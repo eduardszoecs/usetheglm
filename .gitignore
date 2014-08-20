@@ -1,0 +1,17 @@
+.Rproj.user
+.Rhistory
+.RData
+donotlog.Rproj
+
+.directory
+
+# Latex
+*aux
+*log
+*out
+*synctex.gz
+*latexmk
+*concordance.tex
+
+# data
+*data
