@@ -1,5 +1,5 @@
 if(!exists('ld')){
-  source("/home/edisz/Documents/Uni/Projects/PHD/1PESTDATA/us_data/R/src/load.R")
+  source("/home/edisz/Downloads/donotlog/src/0-load.R")
 }
 
 #####--------------------------------------------------------------------------
@@ -13,7 +13,7 @@ ctrl <- exp(log(10) * seq(log10(1), log10(1000), by=0.25))
 todo <- expand.grid(N = N, ctrl = ctrl)
 
 # function to create simulated data
-dosim <- function(N, mu, nsims = 1000){
+dosim <- function(N, mu, nsims = 100){
   Nj     <- rep(N, 6)                       # number of groups
   theta  <- rep(3.91, 6)                    # theta in groups
   mus    <- rep(mu, times = Nj)             # vector of mus
@@ -31,19 +31,19 @@ for(i in seq_len(nrow(todo))){
   takectrl <- todo[i, 'ctrl']
   taketrt <- takectrl * 0.5
   mu <- c(rep(takectrl, each = 2), rep(taketrt, each = 4))
-  sims[[i]] <- dosim(N = N, mu = mu)
+  sims[[i]] <- dosim(N = N, mu = mu, nsims = nsims)
 }
 
 # plot one realisation of simulated data
-todo
-df <- data.frame(x = sims[[126]]$x, y = sims[[126]]$y[ , 5])
+todo[26, ]
+df <- data.frame(x = sims[[26]]$x, y = sims[[26]]$y[ , 25])
 df$yt <- log(1/min(df$y[df$y!=0]) * df$y + 1)
 dfm <- melt(df)
 levels(dfm$variable) <- c('y', 'ln(Ay + 1)')
 p1 <- ggplot(dfm, aes(x = x, y = value)) +
   geom_boxplot(fill = 'grey80') +
   facet_wrap(~variable, scales = 'free_y') +
-  scale_x_discrete(labels = c('Control', 'T1', 'T2', 'T3', 'T4', 'T5')) +
+  scale_x_discrete(labels = c('C', 'T1', 'T2', 'T3', 'T4', 'T5')) +
   labs(x = 'Treatment', y = 'Abundance') +
   theme_bw(base_size = 12, 
            base_family = "Helvetica") +
@@ -95,7 +95,7 @@ saveRDS(res, file.path(cachedir, 'res.rds'))
 # global power
 pow <- function(z){
   ps <- ldply(z, function(w) c(lm = w$plm, glm = w$pglm))
-  apply(ps, 2, function(z) sum(z < 0.05)) / nsims
+  apply(ps, 2, function(z) sum(z < 0.05)) / length(z)
 }
 pows <- ldply(res, pow)
 pows$muc <- todo$ctrl
