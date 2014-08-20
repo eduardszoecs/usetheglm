@@ -53,7 +53,7 @@
 \maketitle
 
 \section{Introduction}
-\subsection{lalal}
+\subsection{la}
 \subsection{Generalized Linear Models}
 
 \section{Methods}
