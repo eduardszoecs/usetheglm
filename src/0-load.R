@@ -24,7 +24,7 @@ require(MASS)
 #####--------------------------------------------------------------------------
 ### Source defined functions
 # source(file.path(srcdir, "themes.R"))
-# source(file.path(srcdir, "functions.R"))
+source(file.path(srcdir, "functions.R"))
 
 #####--------------------------------------------------------------------------
 ### Others
