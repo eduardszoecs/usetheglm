@@ -137,7 +137,7 @@ p2 <- ggplot(powsm) +
   facet_wrap(~N) + 
   # axes
   labs(x = expression(mu[C]), 
-       y = expression(paste('Rejection rate of ', H[0], ' (global test , ', alpha, ' = 0.05)'))) +
+       y = expression(paste('Power (global test , ', alpha, ' = 0.05)'))) +
   # appearance
   theme_bw(base_size = 12, 
            base_family = "Helvetica") +
@@ -157,7 +157,7 @@ ggsave(file.path(figdir, 'p2.pdf'), p2, width = 11, height = 11)
 
 # loec
 loec <- function(z){
-  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm))
+  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw))
   out <- apply(loecs, 2, function(x) sum(x == 2))
   return(out)
 }
@@ -167,12 +167,28 @@ loecs$N <- todo$N
 loecsm <- melt(loecs, id.vars = c('muc', 'N'))
 loecsm$value <- loecsm$value / nsims
 
-ggplot(loecsm) +
-  geom_line(aes(y = value, x = muc, col = variable)) +
+p3 <- ggplot(loecsm) +
+  geom_line(aes(y = value, x = muc, group = variable)) +
+  geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
   coord_trans(xtrans = 'log10') +
   scale_x_continuous(breaks = round(unique(todo$ctrl), 0)) +
   facet_wrap(~N) + 
-  theme_bw() +
-  labs(x = 'mean Abundance in Control', y = 'Proportion correct LOEC')
-
-
+  # axes
+  labs(x = expression(mu[C]), 
+       y = expression(paste('Power (LOEC , ', alpha, ' = 0.05)'))) + 
+  # appearance
+  theme_bw(base_size = 12, 
+           base_family = "Helvetica") +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        text = element_text(size=14),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold")) +
+  # legend
+  scale_fill_grey(name = '', 
+                  breaks = c('lm', 'glm', 'pw'), 
+                  labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Wilcox'),
+                  start = 0.1, end = 0.9) +
+  theme(legend.position="bottom", legend.key = element_blank())
+p3
+ggsave(file.path(figdir, 'p3.pdf'), p3, width = 11, height = 11)
