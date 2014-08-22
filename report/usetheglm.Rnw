@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{scrartcl}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}%GRaphiken
 \usepackage{tabularx}%Tabellen!
@@ -47,19 +47,54 @@
 \graphicspath{{fig/}}                     % path to graphics
 
 \title{Use the GLM, Luke.}
+\subtitle{}
 \author{Eduard Szöcs}
+\date{\today}
 
 \begin{document}
 \maketitle
 
 \section{Introduction}
-\subsection{Generalized Linear Models}
+Not mentioned in Newman (2013). 
+
+Sparsely in OECD Guideline. 
+
+Canada: 'The concept is quite advanced and as yet is not widely used in environmental toxicology.'
+
+Wang/Riffel vergleichen NP aber kein Wort über GLM.
+
+Brock et al. empfiehlt das sampling zui verbessern um die MDD zu verkleinern, keine erwähnung von GLMs (damit erhöhen die auch die power, wie man sieht und sind kostenlos)
+
+\subsection{Normal Model}
+$$ log(Ay_i + 1) \sim N(\mu_i, \sigma^2) $$
+$$ var(log(Ay_i + 1)) = \sigma^2 $$
+$$ log(Ay_i + 1) = \alpha + \beta x_i $$
+
+OR
+$$ y_i^T = log(Ay_i + 1) $$
+$$ y_i^T  \sim N(\mu_i, \sigma^2) $$
+$$ var(y_i^T ) = \sigma^2 $$
+$$ y_i^T  = \alpha + \beta x_i $$
+
+\subsection{Generalized Linear Model}
+$$ y_i \sim NB(\mu_i, \theta) $$
+$$ var(y_i) = \mu_i + \mu_i^2 / \theta $$ 
+$$ log(\mu_i) = \eta_i $$
+$$ \eta_i = \alpha + \beta x_i $$
+
 
 \section{Methods}
 \subsection{Simulation scenarious}
+
+Derzeit, muT = 1/2 muC. Deshalb nimmt die power ab mit kleiner muC (die differnz wird kleiner). Wie kann man das umgehen/besser machen?
+
+Andere Daten/Szenarios? Siehe Wang. 
+Für beta-GLM braucht man gamlss oder ?betareg? (mal vergleichen). Gamma (densities) kann glm().
+
+
 \begin{figure}
-  \includegraphics[width = \textwidth]{p1.pdf}
-  \caption{One realisation of simulated data (N = 6, $\mu_c$ = 31.6). Left panel show raw counts, right panel $log(A \cdot x + 1)$ transformed counts.}
+  \includegraphics[width = \textwidth]{p4_1.pdf}
+  \caption{Real data from Brock et al... (top) and one realisation of simulated data (below, N = 6, $\mu_c$ = 100). Left panel show raw counts, right panel $log(A \cdot x + 1)$ transformed counts.}
 \end{figure}
 
 \subsection{Simulations based on real data}
@@ -77,17 +112,24 @@
   \caption{Power to detect LOEC.}
 \end{figure}
 
+-> bei kleinerm muc lm besser weil annahmen nicht passen (checken)?
+
 \subsection{Simulations based on real data}
 
 \section{Discussion}
+
+Decide between NB and P? - Mean-Var-Plot!
 
 \section{Conclusion}
 
 \appendix
 \section{Tipps
 (Or move up to introduction?)
-Check distribution
-Plot mean variance relationship}
+Check distribution}
+
+
+\section{TODO}
+Read about nparcomp.
 
 
 
