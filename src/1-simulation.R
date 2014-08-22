@@ -8,7 +8,9 @@ nsims <- 100
 # sample sizes
 N <- c(3,6,9,12)
 # mu control
-ctrl <- exp(log(10) * seq(log10(1), log10(1000), by=0.25))
+# ctrl <- exp(log(10) * seq(log10(1), log10(1000), by=0.3))
+# ctrl <- ceiling(ctrl)
+ctrl <- 2^(1:10)
 # both as grid
 todo <- expand.grid(N = N, ctrl = ctrl)
 theta  <- rep(3.91, 6)  
@@ -133,10 +135,16 @@ pows$muc <- todo$ctrl
 pows$N <- todo$N
 powsm <- melt(pows, id.vars = c('muc', 'N'))
 
+# 1
+
+
+
 p2 <- ggplot(powsm) +
   geom_line(aes(y = value, x = muc, group = variable)) +
   geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
-  coord_trans(xtrans = 'log10') +
+  # maby try log2 transformation?
+  coord_trans(xtrans = 'log2') +
+  # use here
   scale_x_continuous(breaks = round(ctrl, 0)) +
   facet_wrap(~N) + 
   # axes
@@ -174,7 +182,7 @@ loecsm$value <- loecsm$value / nsims
 p3 <- ggplot(loecsm) +
   geom_line(aes(y = value, x = muc, group = variable)) +
   geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
-  coord_trans(xtrans = 'log10') +
+  coord_trans(xtrans = 'log2') +
   scale_x_continuous(breaks = round(unique(todo$ctrl), 0)) +
   facet_wrap(~N) + 
   # axes

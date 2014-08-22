@@ -48,15 +48,18 @@
 \newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
 
 \usepackage{alltt}
+
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}%GRaphiken
 \usepackage{tabularx}%Tabellen!
 \usepackage[english]{babel}% Zeilentrennung besser
 \usepackage{url}% Urls besser
 \usepackage{textcomp}% Sonderzeichen
-\usepackage{helvet}% Schrift Helvetica ?
-\usepackage[helvet]{sfmath}% Helvet also in Math modes
-\renewcommand\familydefault{\sfdefault}
+\usepackage{amsmath}%maths / equations
+\usepackage{helvet}% Schrift Helvetica
+% \usepackage[helvet]{sfmath}% Helvet also in Math modes
+% \renewcommand\familydefault{\sfdefault}
+\usepackage{sansmath} % sans in math
 \usepackage[
 	left=3cm,
 	right=2cm,
@@ -96,7 +99,7 @@
 \graphicspath{{fig/}}                     % path to graphics
 
 \title{Use the GLM, Luke.}
-\subtitle{}
+\subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
 \author{Eduard Szöcs}
 \date{\today}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -114,36 +117,62 @@ Wang/Riffel vergleichen NP aber kein Wort über GLM.
 
 Brock et al. empfiehlt das sampling zui verbessern um die MDD zu verkleinern, keine erwähnung von GLMs (damit erhöhen die auch die power, wie man sieht und sind kostenlos)
 
-\subsection{Normal Model}
-$$ log(Ay_i + 1) \sim N(\mu_i, \sigma^2) $$
-$$ var(log(Ay_i + 1)) = \sigma^2 $$
-$$ log(Ay_i + 1) = \alpha + \beta x_i $$
 
-OR
-$$ y_i^T = log(Ay_i + 1) $$
-$$ y_i^T  \sim N(\mu_i, \sigma^2) $$
-$$ var(y_i^T ) = \sigma^2 $$
-$$ y_i^T  = \alpha + \beta x_i $$
+Schon oft angesprochen (O'Hara 2010, Warton 2010 (arcsine is asinine), ?), aber nicht in der Ökotox aufgenommen.
+
+MDD eigentlich nur ein synonym für power.
+
+\subsection{Transformation + Normal Model}
+\begin{align}
+  log(Ay_i + 1) \sim N(\mu_i, \sigma^2) \nonumber \\
+  log(Ay_i + 1) = \alpha + \beta x_i \nonumber \\
+  var(log(Ay_i + 1)) = \sigma^2 \label{eqn:1}
+\end{align}
+
 
 \subsection{Generalized Linear Model}
-$$ y_i \sim NB(\mu_i, \theta) $$
-$$ var(y_i) = \mu_i + \mu_i^2 / \theta $$ 
-$$ log(\mu_i) = \eta_i $$
-$$ \eta_i = \alpha + \beta x_i $$
+\begin{align}
+  y_i \sim NB(\mu_i, \theta)  \nonumber \\
+  log(\mu_i) = \alpha + \beta x_i   \nonumber \\
+  var(y_i) = \mu_i + \mu_i^2 / \theta  \label{eqn:2}
+\end{align}
 
 
 \section{Methods}
-\subsection{Simulation scenarious}
+\subsection{Simulation scenarios}
+We simulated data that mimics count data encountered in mesocosm experiments, with five treatments (T1-T5) and one control (C). 
+Mean abundance in treatments T2-T5 was reduced to half of the control treatment and T1 ($\mu_\text{\tiny T2} = ... = \mu_\text{\tiny T5} = 0.5 \mu_\text{\tiny C} = 0.5 \mu_\text{\tiny T1} $). Therefore, the theoretical LOEC is at T2 and the NOEC correspondingly at T1.
+Counts were drawn from a negative binomial distribution with a fixed $\theta = 3.91$ for all treatments.
+
+We simulated datasets with different the number of replicates (N = \{3, 6, 9, 12\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 \}). For each combination we generated 100 datasets.
+
+Each dataset was analysed with different methods/models.
+
+\subsubsection{Global test of treatment effect}
+2 different models were fitted to the data. 
+A model assuming a normal distribution after ln(Ay + 1) transforming the response (eqn \ref{eqn:1}) and a model assuming that the response follows a negative binomial distribution.
+Treatment effects were in both cases investigated using a Likelihood-Ratio-Test.
+Moreover, we applied a non-parametric Kruskal-Wallis Rank Sum Test.
+
+
+\subsubsection{Determination of LOEC/NOEC}
+multcomp, nparcomp, pairwise-wilcox.
+Check p-value adjustment between methods!
+
+
+
+
+
 
 Derzeit, muT = 1/2 muC. Deshalb nimmt die power ab mit kleiner muC (die differnz wird kleiner). Wie kann man das umgehen/besser machen?
 
 Andere Daten/Szenarios? Siehe Wang. 
 Für beta-GLM braucht man gamlss oder ?betareg? (mal vergleichen). Gamma (densities) kann glm().
 
-
 \begin{figure}
   \includegraphics[width = \textwidth]{p4_1.pdf}
   \caption{Real data from Brock et al... (top) and one realisation of simulated data (below, N = 6, $\mu_c$ = 100). Left panel show raw counts, right panel $log(A \cdot x + 1)$ transformed counts.}
+  \label{fig:p4_1}
 \end{figure}
 
 \subsection{Simulations based on real data}
@@ -154,11 +183,13 @@ Für beta-GLM braucht man gamlss oder ?betareg? (mal vergleichen). Gamma (densit
 \begin{figure}
   \includegraphics[width = \textwidth]{p2.pdf}
   \caption{Power.}
+  \label{fig:p2}
 \end{figure}
 
 \begin{figure}
   \includegraphics[width = \textwidth]{p3.pdf}
   \caption{Power to detect LOEC.}
+  \label{fig:p3}
 \end{figure}
 
 -> bei kleinerm muc lm besser weil annahmen nicht passen (checken)?
