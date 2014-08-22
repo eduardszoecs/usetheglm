@@ -20,6 +20,8 @@ require(plyr)
 require(coefplot2)
 require(multcomp)
 require(MASS)
+require(gridExtra)
+require(nparcomp)
 
 #####--------------------------------------------------------------------------
 ### Source defined functions
@@ -30,5 +32,7 @@ source(file.path(srcdir, "functions.R"))
 ### Others
 # check if load.R already run
 ld <- TRUE
+# Run simulation 1?
+sim1 <- FALSE
 # keep these objects
 keep_obj <- c(ls(), 'keep_obj')

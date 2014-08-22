@@ -11,11 +11,11 @@ N <- c(3,6,9,12)
 ctrl <- exp(log(10) * seq(log10(1), log10(1000), by=0.25))
 # both as grid
 todo <- expand.grid(N = N, ctrl = ctrl)
+theta  <- rep(3.91, 6)  
 
 # function to create simulated data
-dosim <- function(N, mu, nsims = 100){
-  Nj     <- rep(N, 6)                       # number of groups
-  theta  <- rep(3.91, 6)                    # theta in groups
+dosim <- function(N, mu, theta, nsims = 100){
+  Nj     <- rep(N, time = 6)                # number of groups
   mus    <- rep(mu, times = Nj)             # vector of mus
   thetas <- rep(theta, times=Nj)            # vector of thetas
   x      <- factor(rep(1:6, times=Nj))      # factor
@@ -31,12 +31,12 @@ for(i in seq_len(nrow(todo))){
   takectrl <- todo[i, 'ctrl']
   taketrt <- takectrl * 0.5
   mu <- c(rep(takectrl, each = 2), rep(taketrt, each = 4))
-  sims[[i]] <- dosim(N = N, mu = mu, nsims = nsims)
+  sims[[i]] <- dosim(N = N, mu = mu, nsims = nsims, theta = theta)
 }
 
 # plot one realisation of simulated data
-todo[26, ]
-df <- data.frame(x = sims[[26]]$x, y = sims[[26]]$y[ , 25])
+todo[34, ]
+df <- data.frame(x = sims[[34]]$x, y = sims[[34]]$y[ , 2])
 df$yt <- log(1/min(df$y[df$y!=0]) * df$y + 1)
 dfm <- melt(df)
 levels(dfm$variable) <- c('y', 'ln(Ay + 1)')
@@ -52,9 +52,9 @@ p1 <- ggplot(dfm, aes(x = x, y = value)) +
         axis.text=element_text(size=12),
         axis.title=element_text(size=14,face="bold"))
 p1
-# ggsave(file.path(figdir, 'p1.pdf'), p1, width = 10, height = 6)
+ggsave(file.path(figdir, 'p1.pdf'), p1, width = 10, height = 6)
 
-
+if(sim1){
 #####--------------------------------------------------------------------------
 ##### analyse simulations
 res <- llply(sims, function(z){
@@ -70,8 +70,8 @@ res <- llply(sims, function(z){
     modglm <- glm.nb(y ~ x, data = df)
     
     # global test
-    plm <- anova(modlm, test = 'Chisq')["x", "Pr(>Chi)"]
-    pglm <- anova(modglm, test = 'Chisq')["x", "Pr(>Chi)"]
+    plm <- drop1(modlm, test = 'Chisq')["x", "Pr(>Chi)"]
+    pglm <- drop1(modglm, test = 'Chisq')["x", "Pr(>Chi)"]
     pk <- kruskal.test(y ~ x, data = df)$p.value
     
     # multiple comparisons using Dunnett-contrasts
@@ -89,10 +89,10 @@ res <- llply(sims, function(z){
 #                 ytrafo = function(data) trafo(data, numeric_trafo = rank)
 #                 )
 #     p.adjust(pvalue(owt,  method = "unadjusted"), 'holm')
-#     # nparcomp
-#     require(nparcomp)
-#     np <- nparcomp(y ~ x, data = df, type = 'Dunnett', alternative = 'two.sided', asy.method = 'mult.t', info = FALSE)
-#     np$Analysis[ , "p.Value"]
+    # nparcomp
+    np <- nparcomp(y ~ x, data = df, type = 'Dunnett', alternative = 'two.sided', asy.method = 'mult.t', info = FALSE)$Analysis[ , "p.Value"]
+# Holm needed?
+#     np <- p.adjust(np, method = 'holm')
     # pairwise wilcox
     pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
 
@@ -101,11 +101,12 @@ res <- llply(sims, function(z){
     loeclm <- min(which(smclm$test$pvalues < 0.05))
     loecglm <- min(which(smcglm$test$pvalues < 0.05))
     loecpw <- min(which(pw < 0.05))
+    loecnp <- min(which(np < 0.05))
     return(list(A = A, 
                 # modlm = modlm, modglm=modglm,
                 plm=plm, pglm=pglm, pk = pk,
                 # smclm=smclm, smcglm=smcglm, 
-                loeclm=loeclm, loecglm=loecglm, loecpw = loecpw
+                loeclm=loeclm, loecglm=loecglm, loecpw = loecpw, loecnp = loecnp
                 ))
   }
   # run models on simulated data
@@ -114,7 +115,10 @@ res <- llply(sims, function(z){
 }, .progress = 'text')
 
 saveRDS(res, file.path(cachedir, 'res.rds'))
-# res <- readRDS(file.path(cachedir, 'res.rds'))
+} else {
+  res <- readRDS(file.path(cachedir, 'res.rds'))
+}
+# 
 
 
 #####--------------------------------------------------------------------------
@@ -150,14 +154,14 @@ p2 <- ggplot(powsm) +
   scale_fill_grey(name = '', 
                   breaks = c('lm', 'glm', 'pk'), 
                   labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Kruskal'),
-                  start = 0.1, end = 0.9) +
+                  start = 0, end = 1) +
   theme(legend.position="bottom", legend.key = element_blank())
 p2
 ggsave(file.path(figdir, 'p2.pdf'), p2, width = 11, height = 11)
 
 # loec
 loec <- function(z){
-  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw))
+  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw, np = w$loecnp))
   out <- apply(loecs, 2, function(x) sum(x == 2))
   return(out)
 }
@@ -186,9 +190,9 @@ p3 <- ggplot(loecsm) +
         axis.title=element_text(size=14,face="bold")) +
   # legend
   scale_fill_grey(name = '', 
-                  breaks = c('lm', 'glm', 'pw'), 
-                  labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Wilcox'),
-                  start = 0.1, end = 0.9) +
+                  breaks = c('lm', 'glm', 'pw', 'np'), 
+                  labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Wilcox', 'NRCE'),
+                  start = 0, end = 1) +
   theme(legend.position="bottom", legend.key = element_blank())
 p3
 ggsave(file.path(figdir, 'p3.pdf'), p3, width = 11, height = 11)
