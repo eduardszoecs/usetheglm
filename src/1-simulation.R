@@ -1,15 +1,16 @@
 if(!exists('ld')){
-  source("/home/edisz/Downloads/donotlog/src/0-load.R")
+  source("/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/src/0-load.R")
 }
 
 #####--------------------------------------------------------------------------
-#### Simulate data
+#### Simulation 1 Counts
+
+### Power
+### Simulate data
+# no of simulated datasets
 nsims <- 100
 # sample sizes
 N <- c(3,6,9,12)
-# mu control
-# ctrl <- exp(log(10) * seq(log10(1), log10(1000), by=0.3))
-# ctrl <- ceiling(ctrl)
 ctrl <- 2^(1:10)
 # both as grid
 todo <- expand.grid(N = N, ctrl = ctrl)
@@ -27,7 +28,7 @@ dosim <- function(N, mu, theta, nsims = 100){
 
 # simulate data
 sims <- NULL
-set.seed(1234)
+set.seed(seed)
 for(i in seq_len(nrow(todo))){
   N <- todo[i, 'N']
   takectrl <- todo[i, 'ctrl']
@@ -54,14 +55,14 @@ p1 <- ggplot(dfm, aes(x = x, y = value)) +
         axis.text=element_text(size=12),
         axis.title=element_text(size=14,face="bold"))
 p1
-ggsave(file.path(figdir, 'p1.pdf'), p1, width = 10, height = 6)
+if(exp_plot){
+  ggsave(file.path(figdir, 'p1.pdf'), p1, width = 10, height = 6)
+}
 
 if(sim1){
-#####--------------------------------------------------------------------------
 ##### analyse simulations
 res <- llply(sims, function(z){
   ana <- function(y, x){
-#     print(y)
     A <- 1/min(y[y!=0])         # ln(ax + 1) transformation
     yt <- log(A*y + 1)
     
@@ -69,32 +70,26 @@ res <- llply(sims, function(z){
     
     # models
     modlm <- glm(yt ~ x, data = df)
+    modlm.null <- glm(yt ~ 1, data = df)
     modglm <- glm.nb(y ~ x, data = df)
+    modglm.null <- glm.nb(y ~ 1, data = df)
     
     # global test
-    plm <- drop1(modlm, test = 'Chisq')["x", "Pr(>Chi)"]
-    pglm <- drop1(modglm, test = 'Chisq')["x", "Pr(>Chi)"]
+    plm <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
+    # same as
+    # plm <- drop1(modlm, test = 'Chisq')["x", "Pr(>Chi)"]
+    pglm <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
+    # not the same as
+    # drop1(modglm, test = 'Chisq')["x", "Pr(>Chi)"]
+    # as no correct method of drop1 for glm.nb (theta is not refitted correctly!)
     pk <- kruskal.test(y ~ x, data = df)$p.value
     
     # multiple comparisons using Dunnett-contrasts
     smclm <- summary(glht(modlm, linfct = mcp(x = 'Dunnett')), test = adjusted('holm'))
     smcglm <- summary(glht(modglm, linfct = mcp(x = 'Dunnett')), test = adjusted('holm'))
-#     # coin
-#     require(coin)
-#     owt <- oneway_test(y ~ x, data = df, 
-#                 xtrafo = function(data) {
-#                   trafo(data, 
-#                         factor_trafo = function(x){
-#                           model.matrix(~x - 1) %*% t(contrMat(table(x), "Dunnett"))
-#                         }
-#                   )},
-#                 ytrafo = function(data) trafo(data, numeric_trafo = rank)
-#                 )
-#     p.adjust(pvalue(owt,  method = "unadjusted"), 'holm')
-    # nparcomp
-    np <- nparcomp(y ~ x, data = df, type = 'Dunnett', alternative = 'two.sided', asy.method = 'mult.t', info = FALSE)$Analysis[ , "p.Value"]
-# Holm needed?
-#     np <- p.adjust(np, method = 'holm')
+    # np <- nparcomp(y ~ x, data = df, type = 'Dunnett', alternative = 'two.sided', asy.method = 'mult.t', info = FALSE)$Analysis[ , "p.Value"]
+    # Holm needed?
+    # np <- p.adjust(np, method = 'holm')
     # pairwise wilcox
     pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
 
@@ -103,12 +98,13 @@ res <- llply(sims, function(z){
     loeclm <- min(which(smclm$test$pvalues < 0.05))
     loecglm <- min(which(smcglm$test$pvalues < 0.05))
     loecpw <- min(which(pw < 0.05))
-    loecnp <- min(which(np < 0.05))
+    # loecnp <- min(which(np < 0.05))
     return(list(A = A, 
                 # modlm = modlm, modglm=modglm,
                 plm=plm, pglm=pglm, pk = pk,
                 # smclm=smclm, smcglm=smcglm, 
-                loeclm=loeclm, loecglm=loecglm, loecpw = loecpw, loecnp = loecnp
+                loeclm=loeclm, loecglm=loecglm, loecpw = loecpw
+                # , loecnp = loecnp
                 ))
   }
   # run models on simulated data
@@ -123,7 +119,7 @@ saveRDS(res, file.path(cachedir, 'res.rds'))
 # 
 
 
-#####--------------------------------------------------------------------------
+
 ##### compare methods
 # global power
 pow <- function(z){
@@ -134,10 +130,6 @@ pows <- ldply(res, pow)
 pows$muc <- todo$ctrl
 pows$N <- todo$N
 powsm <- melt(pows, id.vars = c('muc', 'N'))
-
-# 1
-
-
 
 p2 <- ggplot(powsm) +
   geom_line(aes(y = value, x = muc, group = variable)) +
@@ -165,11 +157,15 @@ p2 <- ggplot(powsm) +
                   start = 0, end = 1) +
   theme(legend.position="bottom", legend.key = element_blank())
 p2
-ggsave(file.path(figdir, 'p2.pdf'), p2, width = 11, height = 11)
+if(exp_plot){
+  ggsave(file.path(figdir, 'p2.pdf'), p2, width = 11, height = 11)
+}
 
 # loec
 loec <- function(z){
-  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw, np = w$loecnp))
+  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw
+                                  #, np = w$loecnp
+                                  ))
   out <- apply(loecs, 2, function(x) sum(x == 2))
   return(out)
 }
@@ -203,4 +199,230 @@ p3 <- ggplot(loecsm) +
                   start = 0, end = 1) +
   theme(legend.position="bottom", legend.key = element_blank())
 p3
-ggsave(file.path(figdir, 'p3.pdf'), p3, width = 11, height = 11)
+if(exp_plot){
+  ggsave(file.path(figdir, 'p3.pdf'), p3, width = 11, height = 11)
+}
+
+
+### ----------------------------------------------------------------------------
+### Type1 Error
+nsims <- 100
+# sample sizes
+N <- c(3,6,9,12)
+ctrl <- 2^(1:10)
+# both as grid
+todo <- expand.grid(N = N, ctrl = ctrl)
+theta  <- rep(3.91, 6)  
+
+# function to create simulated data
+dosim <- function(N, mu, theta, nsims = 100){
+  Nj     <- rep(N, time = 6)                # number of groups
+  mus    <- rep(mu, times = Nj)             # vector of mus
+  thetas <- rep(theta, times=Nj)            # vector of thetas
+  x      <- factor(rep(1:6, times=Nj))      # factor
+  y      <- replicate(nsims, rnegbin(sum(Nj), mus, thetas))
+  return(list(x = x, y = y))
+}
+
+# simulate data
+sims <- NULL
+set.seed(seed)
+for(i in seq_len(nrow(todo))){
+  N <- todo[i, 'N']
+  takectrl <- todo[i, 'ctrl']
+  taketrt <- takectrl * 1
+  mu <- c(rep(takectrl, each = 2), rep(taketrt, each = 4))
+  sims[[i]] <- dosim(N = N, mu = mu, nsims = nsims, theta = theta)
+}
+
+resfoo <- function(z){
+  ana <- function(y, x){
+    #     print(y)
+    A <- 1/min(y[y!=0])         # ln(ax + 1) transformation
+    yt <- log(A*y + 1)
+    
+    df <- data.frame(x, y, yt)
+    
+    # models
+    modlm <- glm(yt ~ x, data = df)
+    modlm.null <- glm(yt ~ 1, data = df)
+    modglm <- glm.nb(y ~ x, data = df
+                     # , control=glm.control(maxit=10,trace=3)
+                     )
+#     modglm.null <- glm.nb(y ~ 1, data = df)
+    # using mle2
+# dput(y)
+    modglm_bb <- mle2(y ~ dnbinom(mu = exp(logmu), size = k),
+                      parameters = list(logmu ~ x),
+                      data = df,
+                      start = list(logmu = 1, k = 1),
+                      lower = list(logmu = -Inf, k = 0),
+                      upper = list(logmu = Inf, k = 1000),
+                      method = 'L-BFGS-B')
+
+    modglm_bb.null <- try(mle2(y ~ dnbinom(mu = exp(logmu), size = k),
+                      parameters = list(logmu ~ 1),
+                      data = df,
+                      start = list(logmu = 1, k = 1),
+                      lower = list(logmu = -Inf, k = 0),
+                      upper = list(logmu = Inf, k = 1000), 
+                      method = 'L-BFGS-B'),
+                      silent = TRUE)
+    if(is(modglm_bb.null, "try-error")){
+      modglm_bb.null <- mle2(y ~ dnbinom(mu = exp(logmu), size = k),
+                                 parameters = list(logmu ~ 1),
+                                 data = df,
+                                 start = list(logmu = 2, k = 1),
+                                 lower = list(logmu = -Inf, k = 0),
+                                 upper = list(logmu = Inf, k = 1000), 
+                                 method = 'L-BFGS-B')
+    }
+    if(is(modglm_bb.null, "try-error")){
+      modglm_bb.null <- mle2(y ~ dnbinom(mu = exp(logmu), size = k),
+                             parameters = list(logmu ~ 1),
+                             data = df,
+                             start = list(logmu = 2, k = 1),
+                             lower = list(logmu = -Inf, k = 0),
+                             upper = list(logmu = Inf, k = 1000), 
+                             method = 'L-BFGS-B')
+    }
+    
+
+    
+    # global test
+    plm <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
+    # same as
+    # plm <- drop1(modlm, test = 'Chisq')["x", "Pr(>Chi)"]
+    # pglm <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
+    # not the same as
+    # drop1(modglm, test = 'Chisq')["x", "Pr(>Chi)"]
+    # as no correct method of drop1 for glm.nb (theta is not refitted correctly!)
+    pglm <- anova(modglm_bb, modglm_bb.null)[2, 'Pr(>Chisq)']
+    pk <- kruskal.test(y ~ x, data = df)$p.value
+    
+    # multiple comparisons using Dunnett-contrasts
+    smclm <- summary(glht(modlm, linfct = mcp(x = 'Dunnett')), test = adjusted('holm'))
+    smcglm <- summary(glht(modglm, linfct = mcp(x = 'Dunnett')), test = adjusted('holm'))
+    # nparcomp
+    # np <- nparcomp(y ~ x, data = df, type = 'Dunnett', alternative = 'two.sided', asy.method = 'mult.t', info = FALSE)$Analysis[ , "p.Value"]
+    # Holm needed?
+    #     np <- p.adjust(np, method = 'holm')
+    # pairwise wilcox
+suppressWarnings(
+    pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
+)
+    
+    
+    # LOEC (which level? 0 = Control)
+suppressWarnings(
+    loeclm <- min(which(smclm$test$pvalues < 0.05))
+)
+suppressWarnings(
+    loecglm <- min(which(smcglm$test$pvalues < 0.05))
+)
+suppressWarnings(
+    loecpw <- min(which(pw < 0.05))
+)
+    # loecnp <- min(which(np < 0.05))
+    return(list(A = A, 
+                # modlm = modlm, modglm=modglm,
+                plm=plm, pglm=pglm, pk = pk,
+                # smclm=smclm, smcglm=smcglm, 
+                loeclm=loeclm, loecglm=loecglm, loecpw = loecpw
+                # , loecnp = loecnp
+    ))
+  }
+  # run models on simulated data
+  res <- apply(z$y, 2, ana, x = z$x)
+  res
+}
+res <- llply(sims, resfoo, .progress = 'text')
+
+
+
+# Global test (how often wrongly assigned an effect)
+t1 <- function(z){
+  ps <- ldply(z, function(w) c(lm = w$plm, glm = w$pglm, pk = w$pk))
+  apply(ps, 2, function(z) sum(z < 0.05)) / length(z)
+}
+t1s <- ldply(res, t1)
+t1s$muc <- todo$ctrl
+t1s$N <- todo$N
+t1sm <- melt(t1s, id.vars = c('muc', 'N'))
+
+pt1 <- ggplot(t1sm) +
+  geom_line(aes(y = value, x = muc, group = variable)) +
+  geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
+  geom_segment(aes(x = 2, xend = 1024, y = 0.05, yend = 0.05), linetype = 'dashed') + 
+  # maby try log2 transformation?
+  coord_trans(xtrans = 'log2') +
+  # use here
+  scale_x_continuous(breaks = round(ctrl, 0)) +
+  facet_wrap(~N) + 
+  # axes
+  labs(x = expression(mu[C]), 
+       y = expression(paste('Type 1 error (global test , ', alpha, ' = 0.05)'))) +
+  # appearance
+  theme_bw(base_size = 12, 
+           base_family = "Helvetica") +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        text = element_text(size=14),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold")) +
+  # legend
+  scale_fill_grey(name = '', 
+                  breaks = c('lm', 'glm', 'pk'), 
+                  labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Kruskal'),
+                  start = 0, end = 1) +
+  theme(legend.position="bottom", legend.key = element_blank())
+pt1
+if(exp_plot){
+  ggsave(file.path(figdir, 'pt1.pdf'), pt1, width = 11, height = 11)
+}
+
+
+# MC (how often assigned wrongly a LOEC)
+loec <- function(z){
+  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw
+                                  #, np = w$loecnp
+  ))
+  out <- apply(loecs, 2, function(x) sum(x != Inf))
+  return(out)
+}
+loecs <- ldply(res, loec)
+loecs$muc <- todo$ctrl
+loecs$N <- todo$N
+loecsm <- melt(loecs, id.vars = c('muc', 'N'))
+loecsm$value <- loecsm$value / nsims
+
+
+
+pt2 <- ggplot(loecsm) +
+  geom_line(aes(y = value, x = muc, group = variable)) +
+  geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
+  geom_segment(aes(x = 2, xend = 1024, y = 0.05, yend = 0.05), linetype = 'dashed') + 
+  coord_trans(xtrans = 'log2') +
+  scale_x_continuous(breaks = round(unique(todo$ctrl), 0)) +
+  facet_wrap(~N) + 
+  # axes
+  labs(x = expression(mu[C]), 
+       y = expression(paste('Type 1 error (LOEC , ', alpha, ' = 0.05)'))) + 
+  # appearance
+  theme_bw(base_size = 12, 
+           base_family = "Helvetica") +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        text = element_text(size=14),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold")) +
+  # legend
+  scale_fill_grey(name = '', 
+                  breaks = c('lm', 'glm', 'pw', 'np'), 
+                  labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Wilcox', 'NRCE'),
+                  start = 0, end = 1) +
+  theme(legend.position="bottom", legend.key = element_blank())
+pt2
+if(exp_plot){
+  ggsave(file.path(figdir, 'pt2.pdf'), pt2, width = 11, height = 11)
+}

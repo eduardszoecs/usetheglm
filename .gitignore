@@ -12,6 +12,9 @@ donotlog.Rproj
 *synctex.gz
 *latexmk
 *concordance.tex
+*tex
 
 # data
 *data
+*review*
+*pdf

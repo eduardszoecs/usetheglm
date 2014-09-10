@@ -4,7 +4,7 @@ rm(list =ls())
 
 # Project Path
 ## You have to change this!
-prj <- "/home/edisz/Downloads/donotlog/"
+prj <- "/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/"
 
 # Subfolder paths
 srcdir <- file.path(prj, "src")     # source code
@@ -20,8 +20,10 @@ require(plyr)
 require(coefplot2)
 require(multcomp)
 require(MASS)
+require(lmtest)
 require(gridExtra)
 require(nparcomp)
+require(bbmle)
 
 #####--------------------------------------------------------------------------
 ### Source defined functions
@@ -33,6 +35,10 @@ source(file.path(srcdir, "functions.R"))
 # check if load.R already run
 ld <- TRUE
 # Run simulation 1?
-sim1 <- FALSE
+sim1 <- TRUE
 # keep these objects
 keep_obj <- c(ls(), 'keep_obj')
+# seed
+seed <- 8984
+# export plots?
+exp_plot <- TRUE

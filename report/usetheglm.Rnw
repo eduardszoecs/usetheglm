@@ -73,6 +73,20 @@ Schon oft angesprochen (O'Hara 2010, Warton 2010 (arcsine is asinine), ?), aber 
 
 MDD eigentlich nur ein synonym für power.
 
+Obwohl jeder weiß dass NOEC blöd sind - werden sie weiter genutzt (siehe zb. viele publicationen von Fox). Fox 2012: "A
+recurring concern expressed about the suggested move to
+model-based inference is that the derived toxicity measure
+will be influenced by a host of subjective decisions such as the
+choice of the mathematical model, its parameterization, and
+the estimation strategy."
+
+Hoenig and Heisey: No post-hoc power estimation. Equally unhelpful are
+post hoc estimates of minimum significant difference or de-
+tectable ES. Once we have constructed a con-
+fidence interval, power calculations yield no additional in-
+sights’
+
+
 \subsection{Transformation + Normal Model}
 \begin{align}
   log(Ay_i + 1) \sim N(\mu_i, \sigma^2) \nonumber \\
@@ -90,6 +104,11 @@ MDD eigentlich nur ein synonym für power.
 
 
 \section{Methods}
+
+Literature review of SETAC Journals -> NOEC, GLM, log/arcsine transformation? How often, what is applied?
+
+
+
 \subsection{Simulation scenarios}
 We simulated data that mimics count data encountered in mesocosm experiments, with five treatments (T1-T5) and one control (C). 
 Mean abundance in treatments T2-T5 was reduced to half of the control treatment and T1 ($\mu_\text{\tiny T2} = ... = \mu_\text{\tiny T5} = 0.5 \mu_\text{\tiny C} = 0.5 \mu_\text{\tiny T1} $). Therefore, the theoretical LOEC is at T2 and the NOEC correspondingly at T1.
@@ -105,11 +124,16 @@ A model assuming a normal distribution after ln(Ay + 1) transforming the respons
 Treatment effects were in both cases investigated using a Likelihood-Ratio-Test.
 Moreover, we applied a non-parametric Kruskal-Wallis Rank Sum Test.
 
+1) POWER = ability to detect an effect that is present.
+their accuracy at
+2) (Type I error) : maintaining a significance level of 0.05 when there is no
+effect to be detected. Maybe check also this.
 
 \subsubsection{Determination of LOEC/NOEC}
 multcomp, nparcomp, pairwise-wilcox.
 Check p-value adjustment between methods!
 
+Add untransformed
 
 
 
@@ -117,8 +141,7 @@ Check p-value adjustment between methods!
 
 Derzeit, muT = 1/2 muC. Deshalb nimmt die power ab mit kleiner muC (die differnz wird kleiner). Wie kann man das umgehen/besser machen?
 
-Andere Daten/Szenarios? Siehe Wang. 
-Für beta-GLM braucht man gamlss oder ?betareg? (mal vergleichen). Gamma (densities) kann glm().
+Andere Daten/Szenarios? Siehe Wang oder Newman.
 
 \begin{figure}
   \includegraphics[width = \textwidth]{p4_1.pdf}
@@ -126,9 +149,12 @@ Für beta-GLM braucht man gamlss oder ?betareg? (mal vergleichen). Gamma (densit
   \label{fig:p4_1}
 \end{figure}
 
-\subsection{Simulations based on real data}
-Brock et al data.
-Different species of chlorpyrifos.
+% \subsection{Simulations based on real data}
+% Or real data (no simulation) - because post-hoc power is crap?
+% Brock et al data.
+% Different species of chlorpyrifos.
+% -> densities proportions etc wäre noch cool.... Wang/Riffel?
+% Newman: Example 5.1 for arcsine
 
 
 \section{Results}
@@ -148,7 +174,7 @@ Different species of chlorpyrifos.
 
 -> bei kleinerm muc lm besser weil annahmen nicht passen (checken)?
 
-\subsection{Simulations based on real data}
+% \subsection{Simulations based on real data}
 
 \section{Discussion}
 
