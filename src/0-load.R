@@ -18,12 +18,10 @@ require(reshape2)
 require(ggplot2)
 require(plyr)
 require(coefplot2)
-require(multcomp)
-require(MASS)
-require(lmtest)
 require(gridExtra)
-require(nparcomp)
 require(bbmle)
+require(lmtest)
+require(MASS)
 
 #####--------------------------------------------------------------------------
 ### Source defined functions
@@ -39,6 +37,6 @@ sim1 <- TRUE
 # keep these objects
 keep_obj <- c(ls(), 'keep_obj')
 # seed
-seed <- 8984
+seed <- 1606
 # export plots?
 exp_plot <- TRUE

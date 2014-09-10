@@ -1,3 +1,4 @@
+### ----------------------------------------------------------------------------
 #' pairwise wilcox.test
 #' @param y numeric; vector of data values
 #' @param g factor; grouping vector
@@ -19,93 +20,94 @@ pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
 }
 
 
-### ------------------------------------------------------------------------------
-#' Function to analyse simulations
-resfoo <- function(z){
+### ----------------------------------------------------------------------------
+#' Function to create simulated data
+dosim <- function(N, mu, theta, nsims = 100){
+  Nj     <- rep(N, time = 6)                # number of groups
+  mus    <- rep(mu, times = Nj)             # vector of mus
+  thetas <- rep(theta, times=Nj)            # vector of thetas
+  x      <- factor(rep(1:6, times=Nj))      # factor
+  y      <- replicate(nsims, rnegbin(sum(Nj), mus, thetas))
+  return(list(x = x, y = y))
+}
+
+
+### ----------------------------------------------------------------------------
+#' Function to analyse simulated datasets
+resfoo <- function(z, verbose = TRUE){
+  if(verbose){
+    message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
+  }
   ana <- function(y, x){
     # ln(ax + 1) transformation
     A <- 1/min(y[y!=0])         
     yt <- log(A*y + 1)
     df <- data.frame(x, y, yt)
+#     dput(df)
+
     
-    # model using mle2
-    modlm <- glm(yt ~ x, data = df)
-    modlm.null <- glm(yt ~ 1, data = df)
-    modglm <- glm.nb(y ~ x, data = df
-                     # , control=glm.control(maxit=10,trace=3)
-    )
-    #     modglm.null <- glm.nb(y ~ 1, data = df)
-    # using mle2
-    # dput(y)
-    modglm_bb <- mle2(y ~ dnbinom(mu = exp(logmu), size = k),
+    # ------------------------------
+    # Maximum-Likelihood estimation
+    # Gaussian model
+    modlm <- mle2(yt ~ dnorm(mean = mu, sd = s),
+                  parameters = list(mu ~ x, s ~ 1),
+                  data = df,
+                  start = list(mu = mean(yt), s = sd(yt)),
+                  control = list(maxit = 500)
+                  )
+    modlm.null <- update(modlm, 
+           parameters = list(mu ~ 1, sd ~ 1),
+           start = list(mu = mean(yt), s = sd(yt)))
+    
+    # Negative binomial model
+    modglm <- mle2(y ~ dnbinom(mu = exp(logmu), size = k),
                       parameters = list(logmu ~ x),
                       data = df,
-                      start = list(logmu = 1, k = 1),
-                      lower = list(logmu = -Inf, k = 0),
-                      upper = list(logmu = Inf, k = 1000),
-                      method = 'L-BFGS-B')
-    
-    modglm_bb.null <- try(mle2(y ~ dnbinom(mu = exp(logmu), size = k),
-                               parameters = list(logmu ~ 1),
-                               data = df,
-                               start = list(logmu = 1, k = 1),
-                               lower = list(logmu = -Inf, k = 0),
-                               upper = list(logmu = Inf, k = 1000), 
-                               method = 'L-BFGS-B'),
-                          silent = TRUE)
-    if(is(modglm_bb.null, "try-error")){
-      modglm_bb.null <- mle2(y ~ dnbinom(mu = exp(logmu), size = k),
-                             parameters = list(logmu ~ 1),
-                             data = df,
-                             start = list(logmu = 0, k = 1),
-                             lower = list(logmu = -Inf, k = 0),
-                             upper = list(logmu = Inf, k = 1000), 
-                             method = 'L-BFGS-B')
-    }
-    
-    
-    
-    # global test
-    plm <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
-    # same as
-    # plm <- drop1(modlm, test = 'Chisq')["x", "Pr(>Chi)"]
-    # pglm <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
-    # not the same as
-    # drop1(modglm, test = 'Chisq')["x", "Pr(>Chi)"]
-    # as no correct method of drop1 for glm.nb (theta is not refitted correctly!)
-    pglm <- anova(modglm_bb, modglm_bb.null)[2, 'Pr(>Chisq)']
+                      start = list(logmu = log(mean(df$y)), k = 1)
+                   )
+    modglm.null <- update(modglm,
+             parameters = list(logmu ~ 1),
+             start = list(logmu = log(mean(df$y)), k = 1))
+        
+    # ---------------------------------------------------------
+    # Likelihood-Ratio-Tests (global)
+    plm <- anova(modlm, modlm.null)[2, 'Pr(>Chisq)']
+    pglm <- anova(modglm, modglm.null)[2, 'Pr(>Chisq)']
+    # non-parametric test
     pk <- kruskal.test(y ~ x, data = df)$p.value
     
+    
+    # ------------------------------------------------------------
+    # LOECs
     # multiple comparisons using Dunnett-contrasts
-    smclm <- summary(glht(modlm, linfct = mcp(x = 'Dunnett')), test = adjusted('holm'))
-    smcglm <- summary(glht(modglm, linfct = mcp(x = 'Dunnett')), test = adjusted('holm'))
-    # nparcomp
-    # np <- nparcomp(y ~ x, data = df, type = 'Dunnett', alternative = 'two.sided', asy.method = 'mult.t', info = FALSE)$Analysis[ , "p.Value"]
-    # Holm needed?
-    #     np <- p.adjust(np, method = 'holm')
+    # no need for multcomp due to parametrisation
+    # score tests
+    pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(z)'], method = 'holm')
+    pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(z)'], method = 'holm')
+
     # pairwise wilcox
     suppressWarnings(
       pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
     )
     
-    
-    # LOEC (which level? 0 = Control)
+    # extract LOEC (which level? 0 = Control)
     suppressWarnings(
-      loeclm <- min(which(smclm$test$pvalues < 0.05))
+      loeclm <- min(which(pmclm < 0.05))
     )
     suppressWarnings(
-      loecglm <- min(which(smcglm$test$pvalues < 0.05))
+      loecglm <- min(which(pmcglm < 0.05))
     )
     suppressWarnings(
       loecpw <- min(which(pw < 0.05))
     )
-    # loecnp <- min(which(np < 0.05))
-    return(list(A = A, 
-                # modlm = modlm, modglm=modglm,
-                plm=plm, pglm=pglm, pk = pk,
-                # smclm=smclm, smcglm=smcglm, 
-                loeclm=loeclm, loecglm=loecglm, loecpw = loecpw
-                # , loecnp = loecnp
+    
+    # --------------------------------------------
+    # return object
+    return(list(
+      modlm = modlm, modlm.null = modlm.null, modglm = modglm, 
+      modglm.null = modglm.null,
+      plm = plm, pglm = pglm, pk = pk,   
+      loeclm = loeclm, loecglm = loecglm, loecpw = loecpw
     ))
   }
   # run on simulated data
