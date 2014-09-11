@@ -11,6 +11,7 @@
 % \usepackage[helvet]{sfmath}% Helvet also in Math modes
 % \renewcommand\familydefault{\sfdefault}
 \usepackage{sansmath} % sans in math
+\usepackage{todonotes}
 \usepackage[
 	left=3cm,
 	right=2cm,
@@ -49,7 +50,7 @@
 \linespread{1.5}% 1.5 Zeilenabstand			
 \graphicspath{{fig/}}                     % path to graphics
 
-\title{Use the GLM, Luke.}
+\title{Use the GLM, Luke!}
 \subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
 \author{Eduard Szöcs}
 \date{\today}
@@ -58,140 +59,122 @@
 \maketitle
 
 \section{Introduction}
-Not mentioned in Newman (2013). 
 
-Sparsely in OECD Guideline. 
+In environmental risk assessments statistical tests play an important role to evalute the effects of pesticides.
+Ecotoxicologists perform various kinds of experiments yielding to different type of data.
+Examples are: animal counts in mesocosm experiments (positive and discrete data), 
+proportions of surviving animals (bonded between 0 and 1) or biomass (positive data).
 
-Canada: 'The concept is quite advanced and as yet is not widely used in environmental toxicology.'
+These types of data are inherently not normally distributed. 
+However, in order to use the more familiar and traditional data analysis methods based on normal distribution, ecotoxicologists try to transform their data to met these assumptions. 
+Proportions with binomial distributed data are usually transformed using a arcsin square root transformation \citep{oecd_current_2006,
+newman_quantitative_2012},
+count data using a log(Ax + 1) transformation \citep{van_den_brink_impact_2000}.
+If the transformed data does not met the normality assumptions, non-parametric tests are usually applied \citep{wang_making_2011}.
 
-Wang/Riffel vergleichen NP aber kein Wort über GLM.
+Instead of transforming data appropriate models that fit to the data can be used, namely \emph{Generalized Linear Models} (GLM) \citep{nelder_generalized_1972}. These type of models can handly various types of data distributions, e.g. poisson or negative binomial (counts), binomial (proportions) or gamma (mass).
+Despite that GLMs were available since 40 years now, ecotoxicologist do not make use of them.
+One reason might be that they are not mentioned in standard guidance documents for statistical analysis of ecotoxilogical experiments:
+GLMs are not discussed in the \citep{oecd_current_2006} and \citep{epa_methods_2002} guidelines and  not include in their schemes for hypothesis testing. 
+\citet{newman_quantitative_2012} does not cover GLMs in his book.
+\citet{environment_canada_guidance_2005} term GLMS as \emph{useful for toxicological research}, but did not include them in their schemes as \emph{the concept is quite advanced and as yet is not widely used in environmental toxicology}.
 
-Brock et al. empfiehlt das sampling zui verbessern um die MDD zu verkleinern, keine erwähnung von GLMs (damit erhöhen die auch die power, wie man sieht und sind kostenlos)
+Recently studies concluded that data transformations should be avoided and GLMs be used as they have better statistical properties(\emph{Do not log-transform count data}, \citep{ohara_not_2010}; \emph{The arcsine is asinine}, \citep{warton_arcsine_2011}).
+In this paper we first review what types of analysis are used by ecotoxicologists.
+Then we demonstrate that GLM provide superior properties compared to data transformation. 
+We used simulated data that mimicked data encountered in ecotoxicology to compare GLMs with two common data types: counts and proportions. 
+Methods were compared in terms of Type I error (maintain a significance level of 0.05 when there is no effect) and power (detect an effect when it is present). 
 
-
-Schon oft angesprochen (O'Hara 2010, Warton 2010 (arcsine is asinine), ?), aber nicht in der Ökotox aufgenommen.
-
-MDD eigentlich nur ein synonym für power.
-
-Obwohl jeder weiß dass NOEC blöd sind - werden sie weiter genutzt (siehe zb. viele publicationen von Fox). Fox 2012: "A
-recurring concern expressed about the suggested move to
-model-based inference is that the derived toxicity measure
-will be influenced by a host of subjective decisions such as the
-choice of the mathematical model, its parameterization, and
-the estimation strategy."
-
-Hoenig and Heisey: No post-hoc power estimation. Equally unhelpful are
-post hoc estimates of minimum significant difference or de-
-tectable ES. Once we have constructed a con-
-fidence interval, power calculations yield no additional in-
-sights’
-
-
-\subsection{Transformation + Normal Model}
-\begin{align}
-  log(Ay_i + 1) \sim N(\mu_i, \sigma^2) \nonumber \\
-  log(Ay_i + 1) = \alpha + \beta x_i \nonumber \\
-  var(log(Ay_i + 1)) = \sigma^2 \label{eqn:1}
-\end{align}
-
-
-\subsection{Generalized Linear Model}
-\begin{align}
-  y_i \sim NB(\mu_i, \theta)  \nonumber \\
-  log(\mu_i) = \alpha + \beta x_i   \nonumber \\
-  var(y_i) = \mu_i + \mu_i^2 / \theta  \label{eqn:2}
-\end{align}
 
 
 \section{Methods}
-
+\subsection{Review}
 Literature review of SETAC Journals -> NOEC, GLM, log/arcsine transformation? How often, what is applied?
 
+\subsection{Simulations}
+\subsubsection{Count data}
+We simulated count data that mimics count data encountered in mesocosm experiments, with five treatments (T1 - T5) and one control group (C) (e.g. \citep{brock_minimum_2014}).
+Counts were drawn from a negative binomial distribution with a fixed dispersion parameter for all treatments ($\theta = 3.91$).
+We simulated datasets with different the number of replicates (N = \{3, 6, 9, 12\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 128, 512, \}). 
+For each combination we generated 100 datasets.
+For power estimation mean abundance in treatments T2 - T5 was reduced to half of the control treatment and T1 ($\mu_\text{\tiny T2} = ... = \mu_\text{\tiny T5} = 0.5 \mu_\text{\tiny C} = 0.5 \mu_\text{\tiny T1} $).
+For Type I error estimation mean abundance was equal between all groups.
+
+We fitted two parametric models to this data.
+First a model assuming a normal distribution after a ln(Ay + 1) transformation the response (eqn \ref{eqn:1}).
+y is the measured abundance and A was selected in such a way that the lowest non-zero abundance of the data set is transformed to 1 \citep{van_den_brink_impact_2000}.
+
+\begin{align}
+  log(Ay_i + 1) \sim N(\mu_i, \sigma^2) \nonumber \\
+  log(Ay_i + 1) = \alpha + \beta x_i \label{eqn:1} \\
+  var(log(Ay_i + 1)) = \sigma^2 \nonumber
+\end{align}
+
+And second GLM assuming that the response follows a negative binomial distribution. (eqn \ref{eqn:2}).
+\begin{align}
+  y_i \sim NB(\mu_i, \theta)  \nonumber \\
+  log(\mu_i) = \alpha + \beta x_i   \label{eqn:2} \\
+  var(y_i) = \mu_i + \mu_i^2 / \theta  \nonumber
+\end{align}
+
+\todo{explain formulas}
+
+\subsubsection{Binomial data}
+We simulated binomial data that mimics count data encountered in survival experiments, with five treatments (T1 - T5) and one control group (C) (e.g. \citep{newman_quantitative_2012}, example 5.1 therein).
+Each group was sampled from a bin(10, p) distribution.
+For power simulation p in the control and T1 was held constant at p = 0.9 and varied for T2 - T5  (p = \{0.5, 0.55, 0.60, ... 0.90\}).
+For Type I error simulations p was equal between groups ($p_c = p_{T1} = ... = p_{T6}$; p = \{0.5, 0.55, 0.60, ... 0.90\}).
+In both simulations we also varied the number of replicates (N = \{3, 6, 9, 12\}).
+For each combination we generated 100 datasets.
+
+We fitted two parametric models to this data.
+First a model assuming a normal distribution after arcsin transforming the response (eqn \ref{eqn:3} + \ref{eqn:4}, \citep{epa_methods_2002}).
+
+\begin{align}
+  y^T = 
+  \begin{cases}
+    arcsin \sqrt{1/4n}, & \text{if } y = 0 \\
+    arcsin(1) - arcsin \sqrt{1/4n}, & \text{if } y = 1 \\
+    arcsin \sqrt(y), & otherwise
+  \end{cases}
+  \label{eqn:3}
+\end{align}
+
+\begin{align}
+  y^T_i \sim N(\mu_i, \sigma^2) \nonumber \\
+  y^T_i = \alpha + \beta x_i \label{eqn:4} \\
+  var(y^T_i) = \sigma^2 \nonumber
+\end{align}
+
+And second a model assuming a binomial distribution of the response 
+\todo{Check model! qlogis??? why not y ~ dbinom( size=10 , prob=logit(x)}
 
 
-\subsection{Simulation scenarios}
-We simulated data that mimics count data encountered in mesocosm experiments, with five treatments (T1-T5) and one control (C). 
-Mean abundance in treatments T2-T5 was reduced to half of the control treatment and T1 ($\mu_\text{\tiny T2} = ... = \mu_\text{\tiny T5} = 0.5 \mu_\text{\tiny C} = 0.5 \mu_\text{\tiny T1} $). Therefore, the theoretical LOEC is at T2 and the NOEC correspondingly at T1.
-Counts were drawn from a negative binomial distribution with a fixed $\theta = 3.91$ for all treatments.
-
-We simulated datasets with different the number of replicates (N = \{3, 6, 9, 12\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 \}). For each combination we generated 100 datasets.
-
-Each dataset was analysed with different methods/models.
-
-\subsubsection{Global test of treatment effect}
-2 different models were fitted to the data. 
-A model assuming a normal distribution after ln(Ay + 1) transforming the response (eqn \ref{eqn:1}) and a model assuming that the response follows a negative binomial distribution.
-Treatment effects were in both cases investigated using a Likelihood-Ratio-Test.
-Moreover, we applied a non-parametric Kruskal-Wallis Rank Sum Test.
-
-1) POWER = ability to detect an effect that is present.
-their accuracy at
-2) (Type I error) : maintaining a significance level of 0.05 when there is no
-effect to be detected. Maybe check also this.
-
-\subsubsection{Determination of LOEC/NOEC}
-multcomp, nparcomp, pairwise-wilcox.
-Check p-value adjustment between methods!
-
-Add untransformed
 
 
+\subsubsection{Comparing methods}
+A global treatment effect was investigated using Likelihood-Ratio-Tests.
+Moreover, we applied a non-parametric Kruskal-Wallis Rank Sum Test on the untransformed data.
+
+We also investigated power and Type I error for detecting the LOEC (T1 in the simulations).
+For the parametric models we used the parametrisation of contrasting to the control group (equivalent to Dunnett contrast).
+We used a pairwise wilcoxon rank sum test as non-parametric method.
+P-values were adjusted for multiple tesing using Holm's procedure.
 
 
-
-Derzeit, muT = 1/2 muC. Deshalb nimmt die power ab mit kleiner muC (die differnz wird kleiner). Wie kann man das umgehen/besser machen?
-
-Andere Daten/Szenarios? Siehe Wang oder Newman.
-
-\begin{figure}
-  \includegraphics[width = \textwidth]{p4_1.pdf}
-  \caption{Real data from Brock et al... (top) and one realisation of simulated data (below, N = 6, $\mu_c$ = 100). Left panel show raw counts, right panel $log(A \cdot x + 1)$ transformed counts.}
-  \label{fig:p4_1}
-\end{figure}
-
-% \subsection{Simulations based on real data}
-% Or real data (no simulation) - because post-hoc power is crap?
-% Brock et al data.
-% Different species of chlorpyrifos.
-% -> densities proportions etc wäre noch cool.... Wang/Riffel?
-% Newman: Example 5.1 for arcsine
 
 
 \section{Results}
 \subsection{Simulation scenarious}
 
-\begin{figure}
-  \includegraphics[width = \textwidth]{p2.pdf}
-  \caption{Power.}
-  \label{fig:p2}
-\end{figure}
 
-\begin{figure}
-  \includegraphics[width = \textwidth]{p3.pdf}
-  \caption{Power to detect LOEC.}
-  \label{fig:p3}
-\end{figure}
-
--> bei kleinerm muc lm besser weil annahmen nicht passen (checken)?
-
-% \subsection{Simulations based on real data}
 
 \section{Discussion}
 
-Decide between NB and P? - Mean-Var-Plot!
 
 \section{Conclusion}
 
-\appendix
-\section{Tipps
-(Or move up to introduction?)
-Check distribution}
-
-
-\section{TODO}
-Read about nparcomp.
-
-
-
+\bibliography{references}
+\bibliographystyle{apalike}
 
 \end{document}

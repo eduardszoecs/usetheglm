@@ -13,6 +13,7 @@ donotlog.Rproj
 *latexmk
 *concordance.tex
 *tex
+*bbl
 
 # data
 *data
