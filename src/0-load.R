@@ -22,6 +22,7 @@ require(gridExtra)
 require(bbmle)
 require(lmtest)
 require(MASS)
+require(gridExtra)
 
 #####--------------------------------------------------------------------------
 ### Source defined functions
@@ -32,8 +33,9 @@ source(file.path(srcdir, "functions.R"))
 ### Others
 # check if load.R already run
 ld <- TRUE
-# Run simulation 1?
-sim1 <- TRUE
+# Run simulations? 
+sim1 <- FALSE
+sim2 <- TRUE
 # keep these objects
 keep_obj <- c(ls(), 'keep_obj')
 # seed

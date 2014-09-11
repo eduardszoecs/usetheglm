@@ -21,9 +21,10 @@ pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
 
 
 ### ----------------------------------------------------------------------------
+##### Simulation 1 -  Count data
 #' Function to create simulated data
-dosim <- function(N, mu, theta, nsims = 100){
-  Nj     <- rep(N, time = 6)                # number of groups
+dosim1 <- function(N, mu, theta, nsims = 100){
+  Nj     <- rep(N, time = 6)                # 6 groups
   mus    <- rep(mu, times = Nj)             # vector of mus
   thetas <- rep(theta, times=Nj)            # vector of thetas
   x      <- factor(rep(1:6, times=Nj))      # factor
@@ -32,9 +33,8 @@ dosim <- function(N, mu, theta, nsims = 100){
 }
 
 
-### ----------------------------------------------------------------------------
 #' Function to analyse simulated datasets
-resfoo <- function(z, verbose = TRUE){
+resfoo1 <- function(z, verbose = TRUE){
   if(verbose){
     message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
   }
@@ -113,4 +113,122 @@ resfoo <- function(z, verbose = TRUE){
   # run on simulated data
   res <- apply(z$y, 2, ana, x = z$x)
   res
+}
+
+
+
+### ----------------------------------------------------------------------------
+##### Simulation 2 -  Proportions
+#' Function to create simulated data
+dosim2 <- function(N, pC = 0.9, pE = 0.3, nsim = 100, n_animals = 10){
+  n_group <- 6        # number of groups
+  p = c(rep(rep(pC, N), 2), rep(rep(pE, N), 4))    # expected proportions
+  y <- replicate(nsim, rbinom(N * n_group, size = n_animals, prob = p))
+  x      <- factor(rep(1:6, each = N))      
+  return(list(x = x, y = y, n_animals = n_animals))
+}
+
+#' Function to analyse simulated datasets
+resfoo2 <- function(z, verbose = TRUE){
+  if(verbose){
+    message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]) / 10)
+  }
+  
+  ana <- function(y, x, n_animals){
+    # arcsin transformation of proportions
+    y_asin <- ifelse(y  == 0, asin(sqrt(1 / (4 * n_animals))),
+                     ifelse((y / n_animals) == 1, asin(1) - asin(sqrt(1 / (4 * n_animals))),
+                            asin(sqrt(y / n_animals)))
+    )
+    df <- data.frame(x, y, y_asin)
+    
+    # ------------------------------
+    # Maximum-Likelihood estimation
+    # Gaussian model
+    modlm <- mle2(y_asin ~ dnorm(mean = mu, sd = s),
+                  parameters = list(mu ~ x, s ~ 1),
+                  data = df,
+                  start = list(mu = 0.5, s = 1)
+                  )
+    modlm.null <- update(modlm, 
+                         parameters = list(mu ~ 1, sd ~ 1)
+                         )
+    # binomial model
+    modglm <- mle2(y ~ dbinom(size = 10, prob = plogis(p)),
+                   parameters = list(p ~ x),
+                   data = df,
+                   start = list(p = 0.5)
+                   )
+    # glm(cbind(df$y, 10-df$y) ~x, data = df, family = binomial)
+    modglm.null <- update(modglm,
+                          parameters = list(p ~ 1))
+
+    
+    # ---------------------------------------------------------
+    # Likelihood-Ratio-Tests (global)
+    plm <- anova(modlm, modlm.null)[2, 'Pr(>Chisq)']
+    pglm <- anova(modglm, modglm.null)[2, 'Pr(>Chisq)']
+    # non-parametric test
+    pk <- kruskal.test(y ~ x, data = df)$p.value
+    
+    
+    # ------------------------------------------------------------
+    # LOECs
+    # multiple comparisons using Dunnett-contrasts
+    # no need for multcomp due to parametrisation
+    # score tests
+    pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(z)'], method = 'holm')
+    pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(z)'], method = 'holm')
+    
+    # pairwise wilcox
+    suppressWarnings(
+      pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
+    )
+    
+    # extract LOEC (which level? 0 = Control)
+    suppressWarnings(
+      loeclm <- min(which(pmclm < 0.05))
+    )
+    suppressWarnings(
+      loecglm <- min(which(pmcglm < 0.05))
+    )
+    suppressWarnings(
+      loecpw <- min(which(pw < 0.05))
+    )
+    
+    # --------------------------------------------
+    # return object
+    return(list(
+      modlm = modlm, modlm.null = modlm.null, modglm = modglm, 
+      modglm.null = modglm.null,
+      plm = plm, pglm = pglm, pk = pk,   
+      loeclm = loeclm, loecglm = loecglm, loecpw = loecpw
+    ))
+    
+  }
+  # run models on simulated data
+  res <- apply(z$y, 2, ana, x = z$x, n_animals = n_animals)
+  res
+}
+
+
+#### -----------------------------
+### Extractor functions
+# global ps
+p_glob <- function(z){
+  ps <- ldply(z, function(w) c(lm = w$plm, glm = w$pglm, pk = w$pk))
+  apply(ps, 2, function(z) sum(z < 0.05)) / length(z)
+}
+
+# loec
+p_loec <- function(z, type = NULL){
+  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw
+  ))
+  if(type == 't1'){
+    out <- apply(loecs, 2, function(x) sum(x != Inf) / length(x))
+  } 
+  if(type == 'power'){
+    out <- apply(loecs, 2, function(x) sum(x == 2) / length(x))
+  }
+  return(out)
 }
