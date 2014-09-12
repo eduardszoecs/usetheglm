@@ -52,8 +52,7 @@ resfoo1 <- function(z, verbose = TRUE){
     modlm <- mle2(yt ~ dnorm(mean = mu, sd = s),
                   parameters = list(mu ~ x, s ~ 1),
                   data = df,
-                  start = list(mu = mean(yt), s = sd(yt)),
-                  control = list(maxit = 500)
+                  start = list(mu = mean(yt), s = sd(yt))
                   )
     modlm.null <- update(modlm, 
            parameters = list(mu ~ 1, sd ~ 1),
@@ -63,11 +62,14 @@ resfoo1 <- function(z, verbose = TRUE){
     modglm <- mle2(y ~ dnbinom(mu = exp(logmu), size = k),
                       parameters = list(logmu ~ x),
                       data = df,
-                      start = list(logmu = log(mean(df$y)), k = 1)
+                      start = list(logmu = log(mean(df$y)), k = 10),
+                   control = list(maxit = 500)
                    )
     modglm.null <- update(modglm,
              parameters = list(logmu ~ 1),
-             start = list(logmu = log(mean(df$y)), k = 1))
+             start = list(logmu = log(mean(df$y)), k = 10),
+             control = list(maxit = 500)
+             )
         
     # ---------------------------------------------------------
     # Likelihood-Ratio-Tests (global)
@@ -86,12 +88,12 @@ resfoo1 <- function(z, verbose = TRUE){
     pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(z)'], method = 'holm')
 
     # pairwise wilcox
-    suppressWarnings(
+    suppressWarnings( # ties
       pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
     )
     
     # extract LOEC (which level? 0 = Control)
-    suppressWarnings(
+    suppressWarnings( # intended warnings about no min -> no LOEC
       loeclm <- min(which(pmclm < 0.05))
     )
     suppressWarnings(
@@ -215,20 +217,53 @@ resfoo2 <- function(z, verbose = TRUE){
 #### -----------------------------
 ### Extractor functions
 # global ps
-p_glob <- function(z){
+p_glob <- function(z){ 
+  # extract p-values
   ps <- ldply(z, function(w) c(lm = w$plm, glm = w$pglm, pk = w$pk))
-  apply(ps, 2, function(z) sum(z < 0.05)) / length(z)
+  # set p-value form models that did not converge to NA
+  glm_conv <- sapply(z, function(x) x$modglm@details$convergence == 0 &
+                   x$modglm.null@details$convergence == 0) 
+  ps[!glm_conv , 'glm'] <- NA
+  lm_conv <- sapply(z, function(x) x$modlm@details$convergence == 0 &
+                       x$modlm.null@details$convergence == 0) 
+  ps[!lm_conv , 'glm'] <- NA
+  # calculate power
+  pow <- apply(ps, 2, function(z) sum(z < 0.05, na.rm = TRUE)) / length(z)
+  
+  out <- c(pow, c_lm = sum(lm_conv), c_glm = sum(glm_conv), c_pk = 100)
+  return(out)
 }
 
 # loec
 p_loec <- function(z, type = NULL){
+  # extract p-values
   loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw
   ))
+  # set p-value form models that did not converge to NA
+  glm_conv <- sapply(z, function(x) x$modglm@details$convergence == 0 &
+                       x$modglm.null@details$convergence == 0) 
+  loecs[!glm_conv , 'glm'] <- NA
+  lm_conv <- sapply(z, function(x) x$modlm@details$convergence == 0 &
+                      x$modlm.null@details$convergence == 0) 
+  loecs[!lm_conv , 'glm'] <- NA
+  
   if(type == 't1'){
-    out <- apply(loecs, 2, function(x) sum(x != Inf) / length(x))
+    pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / length(x))
   } 
   if(type == 'power'){
-    out <- apply(loecs, 2, function(x) sum(x == 2) / length(x))
+    pow <- apply(loecs, 2, function(x) sum(x == 2, na.rm = TRUE) / length(x))
   }
+  out <- c(pow, c_lm = sum(lm_conv), c_glm = sum(glm_conv), c_pk = 100)
   return(out)
 }
+
+
+#### -----------------------------
+### Misc functions
+#extract legend
+#https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs
+g_legend<-function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
