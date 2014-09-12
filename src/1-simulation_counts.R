@@ -15,31 +15,31 @@ nsims <- 100
 N <- c(3, 6 ,9 ,12)
 ctrl <- 2^(c(1:5, 7, 9))
 # both as grid
-todo <- expand.grid(N = N, ctrl = ctrl)
+todo1_c <- expand.grid(N = N, ctrl = ctrl)
 # fixed theta
 theta  <- rep(3.91, 6)  
 
 
 #####------------------------------------
 # simulate data
-sims <- NULL
+sims1_c <- NULL
 set.seed(seed)
-for(i in seq_len(nrow(todo))){
-  N <- todo[i, 'N']
-  takectrl <- todo[i, 'ctrl']
+for(i in seq_len(nrow(todo1_c))){
+  N <- todo1_c[i, 'N']
+  takectrl <- todo1_c[i, 'ctrl']
   # reduce t2-t5 to 50%
   taketrt <- takectrl * 0.5
   mu <- c(rep(takectrl, each = 2), rep(taketrt, each = 4))
-  sims[[i]] <- dosim1(N = N, mu = mu, nsims = nsims, theta = theta)
+  sims1_c[[i]] <- dosim1(N = N, mu = mu, nsims = nsims, theta = theta)
 }
 
 # plot one realisation of simulated data
-todo[15, ]
-df <- data.frame(x = sims[[15]]$x, y = sims[[15]]$y[ , 2])
+todo1_c[15, ]
+df <- data.frame(x = sims1_c[[15]]$x, y = sims1_c[[15]]$y[ , 2])
 df$yt <- log(1 / min(df$y[df$y != 0]) * df$y + 1)
 dfm <- melt(df)
 levels(dfm$variable) <- c('y', 'ln(Ay + 1)')
-p1 <- ggplot(dfm, aes(x = x, y = value)) +
+ggplot(dfm, aes(x = x, y = value)) +
   geom_boxplot(fill = 'grey80') +
   facet_wrap( ~variable, scales = 'free_y') +
   scale_x_discrete(labels = c('C', 'T1', 'T2', 'T3', 'T4', 'T5')) +
@@ -50,40 +50,32 @@ p1 <- ggplot(dfm, aes(x = x, y = value)) +
         text = element_text(size = 14),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 14,face = "bold"))
-p1
-if(exp_plot){
-  ggsave(file.path(figdir, 'p1.pdf'), p1, width = 10, height = 6)
-}
+
 
 
 #####------------------------------------
 # analyse simulations
 if(sim1){
-  res1 <- llply(sims, resfoo1, .progress = 'text')
-  saveRDS(res1, file.path(cachedir, 'res1_c.rds'))
+  res1_c <- llply(sims1_c, resfoo1, .progress = 'text')
+  saveRDS(res1_c, file.path(cachedir, 'res1_c.rds'))
 } else {
-  res1 <- readRDS(file.path(cachedir, 'res1_c.rds'))
+  res1_c <- readRDS(file.path(cachedir, 'res1_c.rds'))
 }
 
 
 #####------------------------------------
 # Results
 # global power
-pow <- function(z){
-### Check for convergence!
-  ps <- ldply(z, function(w) c(lm = w$plm, glm = w$pglm, pk = w$pk))
-  apply(ps, 2, function(z) sum(z < 0.05)) / length(z)
-}
-pows <- ldply(res1, pow)
-pows$muc <- todo$ctrl
-pows$N <- todo$N
-powsm <- melt(pows, id.vars = c('muc', 'N'))
+pow_glob_c <- ldply(res1_c, p_glob)
+pow_glob_c$muc <- todo1_c$ctrl
+pow_glob_c$N <- todo1_c$N
+pow_glob_c <- melt(pow_glob_c, id.vars = c('muc', 'N'))
 
-p2 <- ggplot(powsm) +
+plot_pow_glob_c <- ggplot(pow_glob_c) +
   geom_line(aes(y = value, x = muc, group = variable)) +
   geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
   coord_trans(xtrans = 'log2') +
-  scale_x_continuous(breaks = round(ctrl, 0)) +
+  scale_x_continuous(breaks = round(unique(todo1_c$ctrl), 0)) +
   facet_grid(~N) + 
   # axes
   labs(x = expression(mu[C]), 
@@ -102,32 +94,20 @@ p2 <- ggplot(powsm) +
                   labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Kruskal'),
                   start = 0, end = 1) +
   guides(fill = FALSE)
-p2
-if(exp_plot){
-  ggsave(file.path(figdir, 'p2.pdf'), p2, width = 11, height = 11)
-}
-
+plot_pow_glob_c
 
 
 ### loec
-loec <- function(z){
-  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw
-                                  #, np = w$loecnp
-                                  ))
-  out <- apply(loecs, 2, function(x) sum(x == 2))
-  return(out)
-}
-loecs <- ldply(res1, loec)
-loecs$muc <- todo$ctrl
-loecs$N <- todo$N
-loecsm <- melt(loecs, id.vars = c('muc', 'N'))
-loecsm$value <- loecsm$value / nsims
+pow_loec_c <- ldply(res1_c, p_loec, type = 'power')
+pow_loec_c$muc <- todo1_c$ctrl
+pow_loec_c$N <- todo1_c$N
+pow_loec_c  <- melt(pow_loec_c , id.vars = c('muc', 'N'))
 
-p3 <- ggplot(loecsm) +
+plot_pow_loec_c <- ggplot(pow_loec_c) +
   geom_line(aes(y = value, x = muc, group = variable)) +
   geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
   coord_trans(xtrans = 'log2') +
-  scale_x_continuous(breaks = round(unique(todo$ctrl), 0)) +
+  scale_x_continuous(breaks = round(unique(todo1_c$ctrl), 0)) +
   facet_grid( ~N) + 
   # axes
   labs(x = expression(mu[C]), 
@@ -146,18 +126,15 @@ p3 <- ggplot(loecsm) +
                   labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Wilcox', 'NRCE'),
                   start = 0, end = 1) +
   guides(fill = FALSE)
-p3
-if(exp_plot){
-  ggsave(file.path(figdir, 'p3.pdf'), p3, width = 11, height = 11)
-}
+plot_pow_loec_c
 
-
+# clean up
+rm(res1_c, todo1_c, df, dfm, sims1_c, takectrl, taketrt, theta, mu, ctrl, nsims, N)
 
 
 
 ### ----------------------------------------------------------------------------
 # Type1 Error
-
 #####------------------------------------
 # settings
 nsims <- 100
@@ -165,47 +142,43 @@ nsims <- 100
 N <- c(3, 6, 9, 12)
 ctrl <- 2^(c(1:5, 7, 9))
 # both as grid
-todo <- expand.grid(N = N, ctrl = ctrl)
+todo2_c <- expand.grid(N = N, ctrl = ctrl)
 theta  <- rep(3.91, 6)  
 
 
 #####------------------------------------
 # simulate data
-sims2 <- NULL
+sims2_c <- NULL
 set.seed(seed)
-for(i in seq_len(nrow(todo))){
-  N <- todo[i, 'N']
-  takectrl <- todo[i, 'ctrl']
+for(i in seq_len(nrow(todo2_c))){
+  N <- todo2_c[i, 'N']
+  takectrl <- todo2_c[i, 'ctrl']
   # all treatments with same mean
   taketrt <- takectrl * 1
   mu <- c(rep(takectrl, each = 2), rep(taketrt, each = 4))
-  sims2[[i]] <- dosim1(N = N, mu = mu, nsims = nsims, theta = theta)
+  sims2_c[[i]] <- dosim1(N = N, mu = mu, nsims = nsims, theta = theta)
 }
 
 
 #####------------------------------------
 # analyse data
 if(sim1){
-  res2 <- llply(sims2, resfoo1, .progress = 'text')
-  saveRDS(res2, file.path(cachedir, 'res2_c.rds'))
+  res2_c <- llply(sims2_c, resfoo1, .progress = 'text')
+  saveRDS(res2_c, file.path(cachedir, 'res2_c.rds'))
 } else {
-  res2 <- readRDS(file.path(cachedir, 'res2_c.rds'))
+  res2_c <- readRDS(file.path(cachedir, 'res2_c.rds'))
 }
 
 
 #####------------------------------------
 # Results
 # Global test (how often wrongly assigned an effect)
-t1 <- function(z){
-  ps <- ldply(z, function(w) c(lm = w$plm, glm = w$pglm, pk = w$pk))
-  apply(ps, 2, function(z) sum(z < 0.05)) / length(z)
-}
-t1s <- ldply(res2, t1)
-t1s$muc <- todo$ctrl
-t1s$N <- todo$N
-t1sm <- melt(t1s, id.vars = c('muc', 'N'))
+t1_glob_c <- ldply(res2_c, p_glob)
+t1_glob_c$muc <- todo2_c$ctrl
+t1_glob_c$N <- todo2_c$N
+t1_glob_c <- melt(t1_glob_c, id.vars = c('muc', 'N'))
 
-pt1 <- ggplot(t1sm) +
+plot_t1_glob_c <- ggplot(t1_glob_c) +
   geom_line(aes(y = value, x = muc, group = variable)) +
   geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
   geom_segment(aes(x = 2, xend = 1024, y = 0.05, yend = 0.05), linetype = 'dashed') + 
@@ -231,32 +204,21 @@ pt1 <- ggplot(t1sm) +
                   labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Kruskal'),
                   start = 0, end = 1) +
   theme(legend.position = "bottom", legend.key = element_blank())
-pt1
-if(exp_plot){
-  ggsave(file.path(figdir, 'pt1.pdf'), pt1, width = 11, height = 11)
-}
+plot_t1_glob_c
 
 
-# MC (how often assigned wrongly a LOEC)
-loec <- function(z){
-  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw
-                                  #, np = w$loecnp
-  ))
-  out <- apply(loecs, 2, function(x) sum(x != Inf))
-  return(out)
-}
-loecs <- ldply(res2, loec)
-loecs$muc <- todo$ctrl
-loecs$N <- todo$N
-loecsm <- melt(loecs, id.vars = c('muc', 'N'))
-loecsm$value <- loecsm$value / nsims
+# LOEC
+t1_loec_c <- ldply(res2_c, p_loec, type = 't1')
+t1_loec_c$muc <- todo2_c$ctrl
+t1_loec_c$N <- todo2_c$N
+t1_loec_c <- melt(t1_loec_c, id.vars = c('muc', 'N'))
 
-pt2 <- ggplot(loecsm) +
+plot_t1_loec_c <- ggplot(t1_loec_c) +
   geom_line(aes(y = value, x = muc, group = variable)) +
   geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
   geom_segment(aes(x = 2, xend = 1024, y = 0.05, yend = 0.05), linetype = 'dashed') + 
   coord_trans(xtrans = 'log2') +
-  scale_x_continuous(breaks = round(unique(todo$ctrl), 0)) +
+  scale_x_continuous(breaks = round(unique(todo2_c$ctrl), 0)) +
   facet_grid(~N) + 
   # axes
   labs(x = expression(mu[C]), 
@@ -275,19 +237,8 @@ pt2 <- ggplot(loecsm) +
                   labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Wilcox'),
                   start = 0, end = 1) +
   theme(legend.position="bottom", legend.key = element_blank())
-pt2
-if(exp_plot){
-  ggsave(file.path(figdir, 'pt2.pdf'), pt2, width = 11, height = 11)
-}
+plot_t1_loec_c
 
 
-p_global <- arrangeGrob(p2, pt1, nrow = 2)
-p_global
-if(exp_plot){
-  ggsave(file.path(figdir, 'p_global.pdf'), p_global, width = 11, height = 11)
-}
-p_loec <- arrangeGrob(p3, pt2, nrow = 2)
-p_loec
-if(exp_plot){
-  ggsave(file.path(figdir, 'p_loec.pdf'), p_global, width = 11, height = 11)
-}
+# clean up
+rm(res2_c, todo2_c, df, dfm, sims2_c, takectrl, taketrt, theta, mu, ctrl, nsims, N)

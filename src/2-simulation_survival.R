@@ -116,6 +116,9 @@ plot_pow_loec_p <- ggplot(pow_loec_p) +
   theme(legend.position="bottom", legend.key = element_blank())
 plot_pow_loec_p
 
+# clean up
+rm(res1_p, df, sims1_p, todo1_p, pEs, n_animals, N, nsims)
+
 
 
 ### ----------------------------------------------------------------------------
@@ -217,3 +220,6 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
                   start = 0, end = 1) +
   theme(legend.position="bottom", legend.key = element_blank())
 plot_t1_loec_p
+
+# clean up
+rm(res2_p, df, sims2_p, todo2_p, ps, n_animals, N, nsims)
