@@ -151,26 +151,30 @@ For Type I error estimation mean abundance was equal between all groups.
 
 We fitted two parametric models to this data.
 First a model assuming a normal distribution after a ln(Ay + 1) transformation the response (eqn \ref{eqn:1}).
-y is the measured abundance and A was selected in such a way that the lowest non-zero abundance of the data set is transformed to 1 \citep{van_den_brink_impact_2000}.
 
 \begin{align}
-  log(Ay_i + 1) \sim N(\mu_i, \sigma^2) \nonumber \\
-  log(Ay_i + 1) = \alpha + \beta x_i \label{eqn:1} \\
-  var(log(Ay_i + 1)) = \sigma^2 \nonumber
+  y^T = log(Ay + 1) \\
+  y^T_i \sim N(\mu_i, \sigma^2) \nonumber \\
+  y^T_i = \alpha + \beta x_i \label{eqn:1} \\
+  var(y^T_i) = \sigma^2 \nonumber
 \end{align}
+where y is the measured abundance and A was selected in such a way that the lowest non-zero abundance of the data set is transformed to 1 \citep{van_den_brink_impact_2000}. 
+$y^T$ is the transformed abundance and the model assumes a constant variance.
 
-And second GLM assuming that the response follows a negative binomial distribution. (eqn \ref{eqn:2}).
+And second GLM assuming that the response follows a negative binomial distribution with a log-link (eqn \ref{eqn:2}) and
+the variance is a function of the mean.
+
 \begin{align}
   y_i \sim NB(\mu_i, \theta)  \nonumber \\
   log(\mu_i) = \alpha + \beta x_i   \label{eqn:2} \\
   var(y_i) = \mu_i + \mu_i^2 / \theta  \nonumber
 \end{align}
 
-\todo{explain formulas}
+Additionally we also analysed this data using a non-parametric approach (see below).
 
 \subsubsection{Binomial data}
 We simulated binomial data that mimics count data encountered in survival experiments, with five treatments (T1 - T5) and one control group (C) (e.g. \citep{newman_quantitative_2012}, example 5.1 therein).
-Each group was sampled from a bin(10, p) distribution.
+Each group consisted of 10 animals and was sampled from a bin(10, p) distribution.
 For power simulation p in the control and T1 was held constant at p = 0.9 and varied for T2 - T5  (p = \{0.5, 0.55, 0.60, ... 0.90\}).
 For Type I error simulations p was equal between groups ($p_c = p_{T1} = ... = p_{T6}$; p = \{0.5, 0.55, 0.60, ... 0.90\}).
 In both simulations we also varied the number of replicates (N = \{3, 6, 9, 12\}).
@@ -184,10 +188,12 @@ First a model assuming a normal distribution after arcsin transforming the respo
   \begin{cases}
     arcsin \sqrt{1/4n}, & \text{if } y = 0 \\
     arcsin(1) - arcsin \sqrt{1/4n}, & \text{if } y = 1 \\
-    arcsin \sqrt(y), & otherwise
+    arcsin \sqrt{y / n}, & otherwise
   \end{cases}
   \label{eqn:3}
 \end{align}
+
+where y are the number of dead animals, $y^T$ are the transformed proportions and n is the number of animals per replicate (n = 10).
 
 \begin{align}
   y^T_i \sim N(\mu_i, \sigma^2) \nonumber \\
@@ -195,16 +201,28 @@ First a model assuming a normal distribution after arcsin transforming the respo
   var(y^T_i) = \sigma^2 \nonumber
 \end{align}
 
+And second a model assuming a binomial distribution of the response with a logit link (eqn \ref{eqn:5}).
+
+\begin{align}
+  y_i \sim Bin(\pi_i, 10) \nonumber \\
+  logit(\pi_i) = \alpha + \beta x_i \label{eqn:5} \\
+  var(y_i) = 10 \times \pi_i \times (1 - \pi_i) \nonumber
+\end{align}
+
+where y is the number of dead animals (out of ten) and $\pi$ the probabilty of counting a dead animal.
 
 \subsubsection{Comparing methods}
 A global treatment effect was investigated using Likelihood-Ratio-Tests.
-Moreover, we applied a non-parametric Kruskal-Wallis Rank Sum Test on the untransformed data.
+Moreover, we applied a non-parametric Kruskal-Wallis-Rank-Sum-Test on the untransformed data.
 
 We also investigated power and Type I error for detecting the LOEC (T1 in the simulations).
 For the parametric models we used the parametrisation of contrasting to the control group (equivalent to Dunnett contrast).
-We used a pairwise wilcoxon rank sum test as non-parametric method.
+\todo{score-test}
+We used a pairwise Wilcoxon-Rank-Sum-Test as a anon-parametric method to detect the LOEC.
 P-values were adjusted for multiple tesing using Holm's procedure.
 
+All simulations have be done in R (Version 3.1.1) on a 64-bit Linux machine with 8GB and 2.2GHZ.
+Source code is available... \todo{put it on github!}
 
 
 
@@ -217,6 +235,8 @@ P-values were adjusted for multiple tesing using Holm's procedure.
 
 
 \section{Conclusion}
+
+\todo{advise, supplement, shapiro scheisse, sessionInfo to Supplement}
 
 \bibliography{references}
 \bibliographystyle{apalike}
