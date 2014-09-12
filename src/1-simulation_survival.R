@@ -1,4 +1,3 @@
-#### TODO: check binomial model!
 if(!exists('ld')){
   source("/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/src/0-load.R")
 }
@@ -24,7 +23,8 @@ todo1_p <- expand.grid(N = N, pE = pEs)
 sims1_p <- NULL
 set.seed(1234)
 for(i in seq_len(nrow(todo1_p))){
-  sims1_p[[i]] <- dosim2(N = todo1_p[i, 'N'], pE = todo1_p[i, 'pE'], nsim = nsims, n_animals = n_animals)
+  sims1_p[[i]] <- dosim2(N = todo1_p[i, 'N'], pE = todo1_p[i, 'pE'], 
+                         nsim = nsims, n_animals = n_animals)
 }
 
 # plot one realisation of simulated data
@@ -58,11 +58,17 @@ if(sim2){
 pow_glob_p <- ldply(res1_p, p_glob)
 pow_glob_p$pE <- todo1_p$pE
 pow_glob_p$N <- todo1_p$N
-pow_glob_p <- melt(pow_glob_p, id.vars = c('pE', 'N'))
+pow_glob_p <- reshape(pow_glob_p, direction = 'long', idvar = 7:8,
+                     varying = list(1:3, 4:6),
+                     v.names = c('power', 'conv'),
+                     timevar = 'variable',
+                     times = c('lm', 'glm', 'pk'))
+all(pow_glob_p$conv == 100)
 
 plot_pow_glob_p <- ggplot(pow_glob_p) +
-  geom_line(aes(y = value, x = pE, group = variable)) +
-  geom_point(aes(y = value, x = pE, fill = variable), size = 4, pch = 21, color = 'black') +
+  geom_line(aes(y = power, x = pE, group = variable)) +
+  geom_point(aes(y = power, x = pE, fill = variable), 
+             size = 4, pch = 21, color = 'black') +
   coord_trans(xtrans = 'log10') +
   # use here
   scale_x_continuous(breaks = pEs) +
@@ -80,10 +86,10 @@ plot_pow_glob_p <- ggplot(pow_glob_p) +
         axis.title=element_text(size=14,face="bold")) +
   # legend
   scale_fill_grey(name = '', 
-                  breaks = c('lm', 'glm', 'k'), 
+                  breaks = c('lm', 'glm', 'pk'), 
                   labels = c('LM + arcsin', 'GLM (bin.)', 'Kruskal'),
                   start = 0, end = 1) +
-  theme(legend.position="bottom", legend.key = element_blank())
+  theme(legend.position="bottom", legend.key = element_blank()) 
 plot_pow_glob_p
 
 
@@ -91,11 +97,17 @@ plot_pow_glob_p
 pow_loec_p <- ldply(res1_p, p_loec, type = 'power')
 pow_loec_p$pE <- todo1_p$pE
 pow_loec_p$N <- todo1_p$N
-pow_loec_p <- melt(pow_loec_p, id.vars = c('pE', 'N'))
+pow_loec_p  <- reshape(pow_loec_p, direction = 'long', idvar = 7:8,
+                       varying = list(1:3, 4:6),
+                       v.names = c('power', 'conv'),
+                       timevar = 'variable',
+                       times = c('lm', 'glm', 'pk'))
+all(pow_loec_p$conv == 100)
 
 plot_pow_loec_p <- ggplot(pow_loec_p) +
-  geom_line(aes(y = value, x = pE, group = variable)) +
-  geom_point(aes(y = value, x = pE, fill = variable), size = 4, pch = 21, color = 'black') +
+  geom_line(aes(y = power, x = pE, group = variable)) +
+  geom_point(aes(y = power, x = pE, fill = variable), 
+             size = 4, pch = 21, color = 'black') +
   facet_grid( ~N) + 
   # axes
   labs(x = 'pE', 
@@ -110,7 +122,7 @@ plot_pow_loec_p <- ggplot(pow_loec_p) +
         axis.title=element_text(size = 14,face = "bold")) +
   # legend
   scale_fill_grey(name = '', 
-                  breaks = c('lm', 'glm', 'pw'), 
+                  breaks = c('lm', 'glm', 'pk'), 
                   labels = c('LM + arcsin', 'GLM (bin.)', 'Wilcox'),
                   start = 0, end = 1) +
   theme(legend.position="bottom", legend.key = element_blank())
@@ -162,12 +174,19 @@ if(sim2){
 t1_glob_p <- ldply(res2_p, p_glob)
 t1_glob_p$ps <- todo2_p$ps
 t1_glob_p$N <- todo2_p$N
-t1_glob_p <- melt(t1_glob_p, id.vars = c('ps', 'N'))
+t1_glob_p <- reshape(t1_glob_p, direction = 'long', idvar = 7:8,
+                     varying = list(1:3, 4:6),
+                     v.names = c('t1', 'conv'),
+                     timevar = 'variable',
+                     times = c('lm', 'glm', 'pk'))
+all(t1_glob_p$conv == 100)
 
 plot_t1_glob_p <- ggplot(t1_glob_p) +
-  geom_line(aes(y = value, x = ps, group = variable)) +
-  geom_point(aes(y = value, x = ps, fill = variable), size = 4, pch = 21, color = 'black') +
-  geom_segment(aes(x = .5, xend = 0.99, y = 0.05, yend = 0.05), linetype = 'dashed') + 
+  geom_line(aes(y = t1, x = ps, group = variable)) +
+  geom_point(aes(y = t1, x = ps, fill = variable), 
+             size = 4, pch = 21, color = 'black') +
+  geom_segment(aes(x = .5, xend = 0.99, y = 0.05, yend = 0.05), 
+               linetype = 'dashed') + 
   coord_trans(xtrans = 'log2') +
   facet_grid(~N) + 
   # axes
@@ -194,12 +213,18 @@ plot_t1_glob_p
 t1_loec_p <- ldply(res2_p, p_loec, type = 't1')
 t1_loec_p$ps <- todo2_p$ps
 t1_loec_p$N <- todo2_p$N
-t1_loec_p <- melt(t1_loec_p, id.vars = c('ps', 'N'))
+t1_loec_p <- reshape(t1_loec_p, direction = 'long', idvar = 7:8,
+                     varying = list(1:3, 4:6),
+                     v.names = c('t1', 'conv'),
+                     timevar = 'variable',
+                     times = c('lm', 'glm', 'pk'))
 
 plot_t1_loec_p <- ggplot(t1_loec_p) +
-  geom_line(aes(y = value, x = ps, group = variable)) +
-  geom_point(aes(y = value, x = ps, fill = variable), size = 4, pch = 21, color = 'black') +
-  geom_segment(aes(x = .5, xend = 0.99, y = 0.05, yend = 0.05), linetype = 'dashed') + 
+  geom_line(aes(y = t1, x = ps, group = variable)) +
+  geom_point(aes(y = t1, x = ps, fill = variable), 
+             size = 4, pch = 21, color = 'black') +
+  geom_segment(aes(x = .5, xend = 0.99, y = 0.05, yend = 0.05), 
+               linetype = 'dashed') + 
   coord_trans(xtrans = 'log2') +
   facet_grid(~N) + 
   # axes
@@ -215,11 +240,11 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
         axis.title=element_text(size = 14, face = "bold")) +
   # legend
   scale_fill_grey(name = '', 
-                  breaks = c('lm', 'glm', 'pw'), 
+                  breaks = c('lm', 'glm', 'pk'), 
                   labels = c('LM + arcsin', 'GLM (neg. bin.)', 'Wilcox'),
                   start = 0, end = 1) +
   theme(legend.position="bottom", legend.key = element_blank())
 plot_t1_loec_p
 
 # clean up
-rm(res2_p, df, sims2_p, todo2_p, ps, n_animals, N, nsims)
+rm(res2_p, sims2_p, todo2_p, ps, n_animals, N, nsims)

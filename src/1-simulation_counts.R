@@ -69,14 +69,20 @@ if(sim1){
 pow_glob_c <- ldply(res1_c, p_glob)
 pow_glob_c$muc <- todo1_c$ctrl
 pow_glob_c$N <- todo1_c$N
-pow_glob_c <- melt(pow_glob_c, id.vars = c('muc', 'N'))
+# restructure data
+pow_glob_c <- reshape(pow_glob_c, direction = 'long', idvar = 7:8,
+        varying = list(1:3, 4:6),
+        v.names = c('power', 'conv'),
+        timevar = 'variable',
+        times = c('lm', 'glm', 'pk'))
 
 plot_pow_glob_c <- ggplot(pow_glob_c) +
-  geom_line(aes(y = value, x = muc, group = variable)) +
-  geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
+  geom_line(aes(y = power, x = muc, group = variable)) +
+  geom_point(aes(y = power, x = muc, fill = variable, size = conv), 
+             pch = 21, color = 'black') +
   coord_trans(xtrans = 'log2') +
   scale_x_continuous(breaks = round(unique(todo1_c$ctrl), 0)) +
-  facet_grid(~N) + 
+  facet_grid( ~ N) + 
   # axes
   labs(x = expression(mu[C]), 
        y = expression(paste('Power (global test , ', alpha, ' = 0.05)'))) +
@@ -89,11 +95,15 @@ plot_pow_glob_c <- ggplot(pow_glob_c) +
         axis.text=element_text(size=12),
         axis.title=element_text(size=14,face="bold")) +
   # legend
-  scale_fill_grey(name = '', 
+  scale_fill_grey(name = 'Method', 
                   breaks = c('lm', 'glm', 'pk'), 
                   labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Kruskal'),
                   start = 0, end = 1) +
-  guides(fill = FALSE)
+  scale_size_continuous( 'Convergence',
+    range = c(1,4),
+    breaks = seq(70, 100, 10),
+    labels = paste0(seq(70, 100, 10), ' %')
+    )
 plot_pow_glob_c
 
 
@@ -101,11 +111,16 @@ plot_pow_glob_c
 pow_loec_c <- ldply(res1_c, p_loec, type = 'power')
 pow_loec_c$muc <- todo1_c$ctrl
 pow_loec_c$N <- todo1_c$N
-pow_loec_c  <- melt(pow_loec_c , id.vars = c('muc', 'N'))
+pow_loec_c  <- reshape(pow_loec_c, direction = 'long', idvar = 7:8,
+                       varying = list(1:3, 4:6),
+                       v.names = c('power', 'conv'),
+                       timevar = 'variable',
+                       times = c('lm', 'glm', 'pk'))
 
 plot_pow_loec_c <- ggplot(pow_loec_c) +
-  geom_line(aes(y = value, x = muc, group = variable)) +
-  geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
+  geom_line(aes(y = power, x = muc, group = variable)) +
+  geom_point(aes(y = power, x = muc, fill = variable, size = conv), 
+             pch = 21, color = 'black') +
   coord_trans(xtrans = 'log2') +
   scale_x_continuous(breaks = round(unique(todo1_c$ctrl), 0)) +
   facet_grid( ~N) + 
@@ -121,15 +136,21 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
         axis.text=element_text(size = 12),
         axis.title=element_text(size = 14,face = "bold")) +
   # legend
-  scale_fill_grey(name = '', 
-                  breaks = c('lm', 'glm', 'pw', 'np'), 
-                  labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Wilcox', 'NRCE'),
+  scale_fill_grey(name = 'Method', 
+                  breaks = c('lm', 'glm', 'pk'), 
+                  labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 
+                             'Wilcox'),
                   start = 0, end = 1) +
-  guides(fill = FALSE)
+  scale_size_continuous( 'Convergence',
+                         range = c(1,4),
+                         breaks = seq(70, 100, 10),
+                         labels = paste0(seq(70, 100, 10), ' %')
+  )
 plot_pow_loec_c
 
 # clean up
-rm(res1_c, todo1_c, df, dfm, sims1_c, takectrl, taketrt, theta, mu, ctrl, nsims, N)
+rm(res1_c, todo1_c, df, dfm, sims1_c, takectrl, taketrt, theta, 
+   mu, ctrl, nsims, N)
 
 
 
@@ -176,12 +197,19 @@ if(sim1){
 t1_glob_c <- ldply(res2_c, p_glob)
 t1_glob_c$muc <- todo2_c$ctrl
 t1_glob_c$N <- todo2_c$N
-t1_glob_c <- melt(t1_glob_c, id.vars = c('muc', 'N'))
+# restructure data
+t1_glob_c <- reshape(t1_glob_c, direction = 'long', idvar = 7:8,
+                      varying = list(1:3, 4:6),
+                      v.names = c('t1', 'conv'),
+                      timevar = 'variable',
+                      times = c('lm', 'glm', 'pk'))
 
 plot_t1_glob_c <- ggplot(t1_glob_c) +
-  geom_line(aes(y = value, x = muc, group = variable)) +
-  geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
-  geom_segment(aes(x = 2, xend = 1024, y = 0.05, yend = 0.05), linetype = 'dashed') + 
+  geom_line(aes(y = t1, x = muc, group = variable)) +
+  geom_point(aes(y = t1, x = muc, fill = variable, size = conv), 
+             pch = 21, color = 'black') +
+  geom_segment(aes(x = 2, xend = 1024, y = 0.05, yend = 0.05), 
+               linetype = 'dashed') + 
   # maby try log2 transformation?
   coord_trans(xtrans = 'log2') +
   # use here
@@ -203,7 +231,12 @@ plot_t1_glob_c <- ggplot(t1_glob_c) +
                   breaks = c('lm', 'glm', 'pk'), 
                   labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Kruskal'),
                   start = 0, end = 1) +
-  theme(legend.position = "bottom", legend.key = element_blank())
+  theme(legend.position = "bottom", legend.key = element_blank())  +
+  scale_size_continuous( 'Convergence',
+                         range = c(1,4),
+                         breaks = seq(70, 100, 10),
+                         labels = paste0(seq(70, 100, 10), ' %')
+  )
 plot_t1_glob_c
 
 
@@ -211,12 +244,18 @@ plot_t1_glob_c
 t1_loec_c <- ldply(res2_c, p_loec, type = 't1')
 t1_loec_c$muc <- todo2_c$ctrl
 t1_loec_c$N <- todo2_c$N
-t1_loec_c <- melt(t1_loec_c, id.vars = c('muc', 'N'))
+t1_loec_c <- reshape(t1_loec_c, direction = 'long', idvar = 7:8,
+                     varying = list(1:3, 4:6),
+                     v.names = c('t1', 'conv'),
+                     timevar = 'variable',
+                     times = c('lm', 'glm', 'pk'))
 
 plot_t1_loec_c <- ggplot(t1_loec_c) +
-  geom_line(aes(y = value, x = muc, group = variable)) +
-  geom_point(aes(y = value, x = muc, fill = variable), size = 4, pch = 21, color = 'black') +
-  geom_segment(aes(x = 2, xend = 1024, y = 0.05, yend = 0.05), linetype = 'dashed') + 
+  geom_line(aes(y = t1, x = muc, group = variable)) +
+  geom_point(aes(y = t1, x = muc, fill = variable, size = conv), 
+             pch = 21, color = 'black') +
+  geom_segment(aes(x = 2, xend = 1024, y = 0.05, yend = 0.05), 
+               linetype = 'dashed') + 
   coord_trans(xtrans = 'log2') +
   scale_x_continuous(breaks = round(unique(todo2_c$ctrl), 0)) +
   facet_grid(~N) + 
@@ -236,9 +275,15 @@ plot_t1_loec_c <- ggplot(t1_loec_c) +
                   breaks = c('lm', 'glm', 'pw'), 
                   labels = c('LM + log(Ay+1)', 'GLM (neg. bin.)', 'Wilcox'),
                   start = 0, end = 1) +
-  theme(legend.position="bottom", legend.key = element_blank())
+  theme(legend.position="bottom", legend.key = element_blank()) +
+  scale_size_continuous( 'Convergence',
+                         range = c(1,4),
+                         breaks = seq(70, 100, 10),
+                         labels = paste0(seq(70, 100, 10), ' %')
+  )
 plot_t1_loec_c
 
 
 # clean up
-rm(res2_c, todo2_c, df, dfm, sims2_c, takectrl, taketrt, theta, mu, ctrl, nsims, N)
+rm(res2_c, todo2_c, sims2_c, takectrl, taketrt, theta, 
+   mu, ctrl, nsims, N)
