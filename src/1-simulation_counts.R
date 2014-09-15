@@ -103,7 +103,8 @@ plot_pow_glob_c <- ggplot(pow_glob_c) +
     range = c(1,4),
     breaks = seq(70, 100, 10),
     labels = paste0(seq(70, 100, 10), ' %')
-    )
+    ) +
+  theme(legend.position="bottom")
 plot_pow_glob_c
 
 
@@ -145,7 +146,8 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
                          range = c(1,4),
                          breaks = seq(70, 100, 10),
                          labels = paste0(seq(70, 100, 10), ' %')
-  )
+  ) +
+  theme(legend.position="bottom")
 plot_pow_loec_c
 
 # clean up

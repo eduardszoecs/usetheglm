@@ -70,9 +70,7 @@ plot_pow_glob_p <- ggplot(pow_glob_p) +
   geom_point(aes(y = power, x = pE, fill = variable), 
              size = 4, pch = 21, color = 'black') +
   coord_trans(xtrans = 'log10') +
-  # use here
-  scale_x_continuous(breaks = pEs) +
-  facet_wrap(~N) + 
+  facet_grid( ~N) + 
   # axes
   labs(x = expression('pE'), 
        y = expression(paste('Power (global test , ', alpha, ' = 0.05)'))) +
@@ -81,15 +79,15 @@ plot_pow_glob_p <- ggplot(pow_glob_p) +
            base_family = "Helvetica") +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), 
-        text = element_text(size=14),
-        axis.text=element_text(size=12),
-        axis.title=element_text(size=14,face="bold")) +
+        text = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14, face = "bold")) +
+  theme(legend.position="bottom") +
   # legend
-  scale_fill_grey(name = '', 
+  scale_fill_grey(name = 'Method', 
                   breaks = c('lm', 'glm', 'pk'), 
                   labels = c('LM + arcsin', 'GLM (bin.)', 'Kruskal'),
-                  start = 0, end = 1) +
-  theme(legend.position="bottom", legend.key = element_blank()) 
+                  start = 0, end = 1) 
 plot_pow_glob_p
 
 
@@ -120,12 +118,12 @@ plot_pow_loec_p <- ggplot(pow_loec_p) +
         text = element_text(size = 14),
         axis.text=element_text(size = 12),
         axis.title=element_text(size = 14,face = "bold")) +
+  theme(legend.position = 'bottom') + 
   # legend
-  scale_fill_grey(name = '', 
+  scale_fill_grey(name = 'Method', 
                   breaks = c('lm', 'glm', 'pk'), 
                   labels = c('LM + arcsin', 'GLM (bin.)', 'Wilcox'),
-                  start = 0, end = 1) +
-  theme(legend.position="bottom", legend.key = element_blank())
+                  start = 0, end = 1)
 plot_pow_loec_p
 
 # clean up
@@ -185,12 +183,12 @@ plot_t1_glob_p <- ggplot(t1_glob_p) +
   geom_line(aes(y = t1, x = ps, group = variable)) +
   geom_point(aes(y = t1, x = ps, fill = variable), 
              size = 4, pch = 21, color = 'black') +
-  geom_segment(aes(x = .5, xend = 0.99, y = 0.05, yend = 0.05), 
+  geom_segment(aes(x = 0.5, xend = 0.9, y = 0.05, yend = 0.05), 
                linetype = 'dashed') + 
   coord_trans(xtrans = 'log2') +
-  facet_grid(~N) + 
+  facet_grid( ~N) + 
   # axes
-  labs(x = 'pE', 
+  labs(x = expression(p[E]), 
        y = expression(paste('Type 1 error (global test , ', alpha, ' = 0.05)'))) +
   # appearance
   theme_bw(base_size = 12, 
@@ -201,11 +199,10 @@ plot_t1_glob_p <- ggplot(t1_glob_p) +
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 14,face="bold")) +
   # legend
-  scale_fill_grey(name = '', 
+  scale_fill_grey(name = 'Method', 
                   breaks = c('lm', 'glm', 'pk'), 
                   labels = c('LM + arcsin', 'GLM (neg. bin.)', 'Kruskal'),
-                  start = 0, end = 1) +
-  theme(legend.position = "bottom", legend.key = element_blank())
+                  start = 0, end = 1)
 plot_t1_glob_p
 
 
@@ -223,12 +220,12 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
   geom_line(aes(y = t1, x = ps, group = variable)) +
   geom_point(aes(y = t1, x = ps, fill = variable), 
              size = 4, pch = 21, color = 'black') +
-  geom_segment(aes(x = .5, xend = 0.99, y = 0.05, yend = 0.05), 
+  geom_segment(aes(x = 0.5, xend = 0.9, y = 0.05, yend = 0.05), 
                linetype = 'dashed') + 
   coord_trans(xtrans = 'log2') +
   facet_grid(~N) + 
   # axes
-  labs(x = 'pE', 
+  labs(x = expression(p[E]), 
        y = expression(paste('Type 1 error (LOEC , ', alpha, ' = 0.05)'))) + 
   # appearance
   theme_bw(base_size = 12, 
@@ -239,11 +236,10 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
         axis.text=element_text(size = 12),
         axis.title=element_text(size = 14, face = "bold")) +
   # legend
-  scale_fill_grey(name = '', 
+  scale_fill_grey(name = 'Method', 
                   breaks = c('lm', 'glm', 'pk'), 
                   labels = c('LM + arcsin', 'GLM (neg. bin.)', 'Wilcox'),
-                  start = 0, end = 1) +
-  theme(legend.position="bottom", legend.key = element_blank())
+                  start = 0, end = 1)
 plot_t1_loec_p
 
 # clean up

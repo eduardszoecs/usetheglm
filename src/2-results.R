@@ -3,9 +3,12 @@ if(!exists('ld')){
 }
 #####--------------------------------------------------------------------------
 # run simulation scripts
+#! Note that there are some switches in 0-load.R
 source(file.path(srcdir, '1-simulation_counts.R'))
 source(file.path(srcdir, '1-simulation_survival.R'))
 
+### --------------------------------------------
+# data to nice graphs
 # Counts
 # global
 plot_pow_glob_c
@@ -16,21 +19,57 @@ leg <- g_legend(plot_pow_glob_c +
                 )
 
 p_glob_c <- arrangeGrob(
-  arrangeGrob(plot_pow_glob_c + theme(legend.position="none"),
-                  plot_t1_glob_c + theme(legend.position="none"),
-                  nrow = 2),
-  leg, ncol = 2, widths = c(10,2))
+  plot_pow_glob_c + theme(legend.position="none") + labs(x = NULL),
+  plot_t1_glob_c + theme(legend.position="none"),
+  leg,
+  nrow = 3, 
+  heights = c(10, 10, 2))
 p_glob_c
+ggsave(file.path(figdir, 'p_glob_c.pdf'), p_glob_c, width = 14, height = 8)
 
 # loec
 leg <- g_legend(plot_pow_loec_c + 
                   theme(legend.key = element_blank()) +
                   guides(fill = guide_legend(override.aes = list(size=5)))
 )
-
 p_loec_c <- arrangeGrob(
-  arrangeGrob(plot_pow_loec_c + theme(legend.position="none"),
-              plot_t1_loec_c + theme(legend.position="none"),
-              nrow = 2),
-  leg, ncol = 2, widths = c(10,2))
+  plot_pow_loec_c + theme(legend.position="none") + labs(x = NULL),
+  plot_t1_loec_c + theme(legend.position="none"),
+  leg,
+  nrow = 3,
+  heights = c(10, 10, 2))
 p_loec_c
+ggsave(file.path(figdir, 'p_loec_c.pdf'), p_loec_c, width = 14, height = 8)
+
+
+### --------------------------------------------
+# Binomial data
+# globel
+leg <- g_legend(plot_pow_glob_p + 
+                  theme(legend.key = element_blank()) +
+                  guides(fill = guide_legend(override.aes = list(size=5)))
+)
+p_glob_p <- arrangeGrob(
+  plot_pow_glob_p + theme(legend.position="none") + labs(x = NULL),
+  plot_t1_glob_p + theme(legend.position="none"),
+  leg,
+  nrow = 3,
+  heights = c(10, 10, 2))
+p_glob_p
+ggsave(file.path(figdir, 'p_glob_p.pdf'), p_glob_p, width = 14, height = 8)
+
+
+# loec
+leg <- g_legend(plot_pow_loec_p + 
+                  theme(legend.key = element_blank()) +
+                  guides(fill = guide_legend(override.aes = list(size=5)))
+)
+p_loec_p <- arrangeGrob(
+  plot_pow_loec_p + theme(legend.position="none") + labs(x = NULL),
+  plot_t1_loec_p + theme(legend.position="none"),
+  leg,
+  nrow = 3,
+  heights = c(10, 10, 2))
+p_loec_p
+ggsave(file.path(figdir, 'p_loec_p.pdf'), p_loec_p, width = 14, height = 8)
+
