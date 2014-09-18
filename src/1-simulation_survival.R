@@ -148,7 +148,6 @@ todo2_p <- expand.grid(N = N, ps = ps)
 #####------------------------------------
 # simulate data
 sims2_p <- NULL
-set.seed(1234)
 for(i in seq_len(nrow(todo2_p))){
   sims2_p[[i]] <- dosim2(N = todo2_p[i, 'N'], 
                       pC = todo2_p[i, 'ps'], pE = todo2_p[i, 'ps'],    # pC = CE
@@ -156,10 +155,11 @@ for(i in seq_len(nrow(todo2_p))){
 }
 
 
+
 #####------------------------------------
 # analyse data
 if(sim2){
-  res2_p <- llply(sims2_p, resfoo2, .progress = 'text')
+  res2_p <- llply(sims2_p, resfoo2, asin = 'ecotox', .progress = 'text')
   saveRDS(res2_p, file.path(cachedir, 'res2_p.rds'))
 } else {
   res2_p <- readRDS(file.path(cachedir, 'res2_p.rds'))
@@ -201,7 +201,7 @@ plot_t1_glob_p <- ggplot(t1_glob_p) +
   # legend
   scale_fill_grey(name = 'Method', 
                   breaks = c('lm', 'glm', 'pk'), 
-                  labels = c('LM + arcsin', 'GLM (neg. bin.)', 'Kruskal'),
+                  labels = c('LM + arcsin', 'GLM', 'Kruskal'),
                   start = 0, end = 1)
 plot_t1_glob_p
 
@@ -238,7 +238,7 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
   # legend
   scale_fill_grey(name = 'Method', 
                   breaks = c('lm', 'glm', 'pk'), 
-                  labels = c('LM + arcsin', 'GLM (neg. bin.)', 'Wilcox'),
+                  labels = c('LM + arcsin', 'GLM', 'Wilcox'),
                   start = 0, end = 1)
 plot_t1_loec_p
 

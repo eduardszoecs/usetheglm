@@ -116,7 +116,7 @@ proportions of surviving animals (bonded between 0 and 1) or biomass (positive d
 
 These types of data are inherently not normally distributed. 
 However, in order to use the more familiar and traditional data analysis methods based on normal distribution, ecotoxicologists try to transform their data to met these assumptions. 
-Proportions with binomial distributed data are usually transformed using a arcsin square root transformation \citep{oecd_current_2006,
+Survivals with binomial distributed data (x out ouf n) are usually transformed using a arcsin square root transformation \citep{oecd_current_2006,
 newman_quantitative_2012},
 count data using a log(Ax + 1) transformation \citep{van_den_brink_impact_2000}.
 If the transformed data does not met the normality assumptions, non-parametric tests are usually applied \citep{wang_making_2011}.
@@ -124,7 +124,7 @@ If the transformed data does not met the normality assumptions, non-parametric t
 However, there is also a third possibility:
 Using a distribution fitting to the type of data instead of the normal distribution, namely \emph{Generalized Linear Models} (GLM) \citep{nelder_generalized_1972}. 
 GLMs can handle various types of data distributions, e.g. poisson or negative binomial (counts), binomial (proportions) or gamma (mass); the normal distribution being a special case.
-Despite that GLMs were available since 40 years now, ecotoxicologist do not make use of them.
+Despite that GLMs were available more than 40 years now, ecotoxicologist do not make use of them.
 One reason might be that they are not mentioned in standard guidance documents for statistical analysis of ecotoxilogical experiments:
 GLMs are not discussed in the \citep{oecd_current_2006} and \citep{epa_methods_2002} guidelines and are not included in the respective schemes for hypothesis testing. 
 \citet{newman_quantitative_2012} does not cover GLMs in his book.
@@ -155,7 +155,7 @@ We fitted two parametric models to this data.
 First a model assuming a normal distribution after a ln(Ay + 1) transformation the response (eqn \ref{eqn:1}).
 
 \begin{align}
-  y^T = log(Ay + 1) \\
+  y^T_i = log(Ay_i + 1) \\
   y^T_i \sim N(\mu_i, \sigma^2) \nonumber \\
   y^T_i = \alpha + \beta x_i \label{eqn:1} \\
   var(y^T_i) = \sigma^2 \nonumber
@@ -164,7 +164,7 @@ where y is the measured abundance and A was selected in such a way that the lowe
 $y^T$ is the transformed abundance and the model assumes a constant variance.
 
 And second GLM assuming that the response follows a negative binomial distribution with a log-link (eqn \ref{eqn:2}) and
-the variance is a function of the mean.
+the variance is a quadratic function of the mean.
 
 \begin{align}
   y_i \sim NB(\mu_i, \theta)  \nonumber \\
@@ -175,21 +175,22 @@ the variance is a function of the mean.
 Additionally we also analysed this data using a non-parametric approach (see below).
 
 \subsubsection{Binomial data}
-We simulated binomial data that mimics count data encountered in survival experiments, with five treatments (T1 - T5) and one control group (C) (e.g. \citep{newman_quantitative_2012}, example 5.1 therein).
-Each group consisted of 10 animals and was sampled from a bin(10, p) distribution.
-For power simulation p in the control and T1 was held constant at p = 0.9 and varied for T2 - T5  (p = \{0.5, 0.55, 0.60, ... 0.90\}).
+We simulated binomial data that mimics data encountered in survival experiments, with five treatments (T1 - T5) and one control group (C) (e.g. \citep{newman_quantitative_2012}, example 5.1 therein).
+Each group consisted of 10 animals and was sampled from a Bin(10, p) distribution.
+For power simulation p in the control and T1 was held constant at p = 0.9 and varied for T2 - T5  (p = \{0.5, 0.55, 0.60, ... , 0.90\}).
 For Type I error simulations p was equal between groups ($p_c = p_{T1} = ... = p_{T6}$; p = \{0.5, 0.55, 0.60, ... 0.90\}).
 In both simulations we also varied the number of replicates (N = \{3, 6, 9, 12\}).
 For each combination we generated 100 datasets.
 
 We fitted two parametric models to this data.
 First a model assuming a normal distribution after arcsin transforming the response (eqn \ref{eqn:3} + \ref{eqn:4}, \citep{epa_methods_2002}).
+\todo{original reference Bartlett 1937!}
 
 \begin{align}
-  y^T = 
+  y^T_i = 
   \begin{cases}
-    arcsin \sqrt{1/4n}, & \text{if } y = 0 \\
-    arcsin(1) - arcsin \sqrt{1/4n}, & \text{if } y = 1 \\
+    arcsin \sqrt{1/4n}, & \text{if } y_i = 0 \\
+    arcsin(1) - arcsin \sqrt{1/4n}, & \text{if } y_i = 1 \\
     arcsin \sqrt{y / n}, & otherwise
   \end{cases}
   \label{eqn:3}
@@ -219,16 +220,32 @@ Moreover, we applied a non-parametric Kruskal-Wallis-Rank-Sum-Test on the untran
 
 We also investigated power and Type I error for detecting the LOEC (T1 in the simulations).
 For the parametric models we used the parametrisation of contrasting to the control group (equivalent to Dunnett contrast).
-\todo{score-test}
+\todo{Wald!-test}
 We used a pairwise Wilcoxon-Rank-Sum-Test as a anon-parametric method to detect the LOEC.
 P-values were adjusted for multiple tesing using Holm's procedure.
 
-All simulations have be done in R (Version 3.1.1) on a 64-bit Linux machine with 8GB and 2.2GHZ.
-Source code is available at \url{https://github.com/EDiLD/usetheglm}. 
+All simulations have be done in R (Version 3.1.1) on a 64-bit Linux machine with 8 GB and 2.2 GHz.
+Exemplary analysis of real data (Count data \citep{brock_minimum_2014}, survial data \citep{epa_methods_2002}) can be found in the supplement.
+Source code forr this work is available online at \url{https://github.com/EDiLD/usetheglm}. 
 
 
 \section{Results}
-\subsection{Simulation scenarious}
+\subsection{Review}
+
+\subsection{Simulations}
+\begin{figure}
+  \includegraphics[width=\linewidth]{p_glob_c.pdf}
+  \caption{Simulation results from power (upper) and Type I error simulations (lower) for count data.}
+  \label{fig:p_glob_c}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{p_glob_p.pdf}
+  \caption{Simulation results from power (upper) and Type I error simulations (lower) for binomial data.}
+\end{figure}
+
+\todo{Double Check results! Line by Line!}
+\todo{Why did we find increased Type I error and Warton did not? Maybe a different asin? (we use a special form, warton standard)}
 
 
 

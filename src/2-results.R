@@ -44,7 +44,9 @@ ggsave(file.path(figdir, 'p_loec_c.pdf'), p_loec_c, width = 14, height = 8)
 
 ### --------------------------------------------
 # Binomial data
-# globel
+# globall
+plot_pow_glob_p
+plot_t1_glob_p
 leg <- g_legend(plot_pow_glob_p + 
                   theme(legend.key = element_blank()) +
                   guides(fill = guide_legend(override.aes = list(size=5)))

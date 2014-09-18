@@ -1,0 +1,313 @@
+\documentclass{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}%GRaphiken
+\usepackage{tabularx}%Tabellen!
+\usepackage[english]{babel}% Zeilentrennung besser
+\usepackage{url}% Urls besser
+\usepackage{textcomp}% Sonderzeichen
+\usepackage{amsmath}%maths / equations
+\usepackage{helvet}% Schrift Helvetica
+% \usepackage[helvet]{sfmath}% Helvet also in Math modes
+% \renewcommand\familydefault{\sfdefault}
+\usepackage{sansmath} % sans in math
+\usepackage{todonotes}
+\usepackage[
+	left=3cm,
+	right=2cm,
+	top=1.5cm,
+	bottom=1cm
+	,
+	includeheadfoot
+	]{geometry}														% Satzspiegel
+\usepackage[
+	round,	%(defaultage in the main file and \input ) for round parentheses;
+	%square,	% for square brackets;
+	%curly,	% for curly braces;
+	%angle,	% for angle brackets;
+	colon,	% (default) to separate multiple citations with colons;
+	%comma,	% to use commas as separaters;
+	authoryear,% (default) for author-year citations;
+	%numbers,	% for numerical citations;
+	%super,	% for superscripted numerical citations, as in Nature;
+	sort,		% orders multiple citations into the sequence in which they appear in the list of 				references;
+	%sort&compress,    % as sort but in addition multiple numerical citations
+                   % are compressed if possible (as 3-6, 15);
+	%longnamesfirst,  % makes the first citation of any reference the equivalent of
+                   % the starred variant (full author list) and subsequent citations
+                   %normal (abbreviated list);
+	%sectionbib,      % redefines \thebibliography to issue \section* instead of \chapter*;
+                   % valid only for classes with a \chapter command;
+                   % to be used with the chapterbib package;
+	%nonamebreak,     % keeps all the authors names in a citation on one line;
+                   %causes overfull hboxes but helps with some hyperref problems.
+]{natbib}											    			% Literaturverzeichnis
+\usepackage{scrhack}   % kills \float@addtolists!  warning
+\usepackage[pdfpagelabels,plainpages=false, pageanchor=false]{hyperref}	
+
+
+%% andere Einstellungen
+\linespread{1}% 1.5 Zeilenabstand			
+\graphicspath{{fig/}}                     % path to graphics
+
+\title{Use the GLM, Luke!}
+\subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
+\author{Eduard Szöcs}
+\date{\today}
+
+\begin{document}
+\maketitle
+\section{Supplement 2 - Examples}
+\subsection{Binomial data}
+\subsubsection{Introduction}
+Here we will show how to analyse binomial data. 
+Data is provided in \citet{newman_quantitative_2012} (example 5.1, page 223) and \citet{epa_methods_2002}.
+Ten fathead minnow (\textit{Pimephales promelas} larvals were exposed to sodium pentachlorophenol (NaPCP) and proportions of the total number alive at the end of the exposure reported.
+
+First we load the data:
+<<bin_load>>=
+df <- read.table(header = TRUE, text = 'conc A B C D
+0 1 1 0.9 0.9
+32 0.8 0.8 1 0.8
+64 0.9 1 1 1 
+128 0.9 0.9 0.8 1
+256 0.7 0.9 1 0.5
+512 0.4 0.3 0.4 0.2')
+df
+@
+
+The we do some house-keeping, reformat the data to the long format and convert concentration to a factor:
+
+<<bin_format, message=FALSE>>=
+require(reshape2)
+# wide to long
+dfm <- melt(df, id.vars = 'conc', value.name = 'y', variable.name = 'tank')
+# conc as factor
+dfm$conc <- factor(dfm$conc)
+head(dfm)
+@
+
+Let's have a first look at the data:
+<<bin_raw_plot, out.width='0.5\\textwidth'>>=
+boxplot(y ~ conc, data = dfm,
+        xlab = 'Concentration', ylab = 'Proportion surv.')
+
+@
+
+
+\subsubsection{Transforming data}
+Next we arcsin transform the proportions:
+<<bin_trans>>=
+dfm$y_asin <- ifelse(dfm$y == 1, asin(1) - asin(sqrt(1/40)),
+					ifelse(dfm$y == 0, asin(sqrt(1/40)), 
+						asin(sqrt(dfm$y))
+						)
+					)
+@
+
+
+<<bin_trans_plot, out.width='0.5\\textwidth'>>=
+boxplot(y_asin ~ conc, data = dfm,
+        xlab = 'Concentration', ylab = 'Proportion surv.')
+@
+
+\subsubsection{Analysing data}
+We will use the bbmle-package \citation{bolker_bbmle:_2014} to fit the models, as we used this also for the simulations.
+However, also standard R functions can be use (see below).
+Let's start with the model assuming a normal distribution of transformed proportions.
+
+<<bin_mod1, message=FALSE, warning=FALSE>>=
+require(bbmle)
+mod_normal <- mle2(y_asin ~ dnorm(mean = mu, sd = s),
+                   parameters = list(mu ~ conc, s ~ 1),
+                   data = dfm,
+                   start = list(mu = 0.5, s = 1)
+                   )
+summary(mod_normal)
+@
+This may gives some warnings as we did not put boundaries on the parameters (s cannot be 0 or lower), however we can ignore them.
+The summary gives us the estimated parameters, their standard error and accompanying p-values.
+Note that this model is parametrised a contrast to the control group so we can directly use the summary-output to determine the LOEC.
+Note that these p-values are not adjusted for multiple testing (you can use p.adjust() for this).
+
+The perform a Likelihood-Ratio-Test we specify a null model and compare both.
+<<bin_mod1_lrt, warning=FALSE>>=
+mod_normal.null <- update(mod_normal, 
+                     parameters = list(mu ~ 1, sd ~ 1)
+                     )
+anova(mod_normal, mod_normal.null)
+@
+
+With base R we could do:
+<<bin_mod1_base>>=
+mod_normal <- lm(y_asin ~ conc, data = dfm)
+drop1(mod_normal, test = 'Chisq')
+@
+or using the lmtest package \citep{zeileis_diagnostic_2002}:
+<<bin_mod1_lmtest, message=FALSE>>=
+require(lmtest)
+lrtest(mod_normal)
+
+@
+
+
+
+Next we assume that the number of surviving larvals are drawn from a binomial distribution.
+First we backtransform the proportions reported to counts of surviving and dead larvals:
+<<bin_mod2_trans>>=
+dfm$surv <- dfm$y * 10
+dfm$dead <- 10 - dfm$surv
+@
+
+And then we specify the logistic model:
+<<bin_mod2>>=
+mod_bin <- mle2(surv ~ dbinom(size = 10, prob = plogis(lp)),
+                parameters = list(lp ~ conc),
+                data = dfm,
+                start = list(lp = 0)
+                )
+summary(mod_bin)
+@
+
+And perform the LRT
+<<bin_mod2_lrt>>=
+mod_bin.null <- update(mod_bin,
+                       parameters = list(lp ~ 1))
+anova(mod_bin, mod_bin.null)
+@
+
+
+With base R we could use
+<<bin_mod2_base>>=
+mod_bin_b <- glm(cbind(surv, dead) ~ conc, data = dfm, family = binomial(link = 'logit'))
+summary(mod_bin_b)
+drop1(mod_bin_b, test = 'Chisq')
+@
+
+
+
+\subsection{Count data}
+\subsubsection{Introduction}
+In this example we will analyse data from \citep{brock_minimum_2014}.
+The data are count of mayfly larvae in Macroinvertebrate Artificial Substrate Samplers in 18 mesocosms at one sampling day.
+There are 5 Treatments and one control group.
+
+First we load the data and bring it to the long format and remove NA values.
+<<count_load, message=FALSE>>=
+df <- read.table(header = TRUE, text = 'Control  T0.1	T0.3	T1	T3	T10
+175	29	27	36	26	20
+65	114	78	11	13	37
+154	72	27	105	33	NA
+83	NA	NA	NA	NA	NA
+')
+dfm <- melt(df, value.name = 'n', variable.name = 'treatment')
+dfm <- dfm[!is.na(dfm['n']), ]
+head(dfm)
+@
+
+	
+Next we have a look at the data:
+<<count_raw_plot, out.width='0.5\\textwidth'>>=
+boxplot(n ~ treatment, data = dfm, xlab = 'Treatment', ylab = 'Count')
+@
+
+
+\subsubsection{Transforming data}
+Next we transform the data using a ln(Ax + 1) transformation:
+
+<<count_trans>>=
+A <- 1 / min(dfm$n[dfm$n != 0])
+dfm$nt <- log(A * dfm$n + 1)
+@
+
+<<plot_count_trans, out.width='0.5\\textwidth'>>=
+boxplot(nt ~ treatment, data = dfm, 
+        xlab = 'Treatment', ylab = 'Transf. Counts')
+@
+
+
+\subsection{Analsying data}
+Again we start with the model assuming a normal distribution of transformed counts:
+<<mod_count, message=FALSE, warning=FALSE>>=
+mod_normal <- mle2(nt ~ dnorm(mean = mu, sd = s),
+                   parameters = list(mu ~ treatment, s ~ 1),
+                   data = dfm,
+                   start = list(mu = mean(dfm$nt), s = sd(dfm$nt)))
+summary(mod_normal)
+mod_normal.null <- update(mod_normal,
+                          parameters = list(mu ~ 1, s ~ 1))
+anova(mod_normal, mod_normal.null)
+@
+
+With base R you could do:
+<<mod_count_b, eval=FALSE>>=
+mod_normal_b <- lm(nt ~ treatment, data = dfm)
+summary(mod_normal_b)
+drop1(mod_normal_b, test = 'Chisq')
+@
+
+
+Next we analyse the raw counts assuming a poisson distribution with a log link:
+<<mod_count_pois, message=FALSE, warning=FALSE>>=
+mod_pois <- mle2(n ~ dpois(lambda = exp(logmu)),
+                   parameters = list(logmu ~ treatment),
+                   data = dfm,
+                   start = list(logmu = mean(dfm$nt)))
+summary(mod_pois)
+@
+
+Or with base R
+<<eval = FALSE>>=
+mod_pois <- glm(n ~ treatment, data = dfm, family = poisson(link = 'log'))
+summary(mod_pois)
+@
+
+But is a poisson distribution appropriate here? 
+A property of the poisson distribution is that its variance is equal to the mean. A simple diagnostic would be to plot group variances vs group means, other more formal statistics are also available.
+
+
+<<mod_count_meanvar, out.width='0.5\\textwidth', message=FALSE>>=
+require(plyr)
+musd <- ddply(dfm, .(treatment), summarise,
+              mu = mean(n),
+              var = var(n))
+musd
+plot(var ~ mu, data = musd, xlab = 'mean', ylab = 'Variance')
+abline(a = 0, b = 1, col = 'darkblue', lwd = 2)
+curve(x + (x^2 / 3.91), from = 24, to = 119.25, add = TRUE, col = 'darkred', lwd = 2)
+legend('topleft', c('NB(k = 3.91)', 'Poisson'), 
+       col = c('darkred', 'darkblue'), 
+       lty = c(1,1), 
+       lwd = c(2,2))
+@
+
+We clearly see that the variance increases much more than would be expected under the poisson distribution (the data is overdispersed).
+One possibility to deal with overdispersion is using a negative binomial distribution:
+
+<<mod_count_negbin>>=
+mod_negbin <- mle2(n ~ dnbinom(mu = exp(logmu), size = k),
+                   parameters = list(logmu ~ treatment, k ~ 1),
+                   data = dfm,
+                   start = list(logmu = log(mean(dfm$n)), k = 1))
+summary(mod_negbin)
+mod_negbin.null <- update(mod_negbin,
+                          parameters = list(logmu ~ 1))
+anova(mod_negbin, mod_negbin.null)
+@
+
+Or using the MASS package \citep{venables_modern_2002}:
+<<mod_count_mass, message=FALSE>>=
+require(MASS)
+mod_negbin_m <- glm.nb(n ~ treatment, data = dfm)
+summary(mod_negbin_m)
+lrtest(mod_negbin_m)
+@
+Note, that we cannot use drop1() with glm.nb()!
+
+
+
+\bibliography{references}
+\bibliographystyle{apalike}
+
+
+\end{document} 

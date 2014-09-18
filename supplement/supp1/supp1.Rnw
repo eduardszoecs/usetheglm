@@ -1,0 +1,74 @@
+\documentclass{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}%GRaphiken
+\usepackage{tabularx}%Tabellen!
+\usepackage[english]{babel}% Zeilentrennung besser
+\usepackage{url}% Urls besser
+\usepackage{textcomp}% Sonderzeichen
+\usepackage{amsmath}%maths / equations
+\usepackage{helvet}% Schrift Helvetica
+% \usepackage[helvet]{sfmath}% Helvet also in Math modes
+% \renewcommand\familydefault{\sfdefault}
+\usepackage{sansmath} % sans in math
+\usepackage{todonotes}
+\usepackage[
+	left=3cm,
+	right=2cm,
+	top=1.5cm,
+	bottom=1cm
+	,
+	includeheadfoot
+	]{geometry}														% Satzspiegel
+\usepackage[
+	round,	%(defaultage in the main file and \input ) for round parentheses;
+	%square,	% for square brackets;
+	%curly,	% for curly braces;
+	%angle,	% for angle brackets;
+	colon,	% (default) to separate multiple citations with colons;
+	%comma,	% to use commas as separaters;
+	authoryear,% (default) for author-year citations;
+	%numbers,	% for numerical citations;
+	%super,	% for superscripted numerical citations, as in Nature;
+	sort,		% orders multiple citations into the sequence in which they appear in the list of 				references;
+	%sort&compress,    % as sort but in addition multiple numerical citations
+                   % are compressed if possible (as 3-6, 15);
+	%longnamesfirst,  % makes the first citation of any reference the equivalent of
+                   % the starred variant (full author list) and subsequent citations
+                   %normal (abbreviated list);
+	%sectionbib,      % redefines \thebibliography to issue \section* instead of \chapter*;
+                   % valid only for classes with a \chapter command;
+                   % to be used with the chapterbib package;
+	%nonamebreak,     % keeps all the authors names in a citation on one line;
+                   %causes overfull hboxes but helps with some hyperref problems.
+]{natbib}											    			% Literaturverzeichnis
+\usepackage{scrhack}   % kills \float@addtolists!  warning
+\usepackage[pdfpagelabels,plainpages=false, pageanchor=false]{hyperref}	
+
+
+%% andere Einstellungen
+\linespread{1.5}% 1.5 Zeilenabstand			
+\graphicspath{{fig/}}                     % path to graphics
+
+\title{Use the GLM, Luke!}
+\subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
+\author{Eduard Szöcs}
+\date{\today}
+
+\begin{document}
+\maketitle
+\section{Supplement 1 - Additional Figures}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{p_loec_c.pdf}
+  \caption{Simulation results from power (upper) and Type I error simulations  (lower) finding the LOEC for count data.}
+  \label{fig:p_glob_c}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{p_loec_p.pdf}
+  \caption{Simulation results from power (upper) and Type I error simulations (lower) finding the LOEC for binomial data.}
+  \label{fig:p_glob_p}
+\end{figure}
+
+\end{document} 
