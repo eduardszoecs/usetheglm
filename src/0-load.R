@@ -35,10 +35,12 @@ source(file.path(srcdir, "functions.R"))
 ld <- TRUE
 # Run simulations? 
 sim1 <- FALSE
-sim2 <- FALSE
+sim2 <- TRUE
 # keep these objects
 keep_obj <- c(ls(), 'keep_obj')
 # seed
 seed <- 1606
 # export plots?
 exp_plot <- TRUE
+# number of simulated datasets
+nsims <- 100

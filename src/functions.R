@@ -138,7 +138,7 @@ resfoo1 <- function(z, verbose = TRUE){
 #' sims <- dosim2(3)
 #' # plot one realisation
 #' plot(sims$x, sims$y[,1])
-dosim2 <- function(N, pC = 0.9, pE = 0.3, nsim = 100, n_animals = 10){
+dosim2 <- function(N, pC = 0.95, pE = 0.3, nsim = 100, n_animals = 10){
   n_group <- 6        # number of groups
   p = c(rep(rep(pC, N), 2), rep(rep(pE, N), 4))    # expected proportions
   y <- replicate(nsim, rbinom(N * n_group, size = n_animals, prob = p))

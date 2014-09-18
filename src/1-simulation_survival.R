@@ -7,12 +7,11 @@ if(!exists('ld')){
 #####------------------------------------
 # Settings
 # no of simulated datasets
-nsims <- 100
 # sample sizes
 N <- c(3, 6 ,9 ,12)
 n_animals <- 10
 # proportions in effect groups
-pEs <- seq(0.5, 0.9, 0.05)
+pEs <- seq(0.5, 0.95, 0.05)
 # both as grid
 todo1_p <- expand.grid(N = N, pE = pEs)
   
@@ -23,7 +22,8 @@ todo1_p <- expand.grid(N = N, pE = pEs)
 sims1_p <- NULL
 set.seed(1234)
 for(i in seq_len(nrow(todo1_p))){
-  sims1_p[[i]] <- dosim2(N = todo1_p[i, 'N'], pE = todo1_p[i, 'pE'], 
+  sims1_p[[i]] <- dosim2(N = todo1_p[i, 'N'], 
+                         pC = 0.95, pE = todo1_p[i, 'pE'], 
                          nsim = nsims, n_animals = n_animals)
 }
 
@@ -116,20 +116,18 @@ plot_pow_loec_p <- ggplot(pow_loec_p) +
 plot_pow_loec_p
 
 # clean up
-rm(res1_p, df, sims1_p, todo1_p, pEs, n_animals, N, nsims)
+# rm(res1_p, df, sims1_p, todo1_p, pEs, n_animals, N)
 
 
 
 ### ----------------------------------------------------------------------------
 # Type1 Error
 # Settings
-# no of simulated datasets
-nsims <- 100
 # sample sizes
 N <- c(3, 6 ,9 ,12)
 n_animals <- 10
 # proportions 
-ps <- seq(0.5, 0.9, 0.05)
+ps <- seq(0.5, 0.95, 0.05)
 # both as grid
 todo2_p <- expand.grid(N = N, ps = ps)
 
@@ -148,7 +146,7 @@ for(i in seq_len(nrow(todo2_p))){
 #####------------------------------------
 # analyse data
 if(sim2){
-  res2_p <- llply(sims2_p, resfoo2, asin = 'ecotox', .progress = 'text', .parallel = TRUE)
+  res2_p <- llply(sims2_p, resfoo2, asin = 'ecotox', .progress = 'text')
   saveRDS(res2_p, file.path(cachedir, 'res2_p.rds'))
 } else {
   res2_p <- readRDS(file.path(cachedir, 'res2_p.rds'))
@@ -168,11 +166,11 @@ plot_t1_glob_p <- ggplot(t1_glob_p) +
   geom_line(aes(y = value, x = ps, group = variable)) +
   geom_point(aes(y = value, x = ps, fill = variable), 
              size = 4, pch = 21, color = 'black') +
-  geom_segment(aes(x = 0.5, xend = 0.9, y = 0.05, yend = 0.05), 
+  geom_segment(aes(x = min(todo2_p$ps), xend = max(todo2_p$ps), y = 0.05, yend = 0.05), 
                linetype = 'dashed') + 
   facet_grid( ~N) + 
   # axes
-  labs(x = expression(p[E]), 
+  labs(x = 'p', 
        y = expression(paste('Type 1 error (global test , ', alpha, ' = 0.05)'))) +
   # appearance
   theme_bw(base_size = 12, 
@@ -200,11 +198,11 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
   geom_line(aes(y = value, x = ps, group = variable)) +
   geom_point(aes(y = value, x = ps, fill = variable), 
              size = 4, pch = 21, color = 'black') +
-  geom_segment(aes(x = 0.5, xend = 0.9, y = 0.05, yend = 0.05), 
+  geom_segment(aes(x = min(todo2_p$ps), xend = max(todo2_p$ps), y = 0.05, yend = 0.05), 
                linetype = 'dashed') + 
   facet_grid(~N) + 
   # axes
-  labs(x = expression(p[E]), 
+  labs(x = 'p', 
        y = expression(paste('Type 1 error (LOEC , ', alpha, ' = 0.05)'))) + 
   # appearance
   theme_bw(base_size = 12, 
@@ -222,4 +220,4 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
 plot_t1_loec_p
 
 # clean up
-rm(res2_p, sims2_p, todo2_p, ps, n_animals, N, nsims)
+# rm(res2_p, sims2_p, todo2_p, ps, n_animals, N)
