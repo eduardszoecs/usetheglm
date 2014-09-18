@@ -178,29 +178,21 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     # ------------------------------
     # Maximum-Likelihood estimation
     # Gaussian model
-    modlm <- mle2(y_asin ~ dnorm(mean = mu, sd = s),
-                  parameters = list(mu ~ x, s ~ 1),
-                  data = df,
-                  start = list(mu = 0.5, s = 1)
-                  )
-    modlm.null <- update(modlm, 
-                         parameters = list(mu ~ 1, sd ~ 1)
-                         )
+    modlm <- lm(y_asin ~ x, data = df)
+    modlm.null <- lm(y_asin ~ 1, data = df)
     # binomial model
-    modglm <- mle2(y ~ dbinom(size = 10, prob = plogis(p)),
-                   parameters = list(p ~ x),
-                   data = df,
-                   start = list(p = 0.5)
-                   )
-    # glm(cbind(df$y, 10-df$y) ~x, data = df, family = binomial)
-    modglm.null <- update(modglm,
-                          parameters = list(p ~ 1))
+    modglm <- glm(cbind(y, n_animals - y) ~ x, data = df, 
+                  family = binomial(link = 'logit'))
+    modglm.null <- glm(cbind(y, n_animals - y) ~ 1, data = df, 
+                       family = binomial(link = 'logit'))
 
     
     # ---------------------------------------------------------
-    # Likelihood-Ratio-Tests (global)
-    plm <- anova(modlm, modlm.null)[2, 'Pr(>Chisq)']
-    pglm <- anova(modglm, modglm.null)[2, 'Pr(>Chisq)']
+    # Global Test
+    # F-test for LM
+    plm <- anova(modlm, modlm.null)[2, 'Pr(>F)']
+    # LRT-test for GLM
+    pglm <- anova(modglm, modglm.null, test = 'Chisq')[2, 'Pr(>Chi)']
     # non-parametric test
     pk <- kruskal.test(y ~ x, data = df)$p.value
     
@@ -208,10 +200,8 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     # ------------------------------------------------------------
     # LOECs
     # multiple comparisons using Dunnett-contrasts
-    # no need for multcomp due to parametrisation
-    # score tests
-    pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(z)'], method = 'holm')
-    pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(z)'], method = 'holm')
+    pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(>|t|)'], method = 'holm')
+    pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(>|z|)'], method = 'holm')
     
     # pairwise wilcox
     suppressWarnings(
@@ -232,8 +222,6 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     # --------------------------------------------
     # return object
     return(list(
-      modlm = modlm, modlm.null = modlm.null, modglm = modglm, 
-      modglm.null = modglm.null,
       plm = plm, pglm = pglm, pk = pk,   
       loeclm = loeclm, loecglm = loecglm, loecpw = loecpw
     ))
@@ -251,18 +239,8 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
 p_glob <- function(z){ 
   # extract p-values
   ps <- ldply(z, function(w) c(lm = w$plm, glm = w$pglm, pk = w$pk))
-  # set p-value form models that did not converge to NA
-  glm_conv <- sapply(z, function(x) x$modglm@details$convergence == 0 &
-                   x$modglm.null@details$convergence == 0) 
-  ps[!glm_conv , 'glm'] <- NA
-  lm_conv <- sapply(z, function(x) x$modlm@details$convergence == 0 &
-                       x$modlm.null@details$convergence == 0) 
-  ps[!lm_conv , 'glm'] <- NA
-  # calculate power
   pow <- apply(ps, 2, function(z) sum(z < 0.05, na.rm = TRUE)) / length(z)
-  
-  out <- c(pow, c_lm = sum(lm_conv), c_glm = sum(glm_conv), c_pk = 100)
-  return(out)
+  return(pow)
 }
 
 # loec
@@ -270,22 +248,13 @@ p_loec <- function(z, type = NULL){
   # extract p-values
   loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw
   ))
-  # set p-value form models that did not converge to NA
-  glm_conv <- sapply(z, function(x) x$modglm@details$convergence == 0 &
-                       x$modglm.null@details$convergence == 0) 
-  loecs[!glm_conv , 'glm'] <- NA
-  lm_conv <- sapply(z, function(x) x$modlm@details$convergence == 0 &
-                      x$modlm.null@details$convergence == 0) 
-  loecs[!lm_conv , 'glm'] <- NA
-  
   if(type == 't1'){
     pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / length(x))
   } 
   if(type == 'power'){
     pow <- apply(loecs, 2, function(x) sum(x == 2, na.rm = TRUE) / length(x))
   }
-  out <- c(pow, c_lm = sum(lm_conv), c_glm = sum(glm_conv), c_pk = 100)
-  return(out)
+  return(pow)
 }
 
 
