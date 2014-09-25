@@ -218,12 +218,12 @@ t1_loec_c$N <- todo2_c$N
 t1_loec_c <- melt(t1_loec_c, id.vars = c('muc', 'N'), value.name = 't1')
 
 plot_t1_loec_c <- ggplot(t1_loec_c) +
+  coord_trans(xtrans = 'log2') +
   geom_line(aes(y = t1, x = muc, group = variable)) +
   geom_point(aes(y = t1, x = muc, fill = variable), 
              pch = 21, color = 'black') +
   geom_segment(aes(x = 2, xend = 1024, y = 0.05, yend = 0.05), 
                linetype = 'dashed') + 
-  coord_trans(xtrans = 'log2') +
   scale_x_continuous(breaks = round(unique(todo2_c$ctrl), 0)) +
   facet_grid(~N) + 
   # axes

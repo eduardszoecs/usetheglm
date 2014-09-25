@@ -68,7 +68,7 @@ resfoo1 <- function(z, verbose = TRUE){
     # ---------------------------------------------------------
     # F test
     plmf <- anova(modlm, modlm.null)[2, 'Pr(>F)']
-    # waldtest(modlm, modlm.null)
+    # = waldtest(modlm, modlm.null)
     # LR test
     plmlr <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
     
