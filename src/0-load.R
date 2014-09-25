@@ -44,7 +44,7 @@ sim2 <- FALSE
 # keep these objects
 keep_obj <- c(ls(), 'keep_obj')
 # seed
-seed <- 1606
+seed <- 1234
 # export plots?
 exp_plot <- TRUE
 # number of simulated datasets
