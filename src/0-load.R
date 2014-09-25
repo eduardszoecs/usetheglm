@@ -5,6 +5,7 @@ rm(list = ls()[!ls() %in% 'prj'])
 # Project Path
 ## You have to change this!
 # prj <- "/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/"
+# prj <- 'C:\\Users\\Edi\\Documents\\usetheglm'
 if(!exists("prj")){
   stop("You need to create a object 'prj' that points to the top folder, 
        e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project'!")
@@ -22,12 +23,11 @@ figdir <- file.path(prj, "report", "fig") # figures for latex
 require(reshape2)
 require(ggplot2)
 require(plyr)
-require(coefplot2)
 require(gridExtra)
 require(bbmle)
 require(lmtest)
 require(MASS)
-require(gridExtra)
+
 
 #####--------------------------------------------------------------------------
 ### Source defined functions
@@ -39,7 +39,7 @@ source(file.path(srcdir, "functions.R"))
 # check if load.R already run
 ld <- TRUE
 # Run simulations? 
-sim1 <- FALSE
+sim1 <- TRUE
 sim2 <- FALSE
 # keep these objects
 keep_obj <- c(ls(), 'keep_obj')
