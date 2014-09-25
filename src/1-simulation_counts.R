@@ -1,5 +1,8 @@
-if(!exists('ld')){
-  source("/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/src/0-load.R")
+if(!exists("prj")){
+  stop("You need to create a object 'prj' that points to the top folder, 
+       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project'!")
+} else {
+  source(file.path(prj, "src", "load.R"))
 }
 
 #####--------------------------------------------------------------------------

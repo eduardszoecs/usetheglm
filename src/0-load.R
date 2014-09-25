@@ -1,16 +1,21 @@
+rm(list = ls()[!ls() %in% 'prj'])
 #####--------------------------------------------------------------------------
 ### Setup project structure
-rm(list =ls()) 
 
 # Project Path
 ## You have to change this!
-prj <- "/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/"
+# prj <- "/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/"
+if(!exists("prj")){
+  stop("You need to create a object 'prj' that points to the top folder, 
+       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project'!")
+}
+
 
 # Subfolder paths
 srcdir <- file.path(prj, "src")     # source code
 datadir <- file.path(prj, "data")   # data
 cachedir <- file.path(prj, "cache")
-figdir <- file.path(prj, "report/fig") # figures for latex
+figdir <- file.path(prj, "report", "fig") # figures for latex
 
 #####--------------------------------------------------------------------------
 ### install missing if needed!
