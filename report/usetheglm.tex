@@ -212,7 +212,7 @@ And second a model assuming a binomial distribution of the response with a logit
   var(y_i) = 10 \times \pi_i \times (1 - \pi_i) \nonumber
 \end{align}
 
-where y is the number of dead animals (out of ten) and $\pi$ the probabilty of counting a dead animal.
+where y is the number of dead animals (out of ten) and $\pi$ the probabilty of encountering a dead animal.
 
 \subsubsection{Comparing methods}
 A global treatment effect was investigated using Likelihood-Ratio-Tests.
@@ -226,7 +226,7 @@ P-values were adjusted for multiple tesing using Holm's procedure.
 
 All simulations have be done in R (Version 3.1.1) on a 64-bit Linux machine with 8 GB and 2.2 GHz.
 Exemplary analysis of real data (Count data \citep{brock_minimum_2014}, survial data \citep{epa_methods_2002}) can be found in the supplement.
-Source code forr this work is available online at \url{https://github.com/EDiLD/usetheglm}. 
+Source code for this work is available online at \url{https://github.com/EDiLD/usetheglm}. 
 
 
 \section{Results}
@@ -238,6 +238,7 @@ Source code forr this work is available online at \url{https://github.com/EDiLD/
   \caption{Simulation results from power (upper) and Type I error simulations (lower) for count data.}
   \label{fig:p_glob_c}
 \end{figure}
+\todo{Check legend -> wilcox is not correct!}
 
 \begin{figure}
   \includegraphics[width=\linewidth]{p_glob_p.pdf}

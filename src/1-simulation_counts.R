@@ -1,5 +1,3 @@
-#### TODO: check convergence of models!
-
 if(!exists('ld')){
   source("/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/src/0-load.R")
 }
@@ -66,7 +64,7 @@ if(sim1){
 #####------------------------------------
 # Results
 # global power
-pow_glob_c <- ldply(res1_c, p_glob)
+pow_glob_c <- ldply(res1_c, p_glob1)
 pow_glob_c$muc <- todo1_c$ctrl
 pow_glob_c$N <- todo1_c$N
 # restructure data
@@ -109,7 +107,7 @@ plot_pow_glob_c
 
 
 ### loec
-pow_loec_c <- ldply(res1_c, p_loec, type = 'power')
+pow_loec_c <- ldply(res1_c, p_loec1, type = 'power')
 pow_loec_c$muc <- todo1_c$ctrl
 pow_loec_c$N <- todo1_c$N
 pow_loec_c  <- reshape(pow_loec_c, direction = 'long', idvar = 7:8,
@@ -196,7 +194,7 @@ if(sim1){
 #####------------------------------------
 # Results
 # Global test (how often wrongly assigned an effect)
-t1_glob_c <- ldply(res2_c, p_glob)
+t1_glob_c <- ldply(res2_c, p_glob1)
 t1_glob_c$muc <- todo2_c$ctrl
 t1_glob_c$N <- todo2_c$N
 # restructure data
@@ -243,7 +241,7 @@ plot_t1_glob_c
 
 
 # LOEC
-t1_loec_c <- ldply(res2_c, p_loec, type = 't1')
+t1_loec_c <- ldply(res2_c, p_loec1, type = 't1')
 t1_loec_c$muc <- todo2_c$ctrl
 t1_loec_c$N <- todo2_c$N
 t1_loec_c <- reshape(t1_loec_c, direction = 'long', idvar = 7:8,
