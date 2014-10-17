@@ -4,6 +4,7 @@ if(!exists("prj")){
 } else {
   source(file.path(prj, "src", "0-load.R"))
 }
+
 #####--------------------------------------------------------------------------
 ### Simulation 2 - Proportions
 ### Power
@@ -79,12 +80,7 @@ plot_pow_glob_p <- ggplot(pow_glob_p) +
         text = element_text(size = 14),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 14, face = "bold")) +
-  theme(legend.position="bottom") +
-  # legend
-  scale_fill_grey(name = 'Method', 
-                  breaks = c('lm', 'glm', 'pk'), 
-                  labels = c('LM + arcsin', 'GLM (bin.)', 'Kruskal'),
-                  start = 0, end = 1) 
+  theme(legend.position="bottom") 
 plot_pow_glob_p
 
 
@@ -110,12 +106,7 @@ plot_pow_loec_p <- ggplot(pow_loec_p) +
         text = element_text(size = 14),
         axis.text=element_text(size = 12),
         axis.title=element_text(size = 14,face = "bold")) +
-  theme(legend.position = 'bottom') + 
-  # legend
-  scale_fill_grey(name = 'Method', 
-                  breaks = c('lm', 'glm', 'pw'), 
-                  labels = c('LM + arcsin', 'GLM (bin.)', 'Wilcox'),
-                  start = 0, end = 1)
+  theme(legend.position = 'bottom') 
 plot_pow_loec_p
 
 # clean up
@@ -182,12 +173,7 @@ plot_t1_glob_p <- ggplot(t1_glob_p) +
         panel.grid.minor = element_blank(), 
         text = element_text(size=14),
         axis.text = element_text(size = 12),
-        axis.title = element_text(size = 14,face="bold")) +
-  # legend
-  scale_fill_grey(name = 'Method', 
-                  breaks = c('lm', 'glm', 'pk'), 
-                  labels = c('LM + arcsin', 'GLM', 'Kruskal'),
-                  start = 0, end = 1)
+        axis.title = element_text(size = 14,face="bold")) 
 plot_t1_glob_p
 
 
@@ -214,12 +200,7 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
         panel.grid.minor = element_blank(), 
         text = element_text(size = 14),
         axis.text=element_text(size = 12),
-        axis.title=element_text(size = 14, face = "bold")) +
-  # legend
-  scale_fill_grey(name = 'Method', 
-                  breaks = c('lm', 'glm', 'pw'), 
-                  labels = c('LM + arcsin', 'GLM', 'Wilcox'),
-                  start = 0, end = 1)
+        axis.title=element_text(size = 14, face = "bold"))
 plot_t1_loec_p
 
 # clean up
