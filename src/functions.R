@@ -39,77 +39,65 @@ resfoo1 <- function(z, verbose = TRUE){
     message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
   }
   ana <- function(y, x){
+    # -------------
+    # Transformations
     # ln(ax + 1) transformation
     A <- 1/min(y[y!=0])         
     yt <- log(A*y + 1)
     df <- data.frame(x, y, yt)
-#     dput(df)
 
-    # ------------------------------
-    # Maximum-Likelihood estimation
-    # Gaussian model
+    # -------------
+    # Models
+    # gaussian
     modlm <- lm(yt ~ x, data = df)
     modlm.null <- lm(yt ~ 1, data = df)
-    
-#     # Negative binomial model
-#     modglm <- mle2(y ~ dnbinom(mu = exp(logmu), size = k),
-#                       parameters = list(logmu ~ x),
-#                       data = df,
-#                       start = list(logmu = log(mean(df$y)), k = 10)
-#                    )
-#     modglm.null <- mle2(y ~ dnbinom(mu = exp(logmu), size = k),
-#                         data = df,
-#                         parameters = list(logmu ~ 1),
-#                         start = list(logmu = log(mean(df$y)), k = 10)
-#                         )
+    # negative binomial 
     modglm <- glm.nb(y ~ x, data = df)
     modglm.null <- glm.nb(y ~ 1, data = df)
+    # quasipoisson
+    modqglm <- glm(y ~ x, data = df, family = 'quasipoisson')
+    modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
         
-    # ---------------------------------------------------------
-    # F test
-    plmf <- anova(modlm, modlm.null)[2, 'Pr(>F)']
-    # = waldtest(modlm, modlm.null)
-    # LR test
-    plmlr <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
+    # ------------- 
+    # Tests
+    # LR Tests
+    lm_lr <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
+    glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
+    # no LR for quasidistribution
     
-    pglmwc <- waldtest(modglm, modglm.null, test = 'Chisq')[2, 'Pr(>Chisq)']
-    pglmwf <- waldtest(modglm, modglm.null, test = 'F')[2, 'Pr(>F)']
-    pglmlr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
+    # F Tests
+    lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
+    qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
+    # no ftest for glm.negbin
     # non-parametric test
     pk <- kruskal.test(y ~ x, data = df)$p.value
     
     
-    # ------------------------------------------------------------
+    # ----------------
     # LOECs
     # multiple comparisons using Dunnett-contrasts
-    # no need for multcomp due to parametrisation
-    # score tests
     pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(>|t|)'], method = 'holm')
     pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(>|z|)'], method = 'holm')
-
+    pmcqglm <-  p.adjust(coef(summary(modqglm))[2:6 , 'Pr(>|t|)'], method = 'holm')
     # pairwise wilcox
     suppressWarnings( # ties
-      pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
-    )
+      pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE))
     
     # extract LOEC (which level? 0 = Control)
     suppressWarnings( # intended warnings about no min -> no LOEC
-      loeclm <- min(which(pmclm < 0.05))
-    )
+      loeclm <- min(which(pmclm < 0.05)))
     suppressWarnings(
-      loecglm <- min(which(pmcglm < 0.05))
-    )
+      loecglm <- min(which(pmcglm < 0.05)))
     suppressWarnings(
-      loecpw <- min(which(pw < 0.05))
-    )
+      loecqglm <- min(which(pmcqglm < 0.05)))
+    suppressWarnings(
+      loecpw <- min(which(pw < 0.05)))
     
-    # --------------------------------------------
+    # ---------
     # return object
-    return(list(
-      plmf = plmf, plmlr = plmlr, 
-      pglmwc = pglmwc, pglmwf = pglmwf, pglmlr = pglmlr, 
+    return(list(lm_lr = lm_lr, glm_lr = glm_lr, lm_f = lm_f, qglm_f = qglm_f,
       pk = pk, 
-      loeclm = loeclm, loecglm = loecglm, loecpw = loecpw
+      loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, loecpw = loecpw
     ))
   }
   # run on simulated data
@@ -119,7 +107,7 @@ resfoo1 <- function(z, verbose = TRUE){
 
 p_glob1 <- function(z){ 
   # extract p-values
-  ps <- ldply(z, function(w) unlist(w)[1:6])
+  ps <- ldply(z, function(w) unlist(w)[1:5])
   # calculate power
   pow <- apply(ps, 2, function(z) sum(z < 0.05, na.rm = TRUE)) / length(z)
   return(pow)
@@ -129,7 +117,7 @@ p_glob1 <- function(z){
 # loec
 p_loec1 <- function(z, type = NULL){
   # extract p-values
-  loecs <- ldply(z, function(w) unlist(w)[7:9]) 
+  loecs <- ldply(z, function(w) unlist(w)[6:9]) 
   if(type == 't1'){
     pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / length(x))
   } 
@@ -138,6 +126,9 @@ p_loec1 <- function(z, type = NULL){
   }
   return(pow)
 }
+
+
+
 
 ### ----------------------------------------------------------------------------
 ##### Simulation 2 -  Proportions
@@ -183,7 +174,8 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
   }
   
   ana <- function(y, x, n_animals, asin){
-    # switch for transformations
+    # -------------
+    # Transformations
     if(asin == 'ecotox'){
       y_asin <- ifelse(y  == 0, asin(sqrt(1 / (4 * n_animals))),
                      ifelse((y / n_animals) == 1, asin(1) - asin(sqrt(1 / (4 * n_animals))),
@@ -192,12 +184,11 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     if(asin == 'asin'){
       y_asin <- asin(sqrt(y / n_animals))
     }
-    # arcsin transformation of proportions
     df <- data.frame(x, y, y_asin)
     
-    # ------------------------------
-    # Maximum-Likelihood estimation
-    # Gaussian model
+    # -------------
+    # Models
+    # Gaussian 
     modlm <- lm(y_asin ~ x, data = df)
     modlm.null <- lm(y_asin ~ 1, data = df)
     # binomial model
@@ -205,45 +196,47 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
                   family = binomial(link = 'logit'))
     modglm.null <- glm(cbind(y, n_animals - y) ~ 1, data = df, 
                        family = binomial(link = 'logit'))
+    # quasibinomial
+    modqglm <- glm(cbind(y, n_animals - y) ~ x, data = df, 
+                  family = quasibinomial(link = 'logit'))
+    modqglm.null <- glm(cbind(y, n_animals - y) ~ 1, data = df, 
+                  family = quasibinomial(link = 'logit'))
 
-    
-    # ---------------------------------------------------------
-    # Global Test
-    # F-test for LM
-    plm <- anova(modlm, modlm.null)[2, 'Pr(>F)']
-    # LRT-test for GLM
-    pglm <- anova(modglm, modglm.null, test = 'Chisq')[2, 'Pr(>Chi)']
+    # ------------- 
+    # Tests
+    # LR Tests
+    lm_lr <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
+    glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
+    # F Tests
+    lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
+    qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
     # non-parametric test
     pk <- kruskal.test(y ~ x, data = df)$p.value
-    
     
     # ------------------------------------------------------------
     # LOECs
     # multiple comparisons using Dunnett-contrasts
     pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(>|t|)'], method = 'holm')
     pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(>|z|)'], method = 'holm')
-    
+    pmcqglm <-  p.adjust(coef(summary(modqglm))[2:6 , 'Pr(>|t|)'], method = 'holm')
     # pairwise wilcox
     suppressWarnings(
-      pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
-    )
-    
+      pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE))
     # extract LOEC (which level? 0 = Control)
     suppressWarnings(
-      loeclm <- min(which(pmclm < 0.05))
-    )
+      loeclm <- min(which(pmclm < 0.05)))
     suppressWarnings(
-      loecglm <- min(which(pmcglm < 0.05))
-    )
+      loecglm <- min(which(pmcglm < 0.05)))
     suppressWarnings(
-      loecpw <- min(which(pw < 0.05))
-    )
+      loecqglm <- min(which(pmcqglm < 0.05)))
+    suppressWarnings(
+      loecpw <- min(which(pw < 0.05)))
     
     # --------------------------------------------
     # return object
-    return(list(
-      plm = plm, pglm = pglm, pk = pk,   
-      loeclm = loeclm, loecglm = loecglm, loecpw = loecpw
+    return(list(lm_lr = lm_lr, glm_lr = glm_lr, lm_f = lm_f, qglm_f = qglm_f,
+      pk = pk, 
+      loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, loecpw = loecpw
     ))
     
   }
@@ -255,10 +248,9 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
 
 #### -----------------------------
 ### Extractor functions
-# global ps
 p_glob <- function(z){ 
   # extract p-values
-  ps <- ldply(z, function(w) c(lm = w$plm, glm = w$pglm, pk = w$pk))
+  ps <- ldply(z, function(w) unlist(w)[1:5])
   pow <- apply(ps, 2, function(z) sum(z < 0.05, na.rm = TRUE)) / length(z)
   return(pow)
 }
@@ -266,8 +258,7 @@ p_glob <- function(z){
 # loec
 p_loec <- function(z, type = NULL){
   # extract p-values
-  loecs <- ldply(z, function(w) c(lm = w$loeclm, glm = w$loecglm, pw = w$loecpw
-  ))
+  loecs <- ldply(z, function(w) unlist(w)[6:9])
   if(type == 't1'){
     pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / length(x))
   } 
@@ -278,10 +269,57 @@ p_loec <- function(z, type = NULL){
 }
 
 
-#### -----------------------------
+### ----------------------------------------------------------------------------
+### Simulation 3 - Shapiro-Wilk Normality Test
+dosim3 <- function(N, mu, nsim = 100){
+  xn <- replicate(nsim, rnorm(N, mu, 1))
+  xnb <- replicate(nsim, rnegbin(N, mu, theta = 3.91))
+  xp <- replicate(nsim, rpois(N, mu))
+  xnb_log <- log10(xnb + 1)
+
+  return(list(xn = xn, xnb = xnb, xp = xp, xnb_log = xnb_log))
+}
+
+
+resfoo3 <- function(z, verbose = TRUE){
+  ana <- function(w){
+    apply(w, 2,  function(x){
+      tryCatch(shapiro.test(x)[['p.value']], error = function(err) NA)
+    })
+  }
+  ps <- ldply(z, ana)
+  out <- rowSums(ps[ , -1] < 0.05, na.rm = TRUE) / ncol(ps)
+  names(out) <- c('xn', 'xnb', 'xp', 'xnb_log')
+  return(out)
+}
+
+
+dosim4 <- function(N, p, nsim = 100, n_animals = 10){
+  xb <- replicate(nsim, rbinom(N, size = n_animals, prop = p)
+  xb_asin <- ifelse(xb  == 0, asin(sqrt(1 / (4 * n_animals))),
+                     ifelse((xb / n_animals) == 1, asin(1) - asin(sqrt(1 / (4 * n_animals))),
+                            asin(sqrt(xb / n_animals))))
+  return(list(xb, xbasin))
+}
+
+
+resfoo4 <- function(z, verbose = TRUE){
+  ana <- function(w){
+    apply(w, 2,  function(x){
+      tryCatch(shapiro.test(x)[['p.value']], error = function(err) NA)
+    })
+  }
+  ps <- ldply(z, ana)
+  out <- rowSums(ps[ , -1] < 0.05, na.rm = TRUE) / ncol(ps)
+  return(out)
+}
+
+
+
+### ----------------------------------------------------------------------------
 ### Misc functions
-#extract legend
-#https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs
+# extract legend from ggplot
+# https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs
 g_legend<-function(a.gplot){
   tmp <- ggplot_gtable(ggplot_build(a.gplot))
   leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
