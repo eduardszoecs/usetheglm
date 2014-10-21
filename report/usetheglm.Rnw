@@ -67,9 +67,7 @@ Recently, \citet{brock_minimum_2014} proposed two methods to decrease the minimu
 
 Ecotoxicologists perform various kinds of experiments yielding to different types of data.
 Examples are: animal counts in mesocosm experiments (positive and discrete data), 
-proportions of surviving animals (bonded between 
-However, there is also a third possibility:
-Using a distribution fitting to the type of data instead of the normal distribution, namely \emph{Generalized Linear Models} (GLM) \citep{nelder_generalized_1972}. 0 and 1) or biomass (positive data).
+proportions of surviving animals (bonded between  0 and 1) or biomass (positive data).
 These types of data are inherently not normally distributed. 
 However, in order to use the more familiar and traditional data analysis methods based on normal distribution, ecotoxicologists try to transform their data to met these assumptions. 
 Survivals with binomial distributed data (x out ouf n) are usually transformed using a arcsin square root transformation \citep{oecd_current_2006,

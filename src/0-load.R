@@ -27,6 +27,8 @@ require(gridExtra)
 require(bbmle)
 require(lmtest)
 require(MASS)
+# require(pbkrtest)
+# require(multcomp)
 
 
 #####--------------------------------------------------------------------------
@@ -40,8 +42,8 @@ source(file.path(srcdir, "functions.R"))
 ld <- TRUE
 # Run simulations? 
 sim1 <- TRUE
-sim2 <- TRUE
-sim3 <- TRUE
+sim2 <- FALSE
+sim3 <- FALSE
 # keep these objects
 keep_obj <- c(ls(), 'keep_obj')
 # seed

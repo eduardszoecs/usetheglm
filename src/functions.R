@@ -65,6 +65,10 @@ resfoo1 <- function(z, verbose = TRUE){
     glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
     # no LR for quasidistribution
     
+#     # LR Tests with Bartlett correction
+#     lm_lrB <- summary(PBmodcomp(modlm, modlm.null, nsim = 100))[['test']][['p.value']][3]
+# #     glm_lrB <- summary(PBmodcomp(modglm, modglm.null, nsim = 100))[['test']][['p.value']][3]
+
     # F Tests
     lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
     qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
@@ -76,6 +80,13 @@ resfoo1 <- function(z, verbose = TRUE){
     # ----------------
     # LOECs
     # multiple comparisons using Dunnett-contrasts
+#     summary(glht(modlm, linfct = mcp(x = 'Dunnett')), test = adjusted('none'))
+#     summary(modlm)
+#     summary(glht(modglm, linfct = mcp(x = 'Dunnett')), test = adjusted('none'))
+#     summary(modglm)
+#     summary(glht(modqglm, linfct = mcp(x = 'Dunnett')), test = adjusted('none'))
+#     summary(modqglm)
+
     pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(>|t|)'], method = 'holm')
     pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(>|z|)'], method = 'holm')
     pmcqglm <-  p.adjust(coef(summary(modqglm))[2:6 , 'Pr(>|t|)'], method = 'holm')
@@ -295,7 +306,7 @@ resfoo3 <- function(z, verbose = TRUE){
 
 
 dosim4 <- function(N, p, nsim = 100, n_animals = 10){
-  xb <- replicate(nsim, rbinom(N, size = n_animals, prop = p)
+  xb <- replicate(nsim, rbinom(N, size = n_animals, prop = p))
   xb_asin <- ifelse(xb  == 0, asin(sqrt(1 / (4 * n_animals))),
                      ifelse((xb / n_animals) == 1, asin(1) - asin(sqrt(1 / (4 * n_animals))),
                             asin(sqrt(xb / n_animals))))
