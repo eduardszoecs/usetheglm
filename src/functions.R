@@ -21,6 +21,46 @@ pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
 
 
 ### ----------------------------------------------------------------------------
+### Parametric bootstrap (PB)
+
+### --------------------
+### PB of LR statistic and bartlett corretion
+myPBmodcomp <- function(m1, m0, data, nsim){
+  # create reference distribution
+  myPBrefdist <- function(m1, m0, data){
+    x <- simulate(m0)
+    newdata <- data
+    newdata[ , as.character(formula(m0)[[2]])] <- x
+    m0r <- update(m0, .~., data = newdata)
+    m1r <-  update(m1, .~., data = newdata)
+    # check convergence
+    if(!is.null(m0r$th.warn) | !is.null(m1r$th.warn))
+      return(NA)
+    return(c(-2 * (logLik(m0r) - logLik(m1r))))
+  }
+  # calculate reference distribution
+  ref <- replicate(1000, myPBrefdist(m1 = m1, m0 = m0, data = data))
+  # original stats
+  DF <- df.residual(m0) - df.residual(m1)
+  LR <- c(-2 * (logLik(m0) - logLik(m1)))
+  p.o <- 1 - pchisq(LR, df = DF)
+  # p from bartlett correction
+  LR.bc <-  LR * DF / mean(ref, na.rm = TRUE)
+  p.bc <- 1 - pchisq(LR.bc, df = DF)
+  # p-value from parametric bootstrap
+  p.pb <- mean(c(ref, LR) >= LR, na.rm = TRUE)
+  return(list(p.bc = p.bc, p.pb = p.pb, p.o = p.o))
+}
+
+### --------------------
+### PB of coefficients
+
+# check http://stats.stackexchange.com/questions/83012/how-to-obtain-p-values-of-coefficients-from-bootstrap-regression
+# how to get pvalues for coefs
+
+
+
+### ----------------------------------------------------------------------------
 ##### Simulation 1 -  Count data
 #' Function to create simulated data
 dosim1 <- function(N, mu, theta, nsims = 100){
@@ -59,34 +99,33 @@ resfoo1 <- function(z, verbose = TRUE){
     modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
         
     # ------------- 
-    # Tests
+    # Test of effects
     # LR Tests
     lm_lr <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
     glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
     # no LR for quasidistribution
     
-#     # LR Tests with Bartlett correction
-#     lm_lrB <- summary(PBmodcomp(modlm, modlm.null, nsim = 100))[['test']][['p.value']][3]
-# #     glm_lrB <- summary(PBmodcomp(modglm, modglm.null, nsim = 100))[['test']][['p.value']][3]
-
+#     # Parametric bootstrap (LR and bartlett correction)
+#     lm_pb <- myPBmodcomp(modlm, modlm.null, data = df, nsim = 100)
+#     lm_lrbc <- lm_pb$p.bc
+#     lm_lrpb <- lm_pb$p.pb
+#     
+#     glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, nsim = 100)
+#     glm_lrbc <- glm_pb$p.bc
+#     glm_lrpb <- glm_pb$p.pb
+#     
     # F Tests
     lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
     qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
     # no ftest for glm.negbin
+    
     # non-parametric test
     pk <- kruskal.test(y ~ x, data = df)$p.value
     
     
     # ----------------
-    # LOECs
+    # Test of parameters LOECs
     # multiple comparisons using Dunnett-contrasts
-#     summary(glht(modlm, linfct = mcp(x = 'Dunnett')), test = adjusted('none'))
-#     summary(modlm)
-#     summary(glht(modglm, linfct = mcp(x = 'Dunnett')), test = adjusted('none'))
-#     summary(modglm)
-#     summary(glht(modqglm, linfct = mcp(x = 'Dunnett')), test = adjusted('none'))
-#     summary(modqglm)
-
     pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(>|t|)'], method = 'holm')
     pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(>|z|)'], method = 'holm')
     pmcqglm <-  p.adjust(coef(summary(modqglm))[2:6 , 'Pr(>|t|)'], method = 'holm')
@@ -107,6 +146,8 @@ resfoo1 <- function(z, verbose = TRUE){
     # ---------
     # return object
     return(list(lm_lr = lm_lr, glm_lr = glm_lr, lm_f = lm_f, qglm_f = qglm_f,
+#                 # PB
+#                 lm_lrbc = lm_lrbc, lm_lrpb = lm_lrpb, glm_lrbc = glm_lrbc, glm_lrpb = glm_lrpb,
       pk = pk, 
       loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, loecpw = loecpw
     ))
