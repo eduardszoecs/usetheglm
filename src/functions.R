@@ -74,6 +74,7 @@ dosim1 <- function(N, mu, theta, nsims = 100){
 
 
 #' Function to analyse simulated datasets
+#! TODO: Check convergence (th.warn.)
 resfoo1 <- function(z, verbose = TRUE){
   if(verbose){
     message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
@@ -106,13 +107,12 @@ resfoo1 <- function(z, verbose = TRUE){
     # no LR for quasidistribution
     
 #     # Parametric bootstrap (LR and bartlett correction)
-#     lm_pb <- myPBmodcomp(modlm, modlm.null, data = df, nsim = 100)
-#     lm_lrbc <- lm_pb$p.bc
-#     lm_lrpb <- lm_pb$p.pb
-#     
-#     glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, nsim = 100)
-#     glm_lrbc <- glm_pb$p.bc
-#     glm_lrpb <- glm_pb$p.pb
+    lm_pb <- myPBmodcomp(modlm, modlm.null, data = df, nsim = 250)
+    lm_lrbc <- lm_pb$p.bc
+    lm_lrpb <- lm_pb$p.pb
+    glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, nsim = 250)
+    glm_lrbc <- glm_pb$p.bc
+    glm_lrpb <- glm_pb$p.pb
 #     
     # F Tests
     lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
@@ -147,7 +147,7 @@ resfoo1 <- function(z, verbose = TRUE){
     # return object
     return(list(lm_lr = lm_lr, glm_lr = glm_lr, lm_f = lm_f, qglm_f = qglm_f,
 #                 # PB
-#                 lm_lrbc = lm_lrbc, lm_lrpb = lm_lrpb, glm_lrbc = glm_lrbc, glm_lrpb = glm_lrpb,
+                lm_lrbc = lm_lrbc, lm_lrpb = lm_lrpb, glm_lrbc = glm_lrbc, glm_lrpb = glm_lrpb,
       pk = pk, 
       loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, loecpw = loecpw
     ))
