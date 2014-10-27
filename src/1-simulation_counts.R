@@ -13,8 +13,8 @@ if(!exists("prj")){
 # no of simulated datasets
 nsims <- 100
 # sample sizes
-N <- c(3, 6 ,9 ,12)
-ctrl <- 2^(c(1:5, 7, 9))
+N <- c(3, 6 ,9)
+ctrl <- 2^(c(1:5))
 # N <- 3
 # ctrl <- 2^(c(1, 3))
 
@@ -75,7 +75,7 @@ pow_glob_c$muc <- todo1_c$ctrl
 pow_glob_c$N <- todo1_c$N
 # restructure data
 pow_glob_c <- melt(pow_glob_c, id.vars = c('muc', 'N'), value.name = 'power')
-pow_glob_c <- pow_glob_c[!pow_glob_c$variable %in% c('lm_lr', 'lm_lrbc', 'lm_lrpb'), ]
+pow_glob_c <- pow_glob_c[!pow_glob_c$variable %in% c('lm_lr', 'lm_lrbc', 'lm_lrpb', 'glm_lrbc'), ]
 
 plot_pow_glob_c <- ggplot(pow_glob_c) +
   geom_line(aes(y = power, x = muc, group = variable, col = variable)) +
@@ -134,8 +134,8 @@ plot_pow_loec_c
 # settings
 nsims <- 100
 # sample sizes
-N <- c(3, 6, 9, 12)
-ctrl <- 2^(c(1:5, 7, 9))
+N <- c(3, 6, 9)
+ctrl <- 2^(c(1:5))
 # N <- 3
 # ctrl <- 2^(c(1, 3, 5, 7, 9))
 # both as grid
@@ -175,7 +175,7 @@ t1_glob_c$muc <- todo2_c$ctrl
 t1_glob_c$N <- todo2_c$N
 # restructure data
 t1_glob_c <- melt(t1_glob_c, id.vars = c('muc', 'N'), value.name = 't1')
-t1_glob_c <- t1_glob_c[!t1_glob_c$variable %in% c('lm_lr', 'lm_lrbc', 'lm_lrpb'), ]
+t1_glob_c <- t1_glob_c[!t1_glob_c$variable %in% c('lm_lr', 'lm_lrbc', 'lm_lrpb', 'glm_lrbc'), ]
 
 plot_t1_glob_c <- ggplot(t1_glob_c) +
   geom_line(aes(y = t1, x = muc, group = variable, col = variable)) +
