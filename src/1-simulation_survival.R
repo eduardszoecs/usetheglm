@@ -32,7 +32,7 @@ for(i in seq_len(nrow(todo1_p))){
 }
 
 # plot one realisation of simulated data
-df <- data.frame(x = sims1_p[[3]]$x, y = sims1_p[[3]]$y[ , 2] / 10)
+df <- data.frame(x = sims1_p[[22]]$x, y = sims1_p[[22]]$y[ , 7] / 10)
 ggplot(df, aes(x = x, y = y)) +
   geom_boxplot(fill = 'grey80') +
   scale_x_discrete(labels = c('C', 'T1', 'T2', 'T3', 'T4', 'T5')) +

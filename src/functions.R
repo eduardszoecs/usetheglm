@@ -109,7 +109,7 @@ resfoo1 <- function(z, verbose = TRUE){
     glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
     # no LR for quasidistribution
     
-    # Parametric bootstrap (LR and bartlett correction)
+    # Parametric bootstrap for GLM LR
     glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, nsim = 250)
     glm_lrpb <- glm_pb$p.pb
     
