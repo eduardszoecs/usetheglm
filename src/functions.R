@@ -107,10 +107,10 @@ resfoo1 <- function(z, verbose = TRUE){
     # no LR for quasidistribution
     
 #     # Parametric bootstrap (LR and bartlett correction)
-    lm_pb <- myPBmodcomp(modlm, modlm.null, data = df, nsim = 250)
+    lm_pb <- myPBmodcomp(modlm, modlm.null, data = df, nsim = 500)
     lm_lrbc <- lm_pb$p.bc
     lm_lrpb <- lm_pb$p.pb
-    glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, nsim = 250)
+    glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, nsim = 500)
     glm_lrbc <- glm_pb$p.bc
     glm_lrpb <- glm_pb$p.pb
 #     
@@ -159,7 +159,7 @@ resfoo1 <- function(z, verbose = TRUE){
 
 p_glob1 <- function(z){ 
   # extract p-values
-  ps <- ldply(z, function(w) unlist(w)[1:5])
+  ps <- ldply(z, function(w) unlist(w)[1:9])
   # calculate power
   pow <- apply(ps, 2, function(z) sum(z < 0.05, na.rm = TRUE)) / length(z)
   return(pow)
@@ -169,7 +169,7 @@ p_glob1 <- function(z){
 # loec
 p_loec1 <- function(z, type = NULL){
   # extract p-values
-  loecs <- ldply(z, function(w) unlist(w)[6:9]) 
+  loecs <- ldply(z, function(w) unlist(w)[10:13]) 
   if(type == 't1'){
     pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / length(x))
   } 
