@@ -31,28 +31,46 @@ myPBmodcomp <- function(m1, m0, data, nsim){
     x <- simulate(m0)
     newdata <- data
     newdata[ , as.character(formula(m0)[[2]])] <- x
-    m0r <- update(m0, .~., data = newdata)
     m1r <-  update(m1, .~., data = newdata)
+    m0r <- update(m0, .~., data = newdata)
     # check convergence
-    if(!is.null(m0r$th.warn) | !is.null(m1r$th.warn))
-      return(NA)
-    return(c(-2 * (logLik(m0r) - logLik(m1r))))
+    if(!is.null(m0r$th.warn) | !is.null(m1r$th.warn)){
+      out <- 'convergence error'
+    } else {
+      out <- c(LR = -2 * (logLik(m0r) - logLik(m1r)), coef(m1r))
+    } 
+    return(out)
   }
+  
   # calculate reference distribution
   ref <- replicate(nsim, myPBrefdist(m1 = m1, m0 = m0, data = data))
   # original stats
   LR <- c(-2 * (logLik(m0) - logLik(m1)))
+  COEF <- coef(m1)
+  # check convergence
+  nconv <-  sapply(ref, function(x) any(x == 'convergence error'))
+  # rm those
+  ref[nconv] <- NULL
+  nconv <- sum(!nconv)
+  ref <- do.call(rbind, ref)
 #   DF <- df.residual(m0) - df.residual(m1)
 #   p.o <- 1 - pchisq(LR, df = DF)
 #   # p from bartlett correction
 #   LR.bc <-  LR * DF / mean(ref, na.rm = TRUE)
 #   p.bc <- 1 - pchisq(LR.bc, df = DF)
   # p-value from parametric bootstrap
-  p.pb <- mean(c(ref, LR) >= LR, na.rm = TRUE)
-  return(list(
+  p.pb <- mean(c(ref[ , 'LR'], LR) >= LR, na.rm = TRUE)
+
+  # p-value for coef
+  ref_c <- ref[ , 2:7]
+  # substract col-means
+  md <- abs(sweep(ref_c, 2, colMeans(ref_c)))
+  p.coef <- rowMeans(apply(md, 1, function(x) x > abs(COEF)))
+
+  return(list( nconv = nconv,
 #     p.bc = p.bc, 
 #               p.o = p.o, 
-              p.pb = p.pb))
+              p.pb = p.pb, p.coef = p.coef))
 }
 
 ### --------------------
@@ -78,7 +96,7 @@ dosim1 <- function(N, mu, theta, nsims = 100){
 
 #' Function to analyse simulated datasets
 #! TODO: Check convergence (th.warn.)
-resfoo1 <- function(z, verbose = TRUE){
+resfoo1 <- function(z, verbose = TRUE, n_pb = 400){
   if(verbose){
     message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
   }
@@ -106,49 +124,54 @@ resfoo1 <- function(z, verbose = TRUE){
     # Test of effects
     # LR Tests
     lm_lr <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
-    glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
-    # no LR for quasidistribution
-    
-    # Parametric bootstrap for GLM LR
-    glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, nsim = 250)
-    glm_lrpb <- glm_pb$p.pb
-    
+    # check convergence
+    if(!is.null(modglm$th.warn) | !is.null(modglm.null$th.warn)){
+      glm_lr <- 'convergence error'
+      glm_lrpb <- 'convergence error'
+    } else {
+      glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
+      # Parametric bootstrap for GLM LR
+      glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, nsim = n_pb)
+      glm_lrpb <- glm_pb$p.pb
+    }
     # F Tests
     lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
     qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
-    # no ftest for glm.negbin
-    
     # non-parametric test
     pk <- kruskal.test(y ~ x, data = df)$p.value
-    
     
     # ----------------
     # Test of parameters LOECs
     # multiple comparisons using Dunnett-contrasts
     pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(>|t|)'], method = 'holm')
-    pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(>|z|)'], method = 'holm')
+    suppressWarnings( # intended warnings about no min -> no LOEC
+      loeclm <- min(which(pmclm < 0.05)))
     pmcqglm <-  p.adjust(coef(summary(modqglm))[2:6 , 'Pr(>|t|)'], method = 'holm')
+    suppressWarnings(
+      loecqglm <- min(which(pmcqglm < 0.05)))
     # pairwise wilcox
     suppressWarnings( # ties
       pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE))
-    
-    # extract LOEC (which level? 0 = Control)
-    suppressWarnings( # intended warnings about no min -> no LOEC
-      loeclm <- min(which(pmclm < 0.05)))
-    suppressWarnings(
-      loecglm <- min(which(pmcglm < 0.05)))
-    suppressWarnings(
-      loecqglm <- min(which(pmcqglm < 0.05)))
     suppressWarnings(
       loecpw <- min(which(pw < 0.05)))
+    
+    if(!is.null(modglm$th.warn)){
+      loecglm <- 'convergence error'
+      loecglm_pb <- 'convergence error'
+    } else {
+      pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(>|z|)'], method = 'holm')
+      suppressWarnings(loecglm <- min(which(pmcglm < 0.05)))
+      pmcglm_pb <- p.adjust(glm_pb$p.coef, method = 'holm')
+      suppressWarnings(loecglm_pb <- min(which(pmcglm_pb < 0.05)))
+    }
     
     # ---------
     # return object
     return(list(lm_lr = lm_lr, glm_lr = glm_lr, lm_f = lm_f, qglm_f = qglm_f,
-#                 # PB
-                glm_lrpb = glm_lrpb,
-      pk = pk, 
-      loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, loecpw = loecpw
+                glm_lrpb = glm_lrpb, 
+                pk = pk, 
+                loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, 
+                loecpw = loecpw, loecglm_pb = loecglm_pb
     ))
   }
   # run on simulated data
@@ -156,11 +179,12 @@ resfoo1 <- function(z, verbose = TRUE){
   res
 }
 
+# Power
 p_glob1 <- function(z){ 
   # extract p-values
-  ps <- ldply(z, function(w) unlist(w)[1:9])
+  ps <- ldply(z, function(w) as.numeric(unlist(w)[1:6]))
   # calculate power
-  pow <- apply(ps, 2, function(z) sum(z < 0.05, na.rm = TRUE)) / length(z)
+  pow <- apply(ps, 2, function(y) sum(y < 0.05, na.rm = TRUE) / sum(!is.na(y)))
   return(pow)
 }
 
@@ -168,12 +192,12 @@ p_glob1 <- function(z){
 # loec
 p_loec1 <- function(z, type = NULL){
   # extract p-values
-  loecs <- ldply(z, function(w) unlist(w)[10:13]) 
+  loecs <- ldply(z, function(w) as.numeric(unlist(w)[7:11]))
   if(type == 't1'){
-    pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / length(x))
+    pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / sum(!is.na(x)))
   } 
   if(type == 'power'){
-    pow <- apply(loecs, 2, function(x) sum(x == 2, na.rm = TRUE) / length(x))
+    pow <- apply(loecs, 2, function(x) sum(x == 2, na.rm = TRUE) / sum(!is.na(x)))
   }
   return(pow)
 }

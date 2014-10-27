@@ -75,7 +75,7 @@ pow_glob_c$muc <- todo1_c$ctrl
 pow_glob_c$N <- todo1_c$N
 # restructure data
 pow_glob_c <- melt(pow_glob_c, id.vars = c('muc', 'N'), value.name = 'power')
-pow_glob_c <- pow_glob_c[!pow_glob_c$variable %in% c('lm_lr', 'lm_lrbc', 'lm_lrpb', 'glm_lrbc'), ]
+# pow_glob_c <- pow_glob_c[!pow_glob_c$variable %in% c('lm_lr', 'lm_lrbc', 'lm_lrpb', 'glm_lrbc'), ]
 
 plot_pow_glob_c <- ggplot(pow_glob_c) +
   geom_line(aes(y = power, x = muc, group = variable, col = variable)) +
@@ -175,7 +175,7 @@ t1_glob_c$muc <- todo2_c$ctrl
 t1_glob_c$N <- todo2_c$N
 # restructure data
 t1_glob_c <- melt(t1_glob_c, id.vars = c('muc', 'N'), value.name = 't1')
-t1_glob_c <- t1_glob_c[!t1_glob_c$variable %in% c('lm_lr', 'lm_lrbc', 'lm_lrpb', 'glm_lrbc'), ]
+# t1_glob_c <- t1_glob_c[!t1_glob_c$variable %in% c('lm_lr', 'lm_lrbc', 'lm_lrpb', 'glm_lrbc'), ]
 
 plot_t1_glob_c <- ggplot(t1_glob_c) +
   geom_line(aes(y = t1, x = muc, group = variable, col = variable)) +
