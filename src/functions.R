@@ -39,17 +39,20 @@ myPBmodcomp <- function(m1, m0, data, nsim){
     return(c(-2 * (logLik(m0r) - logLik(m1r))))
   }
   # calculate reference distribution
-  ref <- replicate(1000, myPBrefdist(m1 = m1, m0 = m0, data = data))
+  ref <- replicate(nsim, myPBrefdist(m1 = m1, m0 = m0, data = data))
   # original stats
-  DF <- df.residual(m0) - df.residual(m1)
   LR <- c(-2 * (logLik(m0) - logLik(m1)))
-  p.o <- 1 - pchisq(LR, df = DF)
-  # p from bartlett correction
-  LR.bc <-  LR * DF / mean(ref, na.rm = TRUE)
-  p.bc <- 1 - pchisq(LR.bc, df = DF)
+#   DF <- df.residual(m0) - df.residual(m1)
+#   p.o <- 1 - pchisq(LR, df = DF)
+#   # p from bartlett correction
+#   LR.bc <-  LR * DF / mean(ref, na.rm = TRUE)
+#   p.bc <- 1 - pchisq(LR.bc, df = DF)
   # p-value from parametric bootstrap
   p.pb <- mean(c(ref, LR) >= LR, na.rm = TRUE)
-  return(list(p.bc = p.bc, p.pb = p.pb, p.o = p.o))
+  return(list(
+#     p.bc = p.bc, 
+#               p.o = p.o, 
+              p.pb = p.pb))
 }
 
 ### --------------------
@@ -106,14 +109,10 @@ resfoo1 <- function(z, verbose = TRUE){
     glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
     # no LR for quasidistribution
     
-#     # Parametric bootstrap (LR and bartlett correction)
-    lm_pb <- myPBmodcomp(modlm, modlm.null, data = df, nsim = 250)
-    lm_lrbc <- lm_pb$p.bc
-    lm_lrpb <- lm_pb$p.pb
+    # Parametric bootstrap (LR and bartlett correction)
     glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, nsim = 250)
-    glm_lrbc <- glm_pb$p.bc
     glm_lrpb <- glm_pb$p.pb
-#     
+    
     # F Tests
     lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
     qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
@@ -147,7 +146,7 @@ resfoo1 <- function(z, verbose = TRUE){
     # return object
     return(list(lm_lr = lm_lr, glm_lr = glm_lr, lm_f = lm_f, qglm_f = qglm_f,
 #                 # PB
-                lm_lrbc = lm_lrbc, lm_lrpb = lm_lrpb, glm_lrbc = glm_lrbc, glm_lrpb = glm_lrpb,
+                glm_lrpb = glm_lrpb,
       pk = pk, 
       loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, loecpw = loecpw
     ))
