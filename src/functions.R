@@ -26,7 +26,7 @@ pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
 ### --------------------
 ### PB of LR statistic and bartlett corretion
 myPBmodcomp <- function(m1, m0, data, nsim){
-  # create reference distribution
+  ## create reference distribution of LR and coefs
   myPBrefdist <- function(m1, m0, data){
     x <- simulate(m0)
     newdata <- data
@@ -42,26 +42,28 @@ myPBmodcomp <- function(m1, m0, data, nsim){
     return(out)
   }
   
-  # calculate reference distribution
-  ref <- replicate(nsim, myPBrefdist(m1 = m1, m0 = m0, data = data))
-  # original stats
-  LR <- c(-2 * (logLik(m0) - logLik(m1)))
-  COEF <- coef(m1)
+  ## calculate reference distribution
+  ref <- replicate(nsim, myPBrefdist(m1 = m1, m0 = m0, data = data), simplify = FALSE)
   # check convergence
   nconv <-  sapply(ref, function(x) any(x == 'convergence error'))
   # rm those
   ref[nconv] <- NULL
   nconv <- sum(!nconv)
   ref <- do.call(rbind, ref)
+  ## original stats
+  LR <- c(-2 * (logLik(m0) - logLik(m1)))
+  COEF <- coef(m1)
+  
 #   DF <- df.residual(m0) - df.residual(m1)
 #   p.o <- 1 - pchisq(LR, df = DF)
 #   # p from bartlett correction
 #   LR.bc <-  LR * DF / mean(ref, na.rm = TRUE)
 #   p.bc <- 1 - pchisq(LR.bc, df = DF)
-  # p-value from parametric bootstrap
+
+  ## p-value from parametric bootstrap
   p.pb <- mean(c(ref[ , 'LR'], LR) >= LR, na.rm = TRUE)
 
-  # p-value for coef
+  ## p-value for coef
   ref_c <- ref[ , 2:7]
   # substract col-means
   md <- abs(sweep(ref_c, 2, colMeans(ref_c)))
@@ -100,7 +102,7 @@ resfoo1 <- function(z, verbose = TRUE, n_pb = 400){
   if(verbose){
     message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
   }
-  ana <- function(y, x){
+  ana <- function(y, x, n_pb){
     # -------------
     # Transformations
     # ln(ax + 1) transformation
@@ -175,7 +177,7 @@ resfoo1 <- function(z, verbose = TRUE, n_pb = 400){
     ))
   }
   # run on simulated data
-  res <- apply(z$y, 2, ana, x = z$x)
+  res <- apply(z$y, 2, ana, x = z$x, n_pb = n_pb)
   res
 }
 
