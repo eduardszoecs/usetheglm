@@ -27,7 +27,7 @@ theta  <- rep(3.91, 6)
 #####------------------------------------
 # simulate data
 sims1_c <- NULL
-set.seed(seed)
+# set.seed(seed)
 for(i in seq_len(nrow(todo1_c))){
   N <- todo1_c[i, 'N']
   takectrl <- todo1_c[i, 'ctrl']
@@ -146,7 +146,7 @@ theta  <- rep(3.91, 6)
 #####------------------------------------
 # simulate data
 sims2_c <- NULL
-set.seed(seed)
+# set.seed(seed)
 for(i in seq_len(nrow(todo2_c))){
   N <- todo2_c[i, 'N']
   takectrl <- todo2_c[i, 'ctrl']
