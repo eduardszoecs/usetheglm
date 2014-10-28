@@ -14,9 +14,11 @@ if(!exists("prj")){
 nsims <- 100
 # sample sizes
 N <- c(3, 6 ,9)
-ctrl <- 2^(c(1:5))
+ctrl <- 2^(c(1:7))
+# for testing
+# nsims <- 20
 # N <- 3
-# ctrl <- 2^(c(1, 3))
+# ctrl <- 2^(c(1:3))
 
 # both as grid
 todo1_c <- expand.grid(N = N, ctrl = ctrl)
@@ -60,7 +62,7 @@ for(i in seq_len(nrow(todo1_c))){
 #####------------------------------------
 # analyse simulations
 if(sim1){
-  res1_c <- llply(sims1_c, resfoo1, .progress = 'text')
+  res1_c <- llply(sims1_c, resfoo1, .progress = 'text', npb = 400)
   saveRDS(res1_c, file.path(cachedir, 'res1_c.rds'))
 } else {
   res1_c <- readRDS(file.path(cachedir, 'res1_c.rds'))
@@ -135,7 +137,8 @@ plot_pow_loec_c
 nsims <- 100
 # sample sizes
 N <- c(3, 6, 9)
-ctrl <- 2^(c(1:5))
+ctrl <- 2^(c(1:7))
+# nsims <- 20
 # N <- 3
 # ctrl <- 2^(c(1, 3, 5, 7, 9))
 # both as grid
@@ -160,7 +163,7 @@ for(i in seq_len(nrow(todo2_c))){
 #####------------------------------------
 # analyse data
 if(sim1){
-  res2_c <- llply(sims2_c, resfoo1, .progress = 'text')
+  res2_c <- llply(sims2_c, resfoo1, .progress = 'text', npb = 400)
   saveRDS(res2_c, file.path(cachedir, 'res2_c.rds'))
 } else {
   res2_c <- readRDS(file.path(cachedir, 'res2_c.rds'))

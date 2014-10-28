@@ -25,7 +25,7 @@ pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
 
 ### --------------------
 ### PB of LR statistic and bartlett corretion
-myPBmodcomp <- function(m1, m0, data, nsim){
+myPBmodcomp <- function(m1, m0, data, npb){
   ## create reference distribution of LR and coefs
   myPBrefdist <- function(m1, m0, data){
     x <- simulate(m0)
@@ -43,7 +43,7 @@ myPBmodcomp <- function(m1, m0, data, nsim){
   }
   
   ## calculate reference distribution
-  ref <- replicate(nsim, myPBrefdist(m1 = m1, m0 = m0, data = data), simplify = FALSE)
+  ref <- replicate(npb, myPBrefdist(m1 = m1, m0 = m0, data = data), simplify = FALSE)
   # check convergence
   nconv <-  sapply(ref, function(x) any(x == 'convergence error'))
   # rm those
@@ -98,7 +98,7 @@ dosim1 <- function(N, mu, theta, nsims = 100){
 
 #' Function to analyse simulated datasets
 #! TODO: Check convergence (th.warn.)
-resfoo1 <- function(z, verbose = TRUE, n_pb = 400){
+resfoo1 <- function(z, verbose = TRUE, npb = 400){
   if(verbose){
     message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
   }
@@ -133,7 +133,7 @@ resfoo1 <- function(z, verbose = TRUE, n_pb = 400){
     } else {
       glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
       # Parametric bootstrap for GLM LR
-      glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, nsim = n_pb)
+      glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, npb = npb)
       glm_lrpb <- glm_pb$p.pb
     }
     # F Tests
@@ -188,6 +188,7 @@ p_glob1 <- function(z){
   ps <- ldply(z, function(w) as.numeric(unlist(w)[1:6]))
   # calculate power
   pow <- apply(ps, 2, function(y) sum(y < 0.05, na.rm = TRUE) / sum(!is.na(y)))
+  names(pow) <-   names(pow) <- c("lm_lr", "glm_lr", "lm_f", "qglm_f", "glm_lrpb", "pk")
   return(pow)
 }
 
@@ -202,6 +203,7 @@ p_loec1 <- function(z, type = NULL){
   if(type == 'power'){
     pow <- apply(loecs, 2, function(x) sum(x == 2, na.rm = TRUE) / sum(!is.na(x)))
   }
+  names(pow) <- c("loeclm", "loecglm", "loecqglm", "loecpw", "loecglm_pb")
   return(pow)
 }
 
