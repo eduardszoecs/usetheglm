@@ -182,6 +182,7 @@ resfoo1 <- function(z, verbose = TRUE, n_pb = 400){
 # Power
 p_glob1 <- function(z){ 
   # extract p-values
+  # as.numeric -> 'convergence error' -> NA
   ps <- ldply(z, function(w) as.numeric(unlist(w)[1:6]))
   # calculate power
   pow <- apply(ps, 2, function(y) sum(y < 0.05, na.rm = TRUE) / sum(!is.na(y)))
