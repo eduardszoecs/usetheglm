@@ -31,10 +31,11 @@ myPBmodcomp <- function(m1, m0, data, npb){
     x <- simulate(m0)
     newdata <- data
     newdata[ , as.character(formula(m0)[[2]])] <- x
-    m1r <-  update(m1, .~., data = newdata)
-    m0r <- update(m0, .~., data = newdata)
+    m1r <-  try(update(m1, .~., data = newdata))
+    m0r <- try(update(m0, .~., data = newdata))
     # check convergence
-    if(!is.null(m0r$th.warn) | !is.null(m1r$th.warn)){
+    if(!is.null(m0r$th.warn) | !is.null(m1r$th.warn) | 
+         inherits(m0r, "try-error") | inherits(m1r, "try-error")){
       out <- 'convergence error'
     } else {
       out <- c(LR = -2 * (logLik(m0r) - logLik(m1r)), coef(m1r))
@@ -50,6 +51,7 @@ myPBmodcomp <- function(m1, m0, data, npb){
   ref[nconv] <- NULL
   nconv <- sum(!nconv)
   ref <- do.call(rbind, ref)
+  
   ## original stats
   LR <- c(-2 * (logLik(m0) - logLik(m1)))
   COEF <- coef(m1)
@@ -69,7 +71,7 @@ myPBmodcomp <- function(m1, m0, data, npb){
   md <- abs(sweep(ref_c, 2, colMeans(ref_c)))
   p.coef <- rowMeans(apply(md, 1, function(x) x > abs(COEF)))
 
-  return(list( nconv = nconv,
+  return(list(nconv = nconv,
 #     p.bc = p.bc, 
 #               p.o = p.o, 
               p.pb = p.pb, p.coef = p.coef))
@@ -102,7 +104,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
   if(verbose){
     message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
   }
-  ana <- function(y, x, n_pb){
+  ana <- function(y, x, npb){
     # -------------
     # Transformations
     # ln(ax + 1) transformation
@@ -117,7 +119,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     modlm.null <- lm(yt ~ 1, data = df)
     # negative binomial 
     modglm <- glm.nb(y ~ x, data = df)
-    modglm.null <- glm.nb(y ~ 1, data = df)
+    modglm.null <- glm.nb(y ~ 1, data = df, init.theta = 3.91)
     # quasipoisson
     modqglm <- glm(y ~ x, data = df, family = 'quasipoisson')
     modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
@@ -163,7 +165,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     } else {
       pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(>|z|)'], method = 'holm')
       suppressWarnings(loecglm <- min(which(pmcglm < 0.05)))
-      pmcglm_pb <- p.adjust(glm_pb$p.coef, method = 'holm')
+      pmcglm_pb <- p.adjust(glm_pb$p.coef[2:6], method = 'holm')
       suppressWarnings(loecglm_pb <- min(which(pmcglm_pb < 0.05)))
     }
     
@@ -177,7 +179,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     ))
   }
   # run on simulated data
-  res <- apply(z$y, 2, ana, x = z$x, n_pb = n_pb)
+  res <- apply(z$y, 2, ana, x = z$x, npb = npb)
   res
 }
 
