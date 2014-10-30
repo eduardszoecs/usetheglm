@@ -41,7 +41,7 @@ source(file.path(srcdir, "functions.R"))
 # check if load.R already run
 ld <- TRUE
 # Run simulations? 
-sim1 <- TRUE
+sim1 <- FALSE
 sim2 <- FALSE
 sim3 <- FALSE
 # keep these objects

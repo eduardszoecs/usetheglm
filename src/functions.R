@@ -119,7 +119,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     modlm.null <- lm(yt ~ 1, data = df)
     # negative binomial 
     modglm <- glm.nb(y ~ x, data = df)
-    modglm.null <- glm.nb(y ~ 1, data = df, init.theta = 3.91)
+    modglm.null <- glm.nb(y ~ 1, data = df)
     # quasipoisson
     modqglm <- glm(y ~ x, data = df, family = 'quasipoisson')
     modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
