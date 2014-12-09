@@ -184,10 +184,6 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
       pmcglm_pb <- p.adjust(glm_pb$p.coef[2:6], method = 'holm')
       suppressWarnings(loecglm_pb <- min(which(pmcglm_pb < 0.05)))
     }
-    
-    ### fitted values
-    fitlm <- fitted(modlm)
-    fitglm <- fitted(modglm)
 
     # ---------
     # return object
@@ -197,19 +193,20 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
                 pk = pk, 
                 loeclm = loeclm, loecglm = loecglm, 
 # loecqglm = loecqglm, 
-                loecpw = loecpw, loecglm_pb = loecglm_pb,
-  fitlm = fitlm, fitglm = fitglm
+                loecpw = loecpw, loecglm_pb = loecglm_pb
     ))
   }
   # run on simulated data
   res <- apply(z$y, 2, ana, x = z$x, npb = npb)
-  res
+  return(res)
 }
 
 # Power
 p_glob1 <- function(z){ 
   # extract p-values
-  ps <- ldply(z, function(w) unlist(w[c('lm_lr', 'glm_lr', 'lm_f', 'glm_lrpb', 'pk')]))
+  take <- c('lm_lr', 'glm_lr', 'lm_f', 'glm_lrpb', 'pk')
+  ps <- ldply(z, function(w) unlist(as.numeric(w[take])))
+  names(ps) <- take
   # calculate power
   pow <- apply(ps, 2, function(y) sum(y < 0.05, na.rm = TRUE) / sum(!is.na(y)))
   return(pow)
@@ -219,16 +216,18 @@ p_glob1 <- function(z){
 # loec
 p_loec1 <- function(z, type = NULL){
   # extract p-values
-  loecs <- ldply(z, function(w) as.numeric(unlist(w)[7:11]))
+  take <- c("loeclm", "loecglm", "loecpw", "loecglm_pb")
+  loecs <- ldply(z, function(w) as.numeric(unlist(w[take])))
   if(type == 't1'){
     pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / sum(!is.na(x)))
   } 
   if(type == 'power'){
     pow <- apply(loecs, 2, function(x) sum(x == 2, na.rm = TRUE) / sum(!is.na(x)))
   }
-  names(pow) <- c("loeclm", "loecglm", "loecqglm", "loecpw", "loecglm_pb")
+  names(pow) <- c("loeclm", "loecglm", "loecpw", "loecglm_pb")
   return(pow)
 }
+
 
 
 
