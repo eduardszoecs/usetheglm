@@ -43,14 +43,14 @@ myPBmodcomp <- function(m1, m0, data, npb){
     m1r1 <-  try(update(m1, .~., data = newdata1))
     
     # check convergence (otherwise return NA for LR)
-    if(!is.null(m0r$th.warn) | !is.null(m1r$th.warn) | 
+    if(!is.null(m0r[['th.warn']]) | !is.null(m1r[['th.warn']]) | 
          inherits(m0r, "try-error") | inherits(m1r, "try-error")){
       LR <- 'convergence error'
     } else {
       LR <- -2 * (logLik(m0r) - logLik(m1r))
     }
     # convergence for coefs
-    if(!is.null(m1r1$th.warn) | inherits(m1r1, "try-error")){
+    if(!is.null(m1r1[['th.warn']]) | inherits(m1r1, "try-error")){
       coefs <- 'convergence error'
     } else {
       coefs <- coef(m1r1)
@@ -136,9 +136,9 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     # gaussian
     modlm <- lm(yt ~ x, data = df)
     modlm.null <- lm(yt ~ 1, data = df)
-    # negative binomial (increase maxit for convergence, but maybe to little data )
-    modglm <- glm.nb(y ~ x, data = df, control = list(maxit = 50))
-    modglm.null <- glm.nb(y ~ 1, data = df, control = list(maxit = 50))
+    # negative binomial 
+    modglm <- glm.nb(y ~ x, data = df)
+    modglm.null <- glm.nb(y ~ 1, data = df)
     # quasipoisson (to tackle down convergence problems)
     modqglm <- glm(y ~ x, data = df, family = 'quasipoisson')
     modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
@@ -148,7 +148,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     # LR Tests
     lm_lr <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
     # check convergence
-    if(!is.null(modglm$th.warn) | !is.null(modglm.null$th.warn)){
+    if(!is.null(modglm[['th.warn']]) | !is.null(modglm.null[['th.warn']])){
       glm_lr <- 'convergence error'
       glm_lrpb <- 'convergence error'
     } else {
@@ -178,7 +178,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     suppressWarnings(
       loecpw <- min(which(pw < 0.05)))
     
-    if(!is.null(modglm$th.warn)){
+    if(!is.null(modglm[['th.warn']])){
       loecglm <- 'convergence error'
       loecglm_pb <- 'convergence error'
     } else {
