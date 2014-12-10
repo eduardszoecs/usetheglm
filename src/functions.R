@@ -30,12 +30,14 @@ myPBmodcomp <- function(m1, m0, data, npb){
   myPBrefdist <- function(m1, m0, data){
     # simulate from null
     x0 <- simulate(m0)
+    # refit
     newdata0 <- data
     newdata0[ , as.character(formula(m0)[[2]])] <- x0
     m1r <-  try(update(m1, .~., data = newdata0))
     m0r <- try(update(m0, .~., data = newdata0))
     # simulate from model
     x1 <- simulate(m1)
+    # refit
     newdata1 <- data
     newdata1[ , as.character(formula(m1)[[2]])] <- x1
     m1r1 <-  try(update(m1, .~., data = newdata1))
@@ -53,6 +55,7 @@ myPBmodcomp <- function(m1, m0, data, npb){
     } else {
       coefs <- coef(m1r1)
     }
+    # return LR and coefs.
     out <- list(LR = LR, coefs = coefs)
     return(out)
   }
@@ -133,12 +136,12 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     # gaussian
     modlm <- lm(yt ~ x, data = df)
     modlm.null <- lm(yt ~ 1, data = df)
-    # negative binomial 
-    modglm <- glm.nb(y ~ x, data = df)
-    modglm.null <- glm.nb(y ~ 1, data = df)
-#     # quasipoisson
-#     modqglm <- glm(y ~ x, data = df, family = 'quasipoisson')
-#     modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
+    # negative binomial (increase maxit for convergence, but maybe to little data )
+    modglm <- glm.nb(y ~ x, data = df, control = list(maxit = 50))
+    modglm.null <- glm.nb(y ~ 1, data = df, control = list(maxit = 50))
+    # quasipoisson (to tackle down convergence problems)
+    modqglm <- glm(y ~ x, data = df, family = 'quasipoisson')
+    modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
         
     # ------------- 
     # Test of effects
@@ -156,7 +159,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     }
     # F Tests
     lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
-#     qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
+    qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
     # non-parametric test
     pk <- kruskal.test(y ~ x, data = df)$p.value
     
@@ -166,9 +169,9 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(>|t|)'], method = 'holm')
     suppressWarnings( # intended warnings about no min -> no LOEC
       loeclm <- min(which(pmclm < 0.05)))
-#     pmcqglm <-  p.adjust(coef(summary(modqglm))[2:6 , 'Pr(>|t|)'], method = 'holm')
-#     suppressWarnings(
-#       loecqglm <- min(which(pmcqglm < 0.05)))
+    pmcqglm <-  p.adjust(coef(summary(modqglm))[2:6 , 'Pr(>|t|)'], method = 'holm')
+    suppressWarnings(
+      loecqglm <- min(which(pmcqglm < 0.05)))
     # pairwise wilcox
     suppressWarnings( # ties
       pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE))
@@ -188,11 +191,10 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     # ---------
     # return object
     return(list(lm_lr = lm_lr, glm_lr = glm_lr, lm_f = lm_f, 
-#                 qglm_f = qglm_f,
+                qglm_f = qglm_f,
                 glm_lrpb = glm_lrpb, 
                 pk = pk, 
-                loeclm = loeclm, loecglm = loecglm, 
-# loecqglm = loecqglm, 
+                loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, 
                 loecpw = loecpw, loecglm_pb = loecglm_pb
     ))
   }
@@ -204,7 +206,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
 # Power
 p_glob1 <- function(z){ 
   # extract p-values
-  take <- c('lm_lr', 'glm_lr', 'lm_f', 'glm_lrpb', 'pk')
+  take <- c('lm_lr', 'glm_lr', 'lm_f', 'glm_lrpb', 'qglm_f', 'pk')
   ps <- ldply(z, function(w) unlist(as.numeric(w[take])))
   names(ps) <- take
   # calculate power
@@ -216,7 +218,7 @@ p_glob1 <- function(z){
 # loec
 p_loec1 <- function(z, type = NULL){
   # extract p-values
-  take <- c("loeclm", "loecglm", "loecpw", "loecglm_pb")
+  take <- c("loeclm", "loecglm", "loecpw", "loecglm_pb", "loecqglm")
   loecs <- ldply(z, function(w) as.numeric(unlist(w[take])))
   if(type == 't1'){
     pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / sum(!is.na(x)))
@@ -224,7 +226,7 @@ p_loec1 <- function(z, type = NULL){
   if(type == 'power'){
     pow <- apply(loecs, 2, function(x) sum(x == 2, na.rm = TRUE) / sum(!is.na(x)))
   }
-  names(pow) <- c("loeclm", "loecglm", "loecpw", "loecglm_pb")
+  names(pow) <- take
   return(pow)
 }
 

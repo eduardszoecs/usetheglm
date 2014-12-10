@@ -22,14 +22,12 @@ p_glob_c <- arrangeGrob(
   nrow = 3, 
   heights = c(10, 10, 2))
 p_glob_c
-ggsave(file.path(figdir, 'p_glob_c.pdf'), p_glob_c, width = 14, height = 8)
-ggsave(file.path(figdir, 'p_glob_c.jpeg'), p_glob_c, width = 14, height = 8)
+# ggsave(file.path(figdir, 'p_glob_c.pdf'), p_glob_c, width = 14, height = 8)
+# ggsave(file.path(figdir, 'p_glob_c.jpeg'), p_glob_c, width = 14, height = 8)
 
 # loec
 leg <- g_legend(plot_pow_loec_c + 
-                  theme(legend.key = element_blank()) +
-                  guides(fill = guide_legend(override.aes = list(size=5)))
-)
+                  theme(legend.key = element_blank()))
 p_loec_c <- arrangeGrob(
   plot_pow_loec_c + theme(legend.position="none") + labs(x = NULL),
   plot_t1_loec_c + theme(legend.position="none"),
@@ -37,7 +35,7 @@ p_loec_c <- arrangeGrob(
   nrow = 3,
   heights = c(10, 10, 2))
 p_loec_c
-ggsave(file.path(figdir, 'p_loec_c.pdf'), p_loec_c, width = 14, height = 8)
+# ggsave(file.path(figdir, 'p_loec_c.pdf'), p_loec_c, width = 14, height = 8)
 
 
 ### --------------------------------------------
