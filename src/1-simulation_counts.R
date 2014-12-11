@@ -77,7 +77,6 @@ pow_glob_c$muc <- todo1_c$ctrl
 pow_glob_c$N <- todo1_c$N
 # restructure data
 pow_glob_c <- melt(pow_glob_c, id.vars = c('muc', 'N'), value.name = 'power')
-pow_glob_c <- pow_glob_c[!pow_glob_c$variable %in% c('qglm_f'), ]
 
 plot_pow_glob_c <- ggplot(pow_glob_c) +
   geom_line(aes(y = power, x = muc, group = variable, col = variable)) +
@@ -106,7 +105,6 @@ pow_loec_c <- ldply(res1_c, p_loec1, type = 'power')
 pow_loec_c$muc <- todo1_c$ctrl
 pow_loec_c$N <- todo1_c$N
 pow_loec_c  <- melt(pow_loec_c, id.vars = c('muc', 'N'), value.name = 'power')
-pow_loec_c <- pow_loec_c[!pow_loec_c$variable %in% c('loecqglm'), ]
 
 plot_pow_loec_c <- ggplot(pow_loec_c) +
   geom_line(aes(y = power, x = muc, group = variable, col = variable)) +
@@ -179,7 +177,6 @@ t1_glob_c$muc <- todo2_c$ctrl
 t1_glob_c$N <- todo2_c$N
 # restructure data
 t1_glob_c <- melt(t1_glob_c, id.vars = c('muc', 'N'), value.name = 't1')
-t1_glob_c <- t1_glob_c[!t1_glob_c$variable %in% c('qglm_f'), ]
 
 plot_t1_glob_c <- ggplot(t1_glob_c) +
   geom_line(aes(y = t1, x = muc, group = variable, col = variable)) +
@@ -212,7 +209,6 @@ t1_loec_c <- ldply(res2_c, p_loec1, type = 't1')
 t1_loec_c$muc <- todo2_c$ctrl
 t1_loec_c$N <- todo2_c$N
 t1_loec_c <- melt(t1_loec_c, id.vars = c('muc', 'N'), value.name = 't1')
-t1_loec_c <- t1_loec_c[!t1_loec_c$variable %in% c('loecqglm'), ]
 
 plot_t1_loec_c <- ggplot(t1_loec_c) +
   coord_trans(xtrans = 'log2') +
