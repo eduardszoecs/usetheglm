@@ -29,6 +29,7 @@ require(lmtest)
 require(MASS)
 # require(pbkrtest)
 # require(multcomp)
+require(exactRankTests)
 
 
 #####--------------------------------------------------------------------------
