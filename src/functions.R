@@ -35,7 +35,7 @@ myPBmodcomp <- function(m1, m0, data, npb){
     newdata0[ , as.character(formula(m0)[[2]])] <- x0
     m1r <-  try(update(m1, .~., data = newdata0))
     m0r <- try(update(m0, .~., data = newdata0))
-    # simulate from model
+    # simulate from full model
     x1 <- simulate(m1)
     # refit
     newdata1 <- data
@@ -82,24 +82,20 @@ myPBmodcomp <- function(m1, m0, data, npb){
   LRo <- c(-2 * (logLik(m0) - logLik(m1)))
   COEFo <- coef(m1)
   
-#   DF <- df.residual(m0) - df.residual(m1)
-#   p.o <- 1 - pchisq(LR, df = DF)
-#   # p from bartlett correction
-#   LR.bc <-  LR * DF / mean(ref, na.rm = TRUE)
-#   p.bc <- 1 - pchisq(LR.bc, df = DF)
-
   ## p-value from parametric bootstrap
   p.pb <- mean(c(LR, LRo) >= LRo, na.rm = TRUE)
 
   ## p-value for coef
-  # substract col-means [= abs(dev) from estimate)]
-  md <- abs(sweep(coefs, 2, colMeans(coefs)))
-  # proportion deviations greater than estimate
-  p.coef <- rowMeans(apply(md, 1, function(x) x >= abs(COEFo)))
+  # proportions of boostrap coefs > or < 0
+  twosidep<-function(coef){
+    p1 <- sum(coef > 0) / length(coef)
+    p2 <- sum(coef < 0) / length(coef)
+    p <- min(p1,p2) * 2
+    return(p)
+  }
+  p.coef <- apply(coefs, 2, twosidep)
 
   return(list(nconv_LR = nconv_LR, nconv_coefs = nconv_coefs,
-#     p.bc = p.bc, 
-#               p.o = p.o, 
               p.pb = p.pb, p.coef = p.coef))
 }
 
@@ -145,7 +141,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
         
     # ------------- 
     # Test of effects
-    # LR Tests
+    # LR Tests (+ bootstrap)
     lm_lr <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
     # check convergence
     if(!is.null(modglm[['th.warn']]) | !is.null(modglm.null[['th.warn']])){
