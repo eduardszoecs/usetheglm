@@ -7,7 +7,7 @@
 pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
   tc <- t(combn(nlevels(g), 2))
   if(dunnett){
-    tc <- tc[tc[ ,1] == levels(g)[1], ]
+    tc <- tc[tc[ ,1] == 1, ]
   }
   pval <- numeric(nrow(tc))
   for(i in seq_len(nrow(tc))){

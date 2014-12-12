@@ -23,7 +23,7 @@ require(multcomp)
 pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
   tc <- t(combn(nlevels(g), 2))
   if(dunnett){
-    tc <- tc[tc[ ,1] == levels(g)[1], ]
+    tc <- tc[tc[ ,1] == 1, ]
   }
   pval <- numeric(nrow(tc))
   for(i in seq_len(nrow(tc))){
@@ -172,10 +172,10 @@ modpois$deviance / modpois$df.residual
 ## Inference, global test
 # LR test
 drop1(modpois, test = 'Chisq')
-# parametric bootstrap
-modpois0 <- glm(Abundance ~ 1, data = df, family = poisson)
-myPBmodcomp(modpois, modpois0, data = df, npb = 500)
-# p-value of boostraped LR is 0.001996008
+# # parametric bootstrap
+# modpois0 <- glm(Abundance ~ 1, data = df, family = poisson)
+# myPBmodcomp(modpois, modpois0, data = df, npb = 500)
+# # p-value of boostraped LR is 0.001996008
 
 ## Inference, test of parameters
 # Wald-z
@@ -230,7 +230,8 @@ modnb <- glm.nb(Abundance ~ Concentration, data = df)
 modnb0 <- glm.nb(Abundance ~ 1, data = df)
 anova(modnb, modnb0, test = 'Chisq')
 # parametric bootstrap
-myPBmodcomp(modnb, modnb0, data = df, npb = 500)
+set.seed(1234)
+myPBmodcomp(modnb, modnb0, data = df, npb = 2000)
 # p-value of boostraped LR is 0.054
 # 1 model did not converge
 
@@ -253,6 +254,15 @@ modnb_fit <- modnb$family$linkinv(modnb_p$fit)
 modnb_lwr <- modnb$family$linkinv(modnb_p$fit - 1.96 * modnb_p$se.fit)
 modnb_upr <- modnb$family$linkinv(modnb_p$fit + 1.96 * modnb_p$se.fit)
 
+
+
+### --------
+### Non-parametric
+
+# Kruskal-Wallis test
+kruskal.test(Abundance ~ Concentration, data = df)
+# pairwise Wilcox
+pairwise_wilcox(df$Abundance, factor(df$Concentration), dunnett = TRUE, padj = 'holm')
 
 
 ### --------------- Summarize --------------------------------------------------
