@@ -73,30 +73,29 @@ if(sim1){
 # Results
 # global power
 pow_glob_c <- ldply(res1_c, p_glob1)
-pow_glob_c$muc <- todo1_c$ctrl
-pow_glob_c$N <- todo1_c$N
-# restructure data
-pow_glob_c <- melt(pow_glob_c, id.vars = c('muc', 'N'), value.name = 'power')
+pow_glob_c$muc <- rep(todo1_c$ctrl, each  = 6)
+pow_glob_c$N <- rep(todo1_c$N, each = 6)
+
+# rm lm_lr
+pow_glob_c  <- pow_glob_c[!pow_glob_c$variable %in% 'lm_lr', ]
+pow_glob_c$variable  <-  factor(pow_glob_c$variable, unique(pow_glob_c$variable)[c(2, 1, 3, 4,5)], 
+                                labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'np'))
+
 
 plot_pow_glob_c <- ggplot(pow_glob_c) +
-  geom_line(aes(y = power, x = muc, group = variable, col = variable)) +
-  geom_point(aes(y = power, x = muc, fill = variable), 
-             pch = 21, color = 'black', size = 3) +
-  coord_trans(xtrans = 'log2') +
-  scale_x_continuous(breaks = round(unique(todo1_c$ctrl), 0)) +
-  facet_grid( ~ N) + 
+  geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable)) +
+  geom_point(aes(y = power, x = log2(muc), shape = variable), color = 'black', size = 4) +
+  facet_grid( ~N, labeller = n_labeller) + 
   # axes
   labs(x = expression(mu[C]), 
        y = expression(paste('Power (global test , ', alpha, ' = 0.05)'))) +
+  scale_x_continuous(breaks = log2(round(unique(todo1_c$ctrl), 0)), 
+                     labels = round(unique(todo1_c$ctrl), 0)) +
   # appearance
-  theme_bw(base_size = 12, 
-           base_family = "Helvetica") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-    text = element_text(size=14),
-        axis.text=element_text(size=12),
-        axis.title=element_text(size=14,face="bold")) +
-  theme(legend.position="bottom")
+  mytheme + 
+  # legend title
+  scale_shape_manual('Method', values=c(0,2,4,16,18)) +
+  scale_linetype_discrete('Method')
 plot_pow_glob_c
 
 
@@ -105,26 +104,23 @@ pow_loec_c <- ldply(res1_c, p_loec1, type = 'power')
 pow_loec_c$muc <- todo1_c$ctrl
 pow_loec_c$N <- todo1_c$N
 pow_loec_c  <- melt(pow_loec_c, id.vars = c('muc', 'N'), value.name = 'power')
+pow_loec_c$variable  <-  factor(pow_loec_c$variable, unique(pow_loec_c$variable)[c(1, 2, 4, 5, 3)], 
+                                labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'np'))
 
 plot_pow_loec_c <- ggplot(pow_loec_c) +
-  geom_line(aes(y = power, x = muc, group = variable, col = variable)) +
-  geom_point(aes(y = power, x = muc, fill = variable), 
-             pch = 21, color = 'black', size = 3) +
-  coord_trans(xtrans = 'log2') +
-  scale_x_continuous(breaks = round(unique(todo1_c$ctrl), 0)) +
-  facet_grid( ~N) + 
+  geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable)) +
+  geom_point(aes(y = power, x = log2(muc), shape = variable), color = 'black', size = 4) +
+  facet_grid( ~N, labeller = n_labeller) + 
   # axes
   labs(x = expression(mu[C]), 
        y = expression(paste('Power (LOEC , ', alpha, ' = 0.05)'))) + 
+  scale_x_continuous(breaks = log2(round(unique(todo1_c$ctrl), 0)), 
+                     labels = round(unique(todo1_c$ctrl), 0)) +
   # appearance
-  theme_bw(base_size = 12, 
-           base_family = "Helvetica") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        text = element_text(size = 14),
-        axis.text=element_text(size = 12),
-        axis.title=element_text(size = 14,face = "bold")) +
-  theme(legend.position="bottom")
+  mytheme + 
+  # legend title
+  scale_shape_manual('Method', values=c(0,2,4,16,18)) +
+  scale_linetype_discrete('Method')
 plot_pow_loec_c
 
 
@@ -173,34 +169,27 @@ if(sim1){
 # Results
 # Global test (how often wrongly assigned an effect)
 t1_glob_c <- ldply(res2_c, p_glob1)
-t1_glob_c$muc <- todo2_c$ctrl
-t1_glob_c$N <- todo2_c$N
-# restructure data
-t1_glob_c <- melt(t1_glob_c, id.vars = c('muc', 'N'), value.name = 't1')
+t1_glob_c$muc <- rep(todo1_c$ctrl, each  = 6)
+t1_glob_c$N <- rep(todo1_c$N, each = 6)
+t1_glob_c  <- t1_glob_c[!t1_glob_c$variable %in% 'lm_lr', ]
+t1_glob_c$variable  <-  factor(t1_glob_c$variable, unique(t1_glob_c$variable)[c(2, 1, 3, 4, 5)], 
+                                labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'np'))
 
-plot_t1_glob_c <- ggplot(t1_glob_c) +
-  geom_line(aes(y = t1, x = muc, group = variable, col = variable)) +
-  geom_point(aes(y = t1, x = muc, fill = variable), 
-             pch = 21, color = 'black', size = 3) +
-  geom_segment(aes(x = 2, xend = 128, y = 0.05, yend = 0.05), 
-               linetype = 'dashed') + 
-  # maby try log2 transformation?
-  coord_trans(xtrans = 'log2') +
-  # use here
-  scale_x_continuous(breaks = round(ctrl, 0)) +
-  facet_grid(~N) + 
+plot_t1_glob_c  <- ggplot(t1_glob_c) +
+  geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable)) +
+  geom_point(aes(y = power, x = log2(muc), shape = variable), color = 'black', size = 4) +
+  geom_segment(aes(x = -Inf, xend = Inf, y = 0.05, yend = 0.05), linetype = 'dashed') + 
+  facet_grid( ~N, labeller = n_labeller) + 
   # axes
   labs(x = expression(mu[C]), 
        y = expression(paste('Type 1 error (global test , ', alpha, ' = 0.05)'))) +
+  scale_x_continuous(breaks = log2(round(unique(todo1_c$ctrl), 0)), 
+                     labels = round(unique(todo1_c$ctrl), 0)) +
   # appearance
-  theme_bw(base_size = 12, 
-           base_family = "Helvetica") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        text = element_text(size=14),
-        axis.text = element_text(size = 12),
-        axis.title = element_text(size = 14,face="bold")) +
-  theme(legend.position = "bottom", legend.key = element_blank()) 
+  mytheme + 
+  # legend title
+  scale_shape_manual('Method', values=c(0,2,4,16,18)) +
+  scale_linetype_discrete('Method')
 plot_t1_glob_c
 
 
@@ -209,26 +198,23 @@ t1_loec_c <- ldply(res2_c, p_loec1, type = 't1')
 t1_loec_c$muc <- todo2_c$ctrl
 t1_loec_c$N <- todo2_c$N
 t1_loec_c <- melt(t1_loec_c, id.vars = c('muc', 'N'), value.name = 't1')
+t1_loec_c$variable  <-  factor(t1_loec_c$variable, unique(t1_loec_c$variable)[c(1, 2, 4, 5, 3)], 
+                                labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'np'))
 
 plot_t1_loec_c <- ggplot(t1_loec_c) +
-  coord_trans(xtrans = 'log2') +
-  geom_line(aes(y = t1, x = muc, group = variable, col = variable)) +
-  geom_point(aes(y = t1, x = muc, fill = variable), 
-             pch = 21, color = 'black', size = 3) +
-  geom_segment(aes(x = 2, xend = 128, y = 0.05, yend = 0.05), 
+  geom_line(aes(y = t1, x = log2(muc), group = variable, linetype = variable)) +
+  geom_point(aes(y = t1, x = log2(muc), shape = variable), color = 'black', size = 4) +
+  geom_segment(aes(x = -Inf, xend = Inf, y = 0.05, yend = 0.05), 
                linetype = 'dashed') + 
-  scale_x_continuous(breaks = round(unique(todo2_c$ctrl), 0)) +
-  facet_grid(~N) + 
+  facet_grid( ~N, labeller = n_labeller) + 
   # axes
   labs(x = expression(mu[C]), 
        y = expression(paste('Type 1 error (LOEC , ', alpha, ' = 0.05)'))) + 
+  scale_x_continuous(breaks = log2(round(unique(todo1_c$ctrl), 0)), 
+                     labels = round(unique(todo1_c$ctrl), 0)) +
   # appearance
-  theme_bw(base_size = 12, 
-           base_family = "Helvetica") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        text = element_text(size = 14),
-        axis.text=element_text(size = 12),
-        axis.title=element_text(size = 14, face = "bold")) +
-  theme(legend.position="bottom", legend.key = element_blank())
-plot_t1_loec_c
+  mytheme + 
+  # legend title
+  scale_shape_manual('Method', values=c(0,2,4,16,18)) +
+  scale_linetype_discrete('Method')
+plot_t1_loec_c 

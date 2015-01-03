@@ -28,6 +28,7 @@ p_glob_c
 # loec
 leg <- g_legend(plot_pow_loec_c + 
                   theme(legend.key = element_blank()))
+leg
 p_loec_c <- arrangeGrob(
   plot_pow_loec_c + theme(legend.position="none") + labs(x = NULL),
   plot_t1_loec_c + theme(legend.position="none"),
