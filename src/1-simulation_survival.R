@@ -12,10 +12,10 @@ if(!exists("prj")){
 # Settings
 # no of simulated datasets
 # sample sizes
-N <- c(3, 6 ,9 ,12)
+N <- c(3, 6 ,9)
 n_animals <- 10
 # proportions in effect groups
-pEs <- seq(0.5, 0.95, 0.05)
+pEs <- seq(0.6, 0.95, 0.05)
 # both as grid
 todo1_p <- expand.grid(N = N, pE = pEs)
   
@@ -65,22 +65,16 @@ pow_glob_p$N <- todo1_p$N
 pow_glob_p <- melt(pow_glob_p, id.vars = c('pE', 'N'))
 
 plot_pow_glob_p <- ggplot(pow_glob_p) +
-  geom_line(aes(y = value, x = pE, group = variable)) +
-  geom_point(aes(y = value, x = pE, fill = variable), 
-             size = 4, pch = 21, color = 'black') +
-  facet_grid( ~N) + 
+  geom_line(aes(y = value, x = pE, group = variable, linetype = variable)) +
+  geom_point(aes(y = value, x = pE, shape = variable), size = 4, color = 'black') +
+  facet_grid( ~N, labeller = n_labeller) +  
   # axes
   labs(x = expression('pE'), 
        y = expression(paste('Power (global test , ', alpha, ' = 0.05)'))) +
   # appearance
-  theme_bw(base_size = 12, 
-           base_family = "Helvetica") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        text = element_text(size = 14),
-        axis.text = element_text(size = 12),
-        axis.title = element_text(size = 14, face = "bold")) +
-  theme(legend.position="bottom") 
+  mytheme +
+  scale_shape_manual('Method', values=c(0,2,4,16,17)) +
+  scale_linetype_discrete('Method')
 plot_pow_glob_p
 
 
