@@ -1,5 +1,6 @@
 ### ----------------------------------------------------------------------------
-### Motivating Example - Written by Eduard Szöcs
+### Motivating Example - Count data
+### Written by Eduard Szöcs
 
 ### -------- Setup ------------------------------------------------------------
 prj <- "/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/"
@@ -291,6 +292,7 @@ moddf <- data.frame(conc = rep(unique(df$Concentration), 4),
                     lwr = c(modlm_lwr, modpois_lwr, modqpois_lwr, modnb_lwr),
                     mod = rep(c('Normal', 'Poisson', 'quasi-Poisson', 'Negative binomial'), each = 6), 
                     strindsAsFactor = FALSE)
+moddf$mod <- factor(moddf$mod, levels = c('Normal', 'Poisson', 'quasi-Poisson', 'Negative binomial'))
 
 p <- ggplot() +
   # raw data
@@ -300,27 +302,29 @@ p <- ggplot() +
   # estimated means + CI
   geom_point(data = moddf, 
              aes(x = 0.1 + rep(1:6,4) + rep(c(0.1, 0.2, 0.3, 0.4), each = 6), 
-                 y = fit, col = mod), size = 3) +
+                 y = fit), size = 4, shape = 17) +
   geom_errorbar(data = moddf, 
                 aes(x = 0.1 + rep(1:6,4) + rep(c(0.1, 0.2, 0.3, 0.4), each = 6), 
-                    ymax = upr, ymin = lwr, col = mod), 
+                    ymax = upr, ymin = lwr, linetype = mod), 
                 width = 0.1, lwd = 1) + 
   # loec_bars
-  # neg bin
-  geom_path(aes(x = c(3-0.15, 3+0.55), y = c(220,220)), col = hue_pal()(4)[1], size = 2) + 
-  geom_path(aes(x = c(5-0.15, 6+0.55), y = c(220,220)), col = hue_pal()(4)[1], size = 2) + 
   # normal
-  geom_path(aes(x = c(5-0.15, 5+0.55), y = c(220-5,220-5)), col = hue_pal()(4)[2], size = 2) + 
+  geom_path(aes(x = c(5-0.15, 5+0.55), y = c(220,220)), linetype = 'solid', size = 1) + 
   # pois
-  geom_path(aes(x = c(2-0.15, 6+0.55), y = c(220-2*5,220-2*5)), col = hue_pal()(4)[3], size = 2) + 
-  # qpois
-  geom_path(aes(x = c(2-0.15, 6+0.55), y = c(220-2*5,220-2*5)), col = hue_pal()(4)[3], size = 2) + 
-  theme_bw() +
-  guides(col=guide_legend(title='Model')) +
+  geom_path(aes(x = c(2-0.15, 6+0.55), y = c(220-5,220-5)), linetype = '1111', size = 1) + 
+  # neg bin
+  geom_path(aes(x = c(3-0.15, 3+0.55), y = c(220-3*5,220-3*5)), linetype = 'dotdash', size = 1) + 
+  geom_path(aes(x = c(5-0.15, 6+0.55), y = c(220-3*5,220-3*5)), linetype = 'dotdash', size = 1) + 
+  scale_linetype_manual(values=c('solid', '1111', 'dashed', 'dotdash')) + 
+  mytheme +
+  guides(linetype=guide_legend(title='Model')) +
   xlab('Concetration [mg/L]') +
   theme(axis.title.x = element_text(face="bold",size=18),
         axis.text.x  = element_text(size=14),
         axis.text.y  = element_text(size=14),
-        axis.title.y = element_text(face="bold",size=18))
+        axis.title.y = element_text(face="bold",size=18),
+        legend.position='right',
+        legend.key.width = unit(1, "cm"))
+p
 ggsave(file.path(figdir, 'example.pdf'), p)
 

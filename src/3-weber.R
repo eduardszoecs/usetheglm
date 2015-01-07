@@ -6,27 +6,6 @@
 require(reshape2)
 require(multcomp)
 
-### --------- Custom Functions -------------------------------------------------
-#' pairwise wilcox.test
-#' @param y numeric; vector of data values
-#' @param g factor; grouping vector
-#' @param dunnett logical; if TRUE dunnett contrast, otherwise Tukey-contrasts
-#' @param padj character; method for p-adjustment, see ?p.adjust.
-pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
-  tc <- t(combn(nlevels(g), 2))
-  if(dunnett){
-    tc <- tc[tc[ ,1] == 1, ]
-  }
-  pval <- numeric(nrow(tc))
-  for(i in seq_len(nrow(tc))){
-    pval[i] <- wilcox.test(y[as.numeric(g) == tc[i, 1]], 
-                           y[as.numeric(g) == tc[i, 2]])$p.value
-  }
-  pval <- p.adjust(pval, padj)
-  names(pval) = paste(tc[,1], tc[,2], sep = '-')
-  return(pval)
-}
-
 
 ### -------- Load + Clean ------------------------------------------------------
 df <- read.table(header = TRUE, text = 'conc A B C D
@@ -54,16 +33,22 @@ dfm$y_asin <- ifelse(dfm$y == 1,
                      asin(sqrt(dfm$y)) 
 )
 
-modlm <- aov(y_asin ~ conc, data = dfm)
+boxplot(y_asin ~ conc, data = dfm, 
+        xlab = 'conc', ylab = 'Proportion surv.')
+
+modlm <- lm(y_asin ~ conc, data = dfm)
 summary(modlm)
+plot(fitted(modlm), residuals(modlm)); abline(h = 0)
+
 # F-test
 drop1(modlm, test = 'F')
 # LOEC
 summary(glht(mod, linfct = mcp(conc = 'Dunnett')), test = adjusted('holm'))
-
+bartlett.test(dfm$y_asin, dfm$conc)
 
 ### -------- Binomial GLM
 modglm <- glm(y ~ conc , data = dfm, family = binomial, weights = rep(10, nrow(dfm)))
+summary(modglm)
 # LR-test
 drop1(modlm, test = 'Chisq')
 summary(glht(modglm, linfct = mcp(conc = 'Dunnett')), test = adjusted('holm'))
