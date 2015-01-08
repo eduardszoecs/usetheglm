@@ -57,7 +57,7 @@ p_glob_p <- arrangeGrob(
   nrow = 3,
   heights = c(10, 10, 2))
 p_glob_p
-# ggsave(file.path(figdir, 'p_glob_p.pdf'), p_glob_p, width = 14, height = 8)
+ggsave(file.path(figdir, 'p_glob_p.pdf'), p_glob_p, width = 10, height = 8)
 
 
 # loec
@@ -72,5 +72,5 @@ p_loec_p <- arrangeGrob(
   nrow = 3,
   heights = c(10, 10, 2))
 p_loec_p
-ggsave(file.path(figdir, 'p_loec_p.pdf'), p_loec_p, width = 14, height = 8)
+ggsave(file.path(figdir, 'p_loec_p.pdf'), p_loec_p, width = 10, height = 8)
 

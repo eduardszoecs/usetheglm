@@ -17,6 +17,7 @@ srcdir <- file.path(prj, "src")     # source code
 datadir <- file.path(prj, "data")   # data
 cachedir <- file.path(prj, "cache")
 figdir <- file.path(prj, "report", "fig") # figures for latex
+markdir <- file.path(prj, "report_markdown", "fig")
 
 #####--------------------------------------------------------------------------
 ### install missing if needed!

@@ -95,7 +95,8 @@ plot_pow_glob_c <- ggplot(pow_glob_c) +
   mytheme + 
   # legend title
   scale_shape_manual('Method', values=c(0,2,4,16,17)) +
-  scale_linetype_discrete('Method')
+  scale_linetype_discrete('Method') +
+  ylim(c(0,1))
 plot_pow_glob_c
 
 
@@ -120,7 +121,8 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
   mytheme + 
   # legend title
   scale_shape_manual('Method', values=c(0,2,4,16,17)) +
-  scale_linetype_discrete('Method')
+  scale_linetype_discrete('Method') +
+  ylim(c(0,1))
 plot_pow_loec_c
 
 
