@@ -101,6 +101,7 @@ plot_pow_loec_p <- ggplot(pow_loec_p) +
   scale_shape_manual('Method', values=c(0,2,4)) +
   scale_linetype_discrete('Method') +
   ylim(c(0,1))
+plot_pow_loec_p
 # clean up
 # rm(res1_p, df, sims1_p, todo1_p, pEs, n_animals, N)
 

@@ -1,7 +1,9 @@
+# R
 .Rproj.user
 .Rhistory
 .RData
 
+# Sublime
 .directory
 
 # Latex
@@ -11,16 +13,13 @@
 *synctex.gz
 *latexmk
 *concordance.tex
-*tex
 *bbl
 *blg
-*tex
-*pdf
-*bib
+
+# Markdown
+*report_markdown*
 
 # data
 *data
 *review*
 *pdf
-*jpeg
-net.R
