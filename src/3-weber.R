@@ -43,7 +43,7 @@ plot(fitted(modlm), residuals(modlm)); abline(h = 0)
 # F-test
 drop1(modlm, test = 'F')
 # LOEC
-summary(glht(mod, linfct = mcp(conc = 'Dunnett')), test = adjusted('holm'))
+summary(glht(modlm, linfct = mcp(conc = 'Dunnett')), test = adjusted('holm'))
 bartlett.test(dfm$y_asin, dfm$conc)
 
 ### -------- Binomial GLM
