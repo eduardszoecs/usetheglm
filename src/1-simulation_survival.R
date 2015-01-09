@@ -11,6 +11,7 @@ if(!exists("prj")){
 #####------------------------------------
 # Settings
 # no of simulated datasets
+nsims <- 250
 # sample sizes
 N <- c(3, 6 ,9)
 n_animals <- 10

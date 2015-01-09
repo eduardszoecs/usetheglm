@@ -78,7 +78,7 @@ Examples are: animal counts in mesocosm experiments (positive, integer valued, d
 Such data are usually analysed by using methods assuming normal distributed data, although these types are inherently not normally distributed. 
 In order to approximate the normality and variance homogeneity assumptions data is usually transformed.
 It is advised that survival data can be transformed using an arcsine square root transformation \citep{oecd_current_2006, newman_quantitative_2012}. 
-For count data from mesocosm experiments a log(Ax + 1) transformation is usually used, where the constant A is either chosen arbitrarily or following the recommendation of \citet{van_den_brink_impact_2000} Ax to be 2 for the lowest abundance value (x) greater than zero. 
+For count data from mesocosm experiments a log(Ax + 1) transformation is usually used, where the constant A is either chosen arbitrarily or following the recommendation of \citet{van_den_brink_impact_2000}: Ax to be 2 for the lowest abundance value (x) greater than zero. 
 Note, that there has been little evaluation and advice for the practitioners which transformations to use.
 If the transformed data does not meet the normality assumptions, usually non-parametric tests are applied \citep{wang_making_2011}.
 
@@ -87,6 +87,7 @@ GLMs can handle various types of data distributions, e.g. Poisson or negative bi
 Despite that GLMs were available more than 40 years now, ecotoxicologists do not regularly make use of them.
 
 Recently studies concluded that data transformations should be avoided and GLMs be used as they have better statistical properties (\emph{Do not log-transform count data}, \citep{ohara_not_2010}; \emph{The arcsine is asinine}, \citep{warton_arcsine_2011}).
+Especially in the light of \todo{Sanderson zitieren}.
 
 We first give two motivating examples showing that different methods may lead to different conclusions. 
 % Then review what types of analysis are used by ecotoxicologists.
@@ -181,17 +182,17 @@ Accordingly, the determined LOECs differed (Normal: 3 mg/L, quasi-Poisson: \text
 \subsection{Binomial data}
 \citet{weber_short-term_1989} provides fathead minnow \textit{Pimephales promelas} larval survival data after sodium pentachlorophenol (NaPCP) exposure.
 This data was also analysed in \citet{newman_quantitative_2012}.
-At six NaPCP concentrations (0, 32, 64, 128, 256, 512 $\mu g / L$) with 4 replications ten fish were exposed and proportions of total number alive at the end reported.
+At six NaPCP concentrations (0, 32, 64, 128, 256, 512 \textmu g/L) with 4 replications ten fish were exposed and proportions of total number alive at the end reported.
 
 \subsubsection{The linear model after transformation}
 To accommodate the assumption for the standard linear model the EPA suggests a arcsine square root transformation for such kind of data \cite{epa_methods_2002}:
 
 $$\begin{aligned}
-  y^T = 
+  y_i^T = 
   \begin{cases}  
-    arcsin(1) - arcsin(\sqrt{\frac{1}{4n}}) & \text{if}\ y = 1 \\
-    arcsin(\sqrt{\frac{1}{4n}}) & \text{if}\ y = 0 \\
-    arcsin(\sqrt{y}) & otherwise
+    arcsin(1) - arcsin(\sqrt{\frac{1}{4n}}) & \text{, if}\ y_i = 1 \\
+    arcsin(\sqrt{\frac{1}{4n}}) & \text{, if}\ y_i = 0 \\
+    arcsin(\sqrt{y_i}) & \text{, otherwise}
   \end{cases}
 \end{aligned}$$
 
@@ -235,39 +236,42 @@ We fitted the models and tested hypotheses on the simulated data as described in
 
 All simulations were done in R (Version 3.1.2) on a 64-bit Linux machine with 8 GB and 2.2 GHz.
 Exemplary analysis of data in the motivating example can be found in the supplement.
-Source code for the simulations is available online at \url{https://github.com/EDiLD/usetheglm}. 
+Source code for the simulations is available online at \url{https://github.com/EDiLD/usetheglm}. \todo{git repo currently private -> tidy}
 
 \subsection{Count data}
 \subsubsection{Methods}
-We simulated count data that mimics count data encountered in mesocosm experiments, with five treatments (T1 - T5) and one control group (C) as in the motivating example. 
-
+We simulated count data that mimics count data encountered in mesocosm experiments, with five treatments (T1 - T5) and one control group (C).
 Counts were drawn from a negative binomial distribution with slight over dispersion (dispersion parameter for all treatments: $\kappa = 3.91$).
 We simulated datasets with different number of replicates (N = \{3, 6, 9\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 64, 128\}). 
-For each combination we generated 100 datasets.
 For power estimation mean abundance in treatments T2 - T5 was reduced to half of control and T1 ($\mu_\text{\tiny T2}~=~...~=~\mu_\text{\tiny T5}~=~0.5~\mu_\text{\tiny C} = 0.5~\mu_\text{\tiny T1}$), resulting to a theoretical LOEC at T2.
 For Type I error estimation mean abundance was kept equal between all groups.
 
+For each combination we generated 100 datasets. 
+For each dataset we tested the treatment effect using linear model after log (Ax + 1) transformation ($LM$), negative binomial GLM with LRT ($GLM_{nb}$), negative binomial GLM with parametric boostrap ($GLM_{pb}$), quasi-Poisson GLM ($GLM_{qp}$) and Kruskal-Wallis test on untransformed data ($NP$).
+Moreover, we compared the methods ability to determine the LOEC (T2 in our simulation design) by comparing inferences on model parameters and a pairwise Wilcoxon test.
 
 \subsubsection{Results}
-For our simulation design (reduction in abundance by 50\%) a sample size of n = 9 was needed to achieve a power greater then 80\%.
-Test of treatment effect for the negative binomial GLM (with LRT) showed an increased Type I error. However, this decreased to an acceptable limit with increasing sample sizes.
-The linear model on transformed data, quasi-Poisson GLM and negative binomial GLM (with bootstrap) maintained an appropriate Type I error, with quasi-Poisson having greatest power (Figure \ref{fig:p_glob_c}).
-The Kruskal-Wallis test showed least power, with low Type I error at small sample sizes.
-For small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of the negative binomial models did not converge to a solution (convergence rate \textless 80\% of the simulations).
+For this simulation design (reduction in abundance by 50\%) a sample size of n = 9 was needed to achieve a power greater then 80\%.
+For small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of the negative binomial models ($GLM_{nb}$ and $GLM_{pb}$) did not converge to a solution (convergence rate \textless 80\% of the simulations). \todo{Supplement Convergence table.}
 
-The inferences on parameters (i.e. LOEC determination) had even less power. 
+$GLM_{nb}$ showed an increased Type I error at low sample sizes for the test of treatment effect. 
+However, this decreased to an acceptable limit with increasing sample sizes (Figure \ref{fig:p_glob_c}, bottom).
+The linear model on transformed data, quasi-Poisson GLM and negative binomial GLM (with bootstrap) maintained an appropriate Type I error, with quasi-Poisson having greatest power.
+The Kruskal-Wallis test showed least power, with low Type I error at small sample sizes. 
+At high sample sizes (n = 9) GLM had greater power than the linear model or the Kruskal test (Figure \ref{fig:p_glob_c}). 
 
 \begin{figure}
   \centering
   \includegraphics[width = 0.8\textwidth]{p_glob_c.pdf}
-  \caption{Simulation results of count data. Power (top) and Type I error (bottom) for the test of a treatment effect.}
+  \caption{Simulation results for count data. Power (top) and Type I error (bottom) for the test of a treatment effect. Compared methods were: Linear model after log (Ax + 1) transformation (lm), negative binomial GLM with LRT (glm\_nb), negative binomial GLM with parametric boostrap (glm\_pb), quasi-Poisson GLM (glm\_qp) and Kruskal-Wallis test on untransformed data (np).}
   \label{fig:p_glob_c}
 \end{figure}
 
+The inferences on parameters showed less power to 
 \begin{figure}
   \centering
   \includegraphics[width = 0.8\textwidth]{p_loec_c.pdf}
-  \caption{a}
+  \caption{Simulation results for count data. Power (top) and Type I error (bottom) for determination of LOEC. Compared methods were: Linear model after log (Ax + 1) transformation (lm), negative binomial GLM with LRT (glm\_nb), negative binomial GLM with parametric boostrap (glm\_pb), quasi-Poisson GLM (glm\_qp) and pairwise Wilcoxon test on untransformed data (np).}
   \label{fig:p_loec_c}
 \end{figure}
 
@@ -276,9 +280,12 @@ The inferences on parameters (i.e. LOEC determination) had even less power.
 \subsection{Binomial data}
 \subsubsection{Methods}
 We simulated data from a design as described in the motivating example, with 5 treated (T1 - T5) and a control group (C). 
-We draw proportion from a Bin(10, $\pi$) distribution, with varying probability of success ($\pi$ = \{0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95\}) and varying number of replicates (N = \{3, 6, 9\}).
+Proportions were drawn from a Bin(10, $\pi$) distribution, with varying probability of success ($\pi$ = \{0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95\}) and varying number of replicates (N = \{3, 6, 9\}).
 For Type I error estimation $\pi$ was held constant between groups.
-For power estimation $\pi$ in C and T1 was set to 0.95 and $\pi$ in T2-T5 varied between 0.6 and 0.95).
+For power estimation $\pi$ in C and T1 was set to 0.95 and $\pi$ in T2-T5 varied between 0.6 and 0.95). 
+
+We simulated 250 datasets for each combination and analysed them using the linear model after arcsine transformation, binomial GLM and Kruskal-Wallis test.
+Moreover, we compared the methods ability to determine the LOEC (T2 in our simulation design) by comparing inferences on model parameters and a pairwise Wilcoxon test. 
 
 \subsubsection{Results}
 
@@ -288,14 +295,14 @@ For power estimation $\pi$ in C and T1 was set to 0.95 and $\pi$ in T2-T5 varied
 \begin{figure}
   \centering
   \includegraphics[width = 0.8\textwidth]{p_glob_p.pdf}
-  \caption{a}
+  \caption{Simulation results for binomial data. Power (top) and Type I error (bottom) for the test of a treatment effect. Compared methods were: Linear model after arcsine square root transformation (lm), binomial GLM with LRT (glm) and Kruskal-Wallis test on untransformed data.}
   \label{fig:p_glob_p}
 \end{figure}
 
 \begin{figure}
   \centering
   \includegraphics[width = 0.8\textwidth]{p_loec_p.pdf}
-  \caption{a}
+  \caption{Simulation results for binomial data. Power (top) and Type I error (bottom) for determination of LOEC. Compared methods were: Linear model after arcsine square root transformation (lm), binomial GLM with LRT (glm) and Kruskal-Wallis test on untransformed data.}
   \label{fig:p_loec_p}
 \end{figure}
 

@@ -323,11 +323,11 @@ p <- ggplot() +
         axis.text.x  = element_text(size=14),
         axis.text.y  = element_text(size=14),
         axis.title.y = element_text(face="bold",size=18),
-        legend.position=c(0.9, 0.7),
+        legend.position=c(0.8, 0.7),
         legend.key.width = unit(1, "cm"),
         legend.background = element_rect(color = 'black')
         )
 p
-ggsave(file.path(figdir, 'example.pdf'), p)
-ggsave(file.path(markdir, 'figure1.eps'), p)
+ggsave(file.path(figdir, 'example.pdf'), p, height = 6, width = 8)
+# ggsave(file.path(markdir, 'figure1.eps'), p)
 

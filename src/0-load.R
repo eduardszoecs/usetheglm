@@ -44,8 +44,7 @@ source(file.path(srcdir, "functions.R"))
 ld <- TRUE
 # Run simulations? 
 sim1 <- FALSE
-sim2 <- FALSE
-sim3 <- FALSE
+sim2 <- TRUE
 # keep these objects
 keep_obj <- c(ls(), 'keep_obj')
 # seed
