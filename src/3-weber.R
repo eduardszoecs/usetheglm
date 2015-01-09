@@ -47,10 +47,14 @@ summary(glht(mod, linfct = mcp(conc = 'Dunnett')), test = adjusted('holm'))
 bartlett.test(dfm$y_asin, dfm$conc)
 
 ### -------- Binomial GLM
-modglm <- glm(y ~ conc , data = dfm, family = binomial, weights = rep(10, nrow(dfm)))
+modglm <- glm(y ~ conc , data = dfm, family = binomial(link = 'logit'), weights = rep(10, nrow(dfm)))
+modglm.null <- glm(y ~ 1 , data = dfm, family = binomial, weights = rep(10, nrow(dfm)))
 summary(modglm)
 # LR-test
-drop1(modlm, test = 'Chisq')
+drop1(modglm, test = 'Chisq')
+1 - pchisq(- 2 * (logLik(modglm.null) - logLik(modglm)), 5)
+# Chisq
+- 2 * (logLik(modglm.null) - logLik(modglm))
 summary(glht(modglm, linfct = mcp(conc = 'Dunnett')), test = adjusted('holm'))
 
 
