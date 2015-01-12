@@ -127,6 +127,16 @@ plot_pow_loec_c
 
 
 
+# compare power
+merged <- merge(pow_glob_c[ , c(1,2,4, 5)], pow_loec_c, by = c('N', 'muc', 'variable'), suffixes = c('glob', 'loec'))
+merged$ratio <- merged$powerloec / merged$powerglob
+head(merged)
+ggplot(merged) +
+  geom_line(aes(y = ratio- 1, x = log2(muc), group = variable , linetype = variable)) +
+  facet_grid( ~N, labeller = n_labeller) 
+mean(merged$ratio)
+range((merged$ratio[merged$variable %in% c('lm', 'glm_np', 'glm_pb', 'glm_qp') & merged$muc > 4] - 1) * 100)
+
 ### ----------------------------------------------------------------------------
 # Type1 Error
 #####------------------------------------

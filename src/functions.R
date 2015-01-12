@@ -384,52 +384,6 @@ p_loec <- function(z, type = NULL){
 }
 
 
-# ### ----------------------------------------------------------------------------
-# ### Simulation 3 - Shapiro-Wilk Normality Test
-# dosim3 <- function(N, mu, nsim = 100){
-#   xn <- replicate(nsim, rnorm(N, mu, 1))
-#   xnb <- replicate(nsim, rnegbin(N, mu, theta = 3.91))
-#   xp <- replicate(nsim, rpois(N, mu))
-#   xnb_log <- log10(xnb + 1)
-# 
-#   return(list(xn = xn, xnb = xnb, xp = xp, xnb_log = xnb_log))
-# }
-# 
-# 
-# resfoo3 <- function(z, verbose = TRUE){
-#   ana <- function(w){
-#     apply(w, 2,  function(x){
-#       tryCatch(shapiro.test(x)[['p.value']], error = function(err) NA)
-#     })
-#   }
-#   ps <- ldply(z, ana)
-#   out <- rowSums(ps[ , -1] < 0.05, na.rm = TRUE) / ncol(ps)
-#   names(out) <- c('xn', 'xnb', 'xp', 'xnb_log')
-#   return(out)
-# }
-# 
-# 
-# dosim4 <- function(N, p, nsim = 100, n_animals = 10){
-#   xb <- replicate(nsim, rbinom(N, size = n_animals, prop = p))
-#   xb_asin <- ifelse(xb  == 0, asin(sqrt(1 / (4 * n_animals))),
-#                      ifelse((xb / n_animals) == 1, asin(1) - asin(sqrt(1 / (4 * n_animals))),
-#                             asin(sqrt(xb / n_animals))))
-#   return(list(xb, xbasin))
-# }
-# 
-# 
-# resfoo4 <- function(z, verbose = TRUE){
-#   ana <- function(w){
-#     apply(w, 2,  function(x){
-#       tryCatch(shapiro.test(x)[['p.value']], error = function(err) NA)
-#     })
-#   }
-#   ps <- ldply(z, ana)
-#   out <- rowSums(ps[ , -1] < 0.05, na.rm = TRUE) / ncol(ps)
-#   return(out)
-# }
-
-
 
 ### ----------------------------------------------------------------------------
 ### Plotting functions
