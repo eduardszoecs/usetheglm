@@ -348,16 +348,27 @@ Statistical hypothesis tests are commonly used to make ecotoxicological inferenc
 Often these inferences are based on experiments with small sample sizes due to practical contraints.
 \todo{Überleitung}
 
-We showed for two common data types in ecotoxicolgy, that using an appropriate model yielded higher statistical power, than trying to meet the assumptions of normality and variance homogeneity using transformations.
+We showed for two common data types in ecotoxicology, that using an appropriate model yielded higher statistical power, than trying to meet the assumptions of normality and variance homogeneity using transformations.
 
+%% --- Normality testing
 
-%% ------ Multivariate + GLMM -------
-Although, our simulations covered only simple exerimental designs, these findings may also extend to more complex designs. 
+%% --- Multivariate + GLMM -------
+Although, our simulations covered only simple experimental designs, these findings may also extend to more complex designs. 
 Nested or repeated designs with non-normal data could be analysed using Generalized Linear Mixed Models (GLMM) and may have advantages with respect to power \citep{stroup_rethinking_2014}.
 For community analyses \emph{GLM for multivariate data} have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \citep{warton_distance-based_2012,szocs_analysing_2015}.
 
+%% --- Non-parametric
 It has been advocated that, in the typical case of small sample sizes (n \textless 20) and non-normal data, non-parametric tests perform better than parametric tests assuming normality \citep{wang_making_2011}.
-In contrast our results show that 
+In contrast our results showed that the often applied Kruskal test and pairwise Wilcoxon test have equal or less power compared to tests assuming normality after data transformation.
+GLM always performed better than non-parametric tests. 
+However, there might be more powerful non-parametric tests available \citep{konietschke_rank-based_2012}.
+Non-parametric statistics are focussing on testing, but not on estimation of effects.
+GLM allows the estimation, additional to testing, and the interpretation of effects might give further insights into ecotoxicological studies.
+Therefore, we do not advise to use non-parametric tests for non-normal data, but instead use GLMs.
+
+
+
+
 
 
 
@@ -365,8 +376,6 @@ In contrast our results show that
 \todo{How to choose models? MV plot,...}
 \todo{robust SE for lower T1 error in glm nb?}
 \todo{Kritik an NOEC}
-\todo{No wilcox/kruskal - maybe more sophisticated non-parametric approaches!}
-\todo{wang riffel}
 
 \section{Conclusions}
 
