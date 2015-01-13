@@ -85,7 +85,7 @@ myPBmodcomp <- function(m1, m0, data, npb){
   
   ## original stats
   LRo <- c(-2 * (logLik(m0) - logLik(m1)))
-  COEFo <- coef(m1)
+#   COEFo <- coef(m1)
   
   ## p-value from parametric bootstrap
   p.pb <- mean(c(LR, LRo) >= LRo, na.rm = TRUE)
@@ -99,7 +99,7 @@ myPBmodcomp <- function(m1, m0, data, npb){
     return(p)
   }
   p.coef <- apply(coefs, 2, twosidep)
-
+  
   return(list(nconv_LR = nconv_LR, nconv_coefs = nconv_coefs,
               p.pb = p.pb, p.coef = p.coef))
 }
