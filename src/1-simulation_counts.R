@@ -99,6 +99,8 @@ plot_pow_glob_c <- ggplot(pow_glob_c) +
   ylim(c(0,1))
 plot_pow_glob_c
 
+max(pow_glob_c[pow_glob_c$N == 3 & !pow_glob_c$variable %in% 'glm_nb', 'power'])
+
 
 ### loec
 pow_loec_c <- ldply(res1_c, p_loec1, type = 'power')
@@ -125,6 +127,7 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
   ylim(c(0,1))
 plot_pow_loec_c
 
+max(pow_loec_c[pow_loec_c$N == 3 & !pow_loec_c$variable %in% c('glm_nb', 'glm_pb'), 'power'])
 
 
 # compare power

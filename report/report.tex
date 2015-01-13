@@ -105,10 +105,11 @@ We will use this data to demonstrate the differences between transformations, di
 To fit the standard linear model, we first transform the counts following \citet{van_den_brink_impact_2000}:
 
 \begin{align}
-  y^T_i = log(Ay_i + 1) \label{eqn:trans}
+  y^T_i & = log(Ay_i + 1) \label{eqn:trans} \\
+  A & = 2~/~min(y)~~~~~\text{, for}~ y > 0 \nonumber
 \end{align}
 
-, where $y_i$ is the measured abundance, $y_i^T$ the transformed abundance and A = 5.5 (the lowest abundance value in the dataset is 11).
+, where $y_i$ is the measured abundance, $y_i^T$ the transformed abundance and A = 2 / 11 = 0.182.
 
 We fit the well known linear model:
 \begin{align}
@@ -175,13 +176,20 @@ All methods resulted in similar predicted values except the normal model predict
 Confidence intervals (CI) where most narrow for the negative binomial model and widest for quasi-Poisson - especially at lower estimated abundances.
 Accordingly, the determined LOECs differed (Normal: 3 mg/L, quasi-Poisson: \textgreater 10mg/L, negative binomial (Wald Z and bootstrap) : 0.3 mg/L).
 
-\begin{figure}
+\citet{brock_minimum_2014} assumed normality after data transformation and reported a LOEC of \mbox{0.3 mg/L} for this data.
+The reason for this difference may be twofold: \citep{brock_minimum_2014} used a $log(2~y + 1)$ transformation, whereas we used a $log(0.182~y + 1)$ transformation \citep{van_den_brink_impact_2000}.
+We applied a two-sided Dunnett test, as the toxic response in a mesocosm experiment may be either decreasing or increasing (due to biological interactions).
+\citet{brock_minimum_2014} used a one-sided Williams test, which is know to have larger power if the assumptions are met \citep{jaki_statistical_2013}.
+This example demonstrates that the choice of the statistical model and procedure might have tremendous impact on ecotoxicological inferences, especially when sample sizes are low.
+
+\begin{figure}[h]
   \centering
   \includegraphics[width = 0.8\textwidth]{example.pdf}
   \caption{Data from \citet{brock_minimum_2014} (boxes + black points) and estimates + 95\% Wald Z or t Confidence intervals from the fitted models (vertical lines). 
   Bars above indicate treatments statistically significant different from the control group (Dunnett contrasts).}
   \label{fig:example}
 \end{figure}
+
 
 \subsection{Binomial data}
 \citet{weber_short-term_1989} provides fathead minnow \textit{Pimephales promelas} larval survival data after sodium pentachlorophenol (NaPCP) exposure.
@@ -283,7 +291,7 @@ $LM$, $GLM_{qp}$ and $GLM_{pb}$ maintained an appropriate Type I error, with $GL
 The Kruskal-Wallis test showed least power, with low Type I error at small sample sizes. 
 At bigger sample sizes (n = 9) all GLM had higher power than LM or the Kruskal test (Figure \ref{fig:p_glob_c}). 
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width = 0.8\textwidth]{p_glob_c.pdf}
   \caption{Simulation results for count data. Power (top) and Type I error (bottom) for the test of a treatment effect. Compared methods were: Linear model after log (Ax + 1) transformation (lm), negative binomial GLM with LRT (glm\_nb), negative binomial GLM with parametric boostrap (glm\_pb), quasi-Poisson GLM (glm\_qp) and Kruskal-Wallis test on untransformed data (np).
@@ -296,7 +304,7 @@ The pairwise Wilcoxon Test had no power at all to detect the correct LOEC.
 $GLM_{nb}$ and $GLM_{pb}$ showed an increased Type 1 error at low sample sizes and $GLM_{qp}$ beeing slightly conservative.
 $GLM_{pb}$ and $LM$ yielded to comparable power.
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width = 0.8\textwidth]{p_loec_c.pdf}
   \caption{Simulation results for count data. Power (top) and Type I error (bottom) for determination of LOEC. Compared methods were: Linear model after log (Ax + 1) transformation (lm), negative binomial GLM with LRT (glm\_nb), negative binomial GLM with parametric boostrap (glm\_pb), quasi-Poisson GLM (glm\_qp) and pairwise Wilcoxon test on untransformed data (np). For n = 3 and $\mu_C$ = {2, 4} less then 80\% of glm\_nb and glm\_pb models did converge.}
@@ -321,7 +329,7 @@ At low samples sizes the binomial GLM showed greatest power for testing the trea
 Kruskal-Wallis test had lowest power and a low Type I error rate.
 However, the difference between methods quickly vanished with increasing samples sizes (Figure \ref{fig:p_glob_p}).
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width = 0.8\textwidth]{p_glob_p.pdf}
   \caption{Simulation results for binomial data. Power (top) and Type I error (bottom) for the test of a treatment effect. Compared methods were: Linear model after arcsine square root transformation (lm), binomial GLM with LRT (glm) and Kruskal-Wallis test on untransformed data.}
@@ -334,7 +342,7 @@ GLM had less power and showed a low Type 1 error rate, especially with decreasin
 The pairwise Wilcoxon test had no power at all for n = 3.
 The differences in power to detect a LOEC vanished quickly with increasing sample sizes (Figure \ref{fig:p_loec_p}). 
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width = 0.8\textwidth]{p_loec_p.pdf}
   \caption{Simulation results for binomial data. Power (top) and Type I error (bottom) for determination of LOEC. Compared methods were: Linear model after arcsine square root transformation (lm), binomial GLM with LRT (glm) and Kruskal-Wallis test on untransformed data.}
@@ -369,8 +377,13 @@ Non-parametric statistics are focussing on testing, but not on estimation of eff
 GLM allows the estimation, additional to testing, and the interpretation of effects might give further insights into ecotoxicological studies.
 Therefore, we do not advise to use non-parametric tests for non-normal data, but instead use GLMs.
 
-
 %% --- general low power
+Extremely low samples sizes (n \textless 5) are common in mesocosm experiments \citep{sanderson_pesticide_2002,szocs_analysing_2015}.
+At such sample sizes, and a simulated reduction of 50\% in abundance, power to detect a treatment effect was unacceptably low (\textless 50\% for methods with appropriate Type 1 error, Figure \ref{fig:p_glob_c}).
+This is even worse for detecting the correct LOEC with power less than 15\%.
+
+
+%% Convergence MASS glm.nb not best algorithm
 
 
 

@@ -122,6 +122,8 @@ df <- read.table(file.path(datadir, 'brock.csv'), header = TRUE, sep = ';')
 df$Concentration <- factor(df$Concentration)
 plot(Abundance ~ Concentration, data = df)
 
+ddply(df, .(Concentration), summarize, mean(Abundance))
+
 
 
 ### -------- Methods -----------------------------------------------------------
@@ -129,7 +131,9 @@ plot(Abundance ~ Concentration, data = df)
 ### Normal + Transformation
 ## log(Ax+1) transformation
 # Ax = 2 , for min(x) & x != 0
+min(df$Abundance[df$Abundance != 0])
 A <- 2 / min(df$Abundance[df$Abundance != 0])
+min(df$Abundance[df$Abundance != 0]) * A
 df <- transform(df, log_Abundance = log(A*Abundance + 1))
 plot(log_Abundance ~ Concentration, data = df)
 
@@ -142,7 +146,7 @@ drop1(modlm, test = 'F')
 # LR-test
 drop1(modlm, test = 'Chisq')
 
-## Inference, parametres
+## Inference, parameters
 summary(modlm)
 coef(summary(modlm))
 # Wald-t
@@ -150,6 +154,9 @@ prettyNum(p.adjust(coef(summary(modlm))[ , 'Pr(>|t|)'], method = 'holm'))[2:6]
 # same as
 summary(glht(modlm, linfct = mcp(Concentration = 'Dunnett')),  
         test = adjusted('holm'))
+summary(glht(modlm, linfct = mcp(Concentration = 'Williams')),  
+        test = adjusted('holm'))
+
 
 ## predicted mean values with back transformation
 modlm_p <- predict(modlm, newdata = data.frame(Concentration = unique(df$Concentration)), 
@@ -318,7 +325,7 @@ p <- ggplot() +
   scale_linetype_manual(values=c('solid', '1111', 'dashed', 'dotdash')) + 
   mytheme +
   guides(linetype=guide_legend(title='Model')) +
-  xlab('Concetration [mg/L]') +
+  xlab('Concentration [mg/L]') +
   theme(axis.title.x = element_text(face="bold",size=18),
         axis.text.x  = element_text(size=14),
         axis.text.y  = element_text(size=14),

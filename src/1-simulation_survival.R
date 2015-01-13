@@ -82,6 +82,8 @@ plot_pow_glob_p <- ggplot(pow_glob_p) +
 plot_pow_glob_p
 
 
+
+
 ### loec
 pow_loec_p <- ldply(res1_p, p_loec, type = 'power')
 pow_loec_p$pE <- todo1_p$pE
