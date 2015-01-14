@@ -177,9 +177,9 @@ Confidence intervals (CI) where most narrow for the negative binomial model and 
 Accordingly, the determined LOECs differed (Normal: 3 mg/L, quasi-Poisson: \textgreater 10mg/L, negative binomial (Wald Z and bootstrap) : 0.3 mg/L).
 
 \citet{brock_minimum_2014} assumed normality after data transformation and reported a LOEC of \mbox{0.3 mg/L} for this data.
-The reason for this difference may be twofold: \citep{brock_minimum_2014} used a $log(2~y + 1)$ transformation, whereas we used a $log(0.182~y + 1)$ transformation \citep{van_den_brink_impact_2000}.
-We applied a two-sided Dunnett test, as the toxic response in a mesocosm experiment may be either decreasing or increasing (due to biological interactions).
-\citet{brock_minimum_2014} used a one-sided Williams test, which is know to have larger power if the assumptions are met \citep{jaki_statistical_2013}.
+The reason for this difference may be manyfold: \citep{brock_minimum_2014} used a $log(2~y + 1)$ transformation, whereas we used a $log(0.182~y + 1)$ transformation \citep{van_den_brink_impact_2000}.
+Moreover, we applied a two-sided Dunnett test, as the toxic response in a mesocosm experiment may be either decreasing or increasing (due to biological interactions).
+\citet{brock_minimum_2014} used a one-sided Williams test, which is known to have larger power if the assumptions are met \citep{jaki_statistical_2013}.
 This example demonstrates that the choice of the statistical model and procedure might have tremendous impact on ecotoxicological inferences, especially when sample sizes are low.
 
 \begin{figure}[h]
@@ -361,7 +361,7 @@ How should one choose
 
 %% --- Normality testing - choosing the correct model
 
-%% -- compare
+%% -- GLM / LR test not so good for low sample sizes.
 
 %% --- Multivariate + GLMM -------
 Although, our simulations covered only simple experimental designs, these findings may also extend to more complex designs. 
@@ -379,11 +379,12 @@ Therefore, we do not advise to use non-parametric tests for non-normal data, but
 
 %% --- general low power
 Extremely low samples sizes (n \textless 5) are common in mesocosm experiments \citep{sanderson_pesticide_2002,szocs_analysing_2015}.
-At such sample sizes, and a simulated reduction of 50\% in abundance, power to detect a treatment effect was unacceptably low (\textless 50\% for methods with appropriate Type 1 error, Figure \ref{fig:p_glob_c}).
+We simulated a reduction of 50\% in abundance and with such low sample sizes power to detect a treatment effect was unacceptably low (\textless 50\% for methods with appropriate Type 1 error, Figure \ref{fig:p_glob_c}).
 This is even worse for detecting the correct LOEC with power less than 15\%.
-Although, the use of LOEC/NOEC has been heavily criticized in the past \citep{landis_well_2011}  they are still regularly used in ecotoxicology \citep{jager_bad_2012}. 
-Especially in mesocosm studies NOEC calculations are used in the majority of mesocosm experiments \citep{brock_minimum_2014,efsa_ppr_guidance_2013}.
-% lesen honing, brock etc. aufpassen!
+Although, the use of LOEC/NOEC has been heavily criticized in the past \citep{landis_well_2011}  they are still regularly used in ecotoxicology \citep{jager_bad_2012}, especially in mesocosm studies NOEC calculations are used in the majority of mesocosm experiments \citep{brock_minimum_2014,efsa_ppr_guidance_2013}.
+% lesen honing, brock EFSA etc. aufpassen!
+% Auf MDD eingehen!
+% 50% reduction = class 4 for MDD (small effects can be determined?! - check)
 Our results suggest, that
 
 
