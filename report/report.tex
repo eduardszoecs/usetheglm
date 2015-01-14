@@ -143,7 +143,7 @@ To overcome this problem a quasi-Poisson distribution could be used which introd
   var(y_i) &= \Theta \lambda_i  \nonumber
 \end{align}
 
-Another possibility to deal with overdispersion is to use a negative binomial distribution
+Another possibility to deal with overdispersion is to use a negative binomial distribution:
 
 \begin{align}
   y_i &\sim NB(\lambda, \kappa) \label{eqn:negbin}  \\
@@ -160,25 +160,25 @@ The above described models are most commonly used in ecology, although other dis
 \subsubsection{Hypothesis testing}
 
 On this data, we could test different hypotheses like (i) if is there any effect of the treatment or (ii) test single parameters (treatments) to determine the LOEC.
-We used F-tests for the normal and quasi-Poisson models and Likelihood-Ratio (LR) tests for Poisson and Negative binomial models to test if there is any treatment related effect.
-To assess the LOEC we used Dunnett contrasts with Wald t tests (normal and quasi-poisson) and Wald Z tests (Poisson and negative binomial) following general recommendations \citep{bolker_generalized_2009}. 
-Moreover, we used parametric bootstrap (with 2000 bootstrap samples) to assess the LR and parameters in the negative binomial model \citep{faraway_extending_2006}.
-For comparison, we also performed the commonly used non-parametric Kruskal-Wallis test and pairwise Wilcoxon test on untransformed data.
-P-values from multiple comparisons where adjusted using the method of \citet{holm_simple_1979}.
+We used F-tests for the normal and quasi-Poisson models and Likelihood-Ratio (LR) tests for Poisson and negative binomial models to test if there is any treatment related effect.
+To assess the LOEC we used Dunnett contrasts with one-sided Wald t tests (normal and quasi-poisson) and one-sided Wald Z tests (Poisson and negative binomial) following general recommendations \citep{bolker_generalized_2009}. 
+% Moreover, we used parametric bootstrap (with 2000 bootstrap samples) to assess the LR and parameters in the negative binomial model \citep{faraway_extending_2006}.
+% For comparison, we also performed the commonly used non-parametric Kruskal-Wallis test and pairwise Wilcoxon test on untransformed data.
+% P-values from multiple comparisons where adjusted using the method of \citet{holm_simple_1979}.
 
 
 \subsubsection{Results}
-F-test of the linear model  (F = 2.57, p = 0.084) and the quasi-Poisson model (F = 2.90, p = 0.061) as well as Kruskal-Wallis test (p = 0.145) did not indicate any treatment related effects.
-The LR test of the negative binomial model indicated a treatment related effect (LR = 13.99, p = 0.016), whereas parametric bootstrap did not (p = 0.058).
-Because of overdispersion the Poisson model did not fit to the data and inferences are not valid. \todo{see supplement}
+The Poisson model showed considerable overdispersion and did not fit to the data. Therefore, inferences are not valid and we do not further discuss it's results. \todo{see supplement}
+The normal (F = 2.57, p = 0.084) and quasi-Poisson model (F = 2.90, p = 0.061) did not indicate any treatment related effects.
+Whereas the LR test of the negative binomial model indicated a treatment related effect (LR = 13.99, p = 0.016).
 
-All methods resulted in similar predicted values except the normal model predicting always lower abundances (Figure \ref{fig:example}). 
-Confidence intervals (CI) where most narrow for the negative binomial model and widest for quasi-Poisson - especially at lower estimated abundances.
-Accordingly, the determined LOECs differed (Normal: 3 mg/L, quasi-Poisson: \textgreater 10mg/L, negative binomial (Wald Z and bootstrap) : 0.3 mg/L).
+All methods resulted in similar predicted values, except the normal model predicting always lower abundances (Figure \ref{fig:example}). 
+95\% Confidence intervals (CI) where most narrow for the negative binomial model and widest for quasi-Poisson - especially at lower estimated abundances.
+Accordingly, the determined LOECs differed (Normal and quasi-Poisson: 3 mg/L, negative binomial: 0.3 mg/L).
 
 \citet{brock_minimum_2014} assumed normality after data transformation and reported a LOEC of \mbox{0.3 mg/L} for this data.
-The reason for this difference may be manyfold: \citep{brock_minimum_2014} used a $log(2~y + 1)$ transformation, whereas we used a $log(0.182~y + 1)$ transformation \citep{van_den_brink_impact_2000}.
-Moreover, we applied a two-sided Dunnett test, as the toxic response in a mesocosm experiment may be either decreasing or increasing (due to biological interactions).
+The reason for this difference may be twofold: \citep{brock_minimum_2014} used a $log(2~y + 1)$ transformation, whereas we used a $log(0.182~y + 1)$ transformation \citep{van_den_brink_impact_2000}.
+Moreover, we applied a one-sided Dunnett test, as the toxic response in a mesocosm experiment may be either decreasing or increasing (due to biological interactions).
 \citet{brock_minimum_2014} used a one-sided Williams test, which is known to have larger power if the assumptions are met \citep{jaki_statistical_2013}.
 This example demonstrates that the choice of the statistical model and procedure might have tremendous impact on ecotoxicological inferences, especially when sample sizes are low.
 

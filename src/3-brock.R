@@ -107,6 +107,7 @@ modpois_upr <- modpois$family$linkinv(modpois_p$fit + 1.96 * modpois_p$se.fit)
 ### --------
 ### quasi-Poisson GLM
 modqpois <- glm(Abundance ~ Concentration, data = df, family = quasipoisson)
+summary(modqpois)
 
 ## Inference, global test
 # F test
