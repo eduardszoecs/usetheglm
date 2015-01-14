@@ -25,11 +25,8 @@ require(reshape2)
 require(ggplot2)
 require(plyr)
 require(gridExtra)
-# require(bbmle)
-require(lmtest)
 require(MASS)
-# require(pbkrtest)
-# require(multcomp)
+require(multcomp)
 require(exactRankTests)
 
 

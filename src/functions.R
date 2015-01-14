@@ -29,79 +29,39 @@ pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
 ### Parametric bootstrap (PB)
 
 ### --------------------
-### PB of LR statistic and bartlett corretion
-myPBmodcomp <- function(m1, m0, data, npb){
-  ## create reference distribution of LR and coefs
-  myPBrefdist <- function(m1, m0, data){
-    # simulate from null
-    x0 <- simulate(m0)
-    # refit null
-    newdata0 <- data
-    newdata0[ , as.character(formula(m0)[[2]])] <- x0
-    m1r <-  try(update(m1, .~., data = newdata0))
-    m0r <- try(update(m0, .~., data = newdata0))
-    # simulate from full model
-    x1 <- simulate(m1)
-    # refit model
-    newdata1 <- data
-    newdata1[ , as.character(formula(m1)[[2]])] <- x1
-    m1r1 <-  try(update(m1, .~., data = newdata1))
-    
-    # check convergence (otherwise return NA for LR)
-    if(!is.null(m0r[['th.warn']]) | !is.null(m1r[['th.warn']]) | 
-         inherits(m0r, "try-error") | inherits(m1r, "try-error")){
-      LR <- 'convergence error'
-    } else {
-      LR <- -2 * (logLik(m0r) - logLik(m1r))
-    }
-    # convergence for coefs
-    if(!is.null(m1r1[['th.warn']]) | inherits(m1r1, "try-error")){
-      coefs <- 'convergence error'
-    } else {
-      coefs <- coef(m1r1)
-    }
-    # return LR and coefs.
-    out <- list(LR = LR, coefs = coefs)
-    return(out)
+### PB of LR statistic
+
+# generate reference distribution
+myPBrefdist <- function(m1, m0, data){
+  # simulate from null
+  x0 <- simulate(m0)
+  # refit null
+  newdata0 <- data
+  newdata0[ , as.character(formula(m0)[[2]])] <- x0
+  m1r <-  try(update(m1, .~., data = newdata0))
+  m0r <- try(update(m0, .~., data = newdata0))
+  # check convergence (otherwise return NA for LR)
+  if(!is.null(m0r[['th.warn']]) | !is.null(m1r[['th.warn']]) | 
+       inherits(m0r, "try-error") | inherits(m1r, "try-error")){
+    LR <- 'convergence error'
+  } else {
+    LR <- -2 * (logLik(m0r) - logLik(m1r))
   }
-  
+  return(LR)
+}
+
+myPBmodcomp <- function(m1, m0, data, npb){
   ## calculate reference distribution
-  ref <- replicate(npb, myPBrefdist(m1 = m1, m0 = m0, data = data), 
-                   simplify = FALSE)
-  LR <- sapply(ref, function(x) x[['LR']])
-  coefs <- lapply(ref, function(x) x[['coefs']])
-  
-  # check convergence
-  nconv_LR <-  LR == 'convergence error'
+  LR <- replicate(npb, myPBrefdist(m1 = m1, m0 = m0, data = data), 
+                   simplify = TRUE)
   # rm those
-  LR <- as.numeric(LR[!nconv_LR])
-  nconv_LR <- sum(!nconv_LR)
-  
-  nconv_coefs <- sapply(coefs, function(x) any(x == 'convergence error'))
-  # rm those
-  coefs[nconv_coefs] <- NULL
-  nconv_coefs <- sum(!nconv_coefs)
-  coefs <- do.call(rbind, coefs)
-  
+  LR <- as.numeric(LR)
+  nconv_LR <- sum(!is.na(LR))
   ## original stats
   LRo <- c(-2 * (logLik(m0) - logLik(m1)))
-#   COEFo <- coef(m1)
-  
   ## p-value from parametric bootstrap
   p.pb <- mean(c(LR, LRo) >= LRo, na.rm = TRUE)
-
-  ## p-value for coef
-  # proportions of boostrap coefs > or < 0
-  twosidep <- function(coef){
-    p1 <- sum(coef > 0) / length(coef)
-    p2 <- sum(coef < 0) / length(coef)
-    p <- min(p1,p2) * 2
-    return(p)
-  }
-  p.coef <- apply(coefs, 2, twosidep)
-  
-  return(list(nconv_LR = nconv_LR, nconv_coefs = nconv_coefs,
-              p.pb = p.pb, p.coef = p.coef))
+  return(list(nconv_LR = nconv_LR, p.pb = p.pb))
 }
 
 
@@ -148,31 +108,45 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     # Test of effects
     # check convergence
     if(!is.null(modglm[['th.warn']]) | !is.null(modglm.null[['th.warn']])){
-      glm_lr <- 'convergence error'
-      glm_lrpb <- 'convergence error'
+      p_glm_lr <- 'convergence error'
+      p_glm_lrpb <- 'convergence error'
     } else {
-      glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
+      p_glm_lr <- anova(modglm, modglm.null, test = 'Chisq')[2 , 'Pr(Chi)']
       # Parametric bootstrap for GLM LR
       glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, npb = npb)
-      glm_lrpb <- glm_pb$p.pb
+      p_glm_lrpb <- glm_pb$p.pb
     }
     # F Tests
-    lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
-    qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
+    p_lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
+    p_qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
     # non-parametric test
-    pk <- kruskal.test(y ~ x, data = df)$p.value
+    p_k <- kruskal.test(y ~ x, data = df)$p.value
     
     # ----------------
-    # Test of parameters (LOECs)
-    # multiple comparisons using Dunnett-contrasts
-    pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(>|t|)'], method = 'holm')
+    # LOEC
+    # lm
+    mc_lm <- summary(glht(modlm, linfct = mcp(x = 'Dunnett'),  
+                          alternative = 'less'))$test$pvalues
     suppressWarnings( # intended warnings about no min -> no LOEC
-      loeclm <- min(which(pmclm < 0.05))
+      loeclm <- min(which(mc_lm < 0.05))
       )
-    pmcqglm <-  p.adjust(coef(summary(modqglm))[2:6 , 'Pr(>|t|)'], method = 'holm')
-    suppressWarnings(
-      loecqglm <- min(which(pmcqglm < 0.05))
+    # negbin
+    if(!is.null(modglm[['th.warn']])){
+      loecglm <- 'convergence error'
+    } else {
+      mc_glm <- summary(glht(modglm, linfct = mcp(x = 'Dunnett'),  
+                             alternative = 'less'))$test$pvalues
+      suppressWarnings(
+        loecglm <- min(which(mc_glm  < 0.05))
       )
+    }
+    # quasi
+    mc_qglm <- summary(glht(modqglm, linfct = mcp(x = 'Dunnett'),  
+                          alternative = 'less'))$test$pvalues
+    suppressWarnings( # intended warnings about no min -> no LOEC
+      loecqglm <- min(which(mc_qglm < 0.05))
+    ) 
+    
     # pairwise wilcox
     suppressWarnings( # ties
       pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
@@ -180,27 +154,15 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     suppressWarnings(
       loecpw <- min(which(pw < 0.05))
       )
-    if(!is.null(modglm[['th.warn']])){
-      loecglm <- 'convergence error'
-      loecglm_pb <- 'convergence error'
-    } else {
-      pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(>|z|)'], method = 'holm')
-      suppressWarnings(loecglm <- min(which(pmcglm < 0.05)))
-      pmcglm_pb <- p.adjust(lm_pb$p.coef[2:6], method = 'holm')
-      suppressWarnings(
-        loecglm_pb <- min(which(pmcglm_pb < 0.05))
-        )
-    }
-
+    
     # ---------
     # return object
-    return(list(lm_lr = lm_lr, glm_lr = glm_lr, lm_f = lm_f, 
-                qglm_f = qglm_f,
-                glm_lrpb = glm_lrpb, 
-                pk = pk, 
+    return(list(p_lm_f = p_lm_f, p_glm_lr = p_glm_lr, p_qglm_f = p_qglm_f,
+                p_glm_lrpb = p_glm_lrpb, p_k = p_k, 
                 loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, 
-                loecpw = loecpw, loecglm_pb = loecglm_pb
-    ))
+                loecpw = loecpw
+                )
+           )
   }
   # run on simulated data
   res <- apply(z$y, 2, ana, x = z$x, npb = npb)
