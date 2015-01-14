@@ -12,6 +12,7 @@
 \usepackage{sansmath} % sans in math
 \usepackage[]{color}
 \usepackage{booktabs} % for cmidrule
+\usepackage{siunitx} % to aling column s on dots
 \usepackage{todonotes}
 \usepackage[
 	left=3cm,
@@ -224,6 +225,9 @@ Data of type \emph{x out of n} are typically modelled by a binomial distribution
 , with N = number of exposed animals and $\pi$ is the probability of survival.
 The variance of the binomial distribution is a quadratic function of the mean.
 
+We used F-test for the normal and LR test for binomial GLM to determine a general treatment effect.
+LOEC was assessed using one-sided Dunnett contrasts.
+
 
 \subsubsection{Results}
 For this dataset, both methods yielded to same ecotoxicological inferences:
@@ -233,21 +237,21 @@ However, the coefficients of the binomial model are directly interpretable as ch
 
 \begin{table}[h]
 \centering
-\caption{Estimated parameters and Confidence Intervals for the binomial data example. 
-Bold values indicate LOEC as determined using Dunnett contrasts and adjustment for multiple testing.}
+\footnotesize
+\caption{Estimated parameters and 95\% Confidence Intervals for the binomial data example. 
+Asterisks indicate LOEC as determined using one-sided Dunnett tests.}
 \label{tab:ex_bin}
-\begin{tabular}{llclc}
+\begin{tabular}{lS[table-format=3.2]lS[table-format=3.2]l}
 \hline
  & \multicolumn{4}{c}{Model} \\ 
-\cmidrule(lr){2-5} 
 Parameter & \multicolumn{2}{c}{LM} & \multicolumn{2}{c}{GLM} \\ 
 \cmidrule(lr){2-3} \cmidrule(lr){4-5} 
-Control & 1.331 & (1.180, 1.481) & 2.994 & (1.523, 4.366) \\ 
+Control ($\alpha$) & 1.331 & (1.180, 1.481) & 2.994 & (1.523, 4.366) \\ 
 32 \textmu g/L  & -0.147 & (-0.360, 0.066) & -1.21 & (2.876, 0.456) \\ 
 64 \textmu g/L  & 0.041 & (0.172, 0.254) & 0.719 & (-1.723, 3.161) \\ 
 128 \textmu g/L  & -0.076 & (0.289, 0.137) & -0.747 & (-2.505, 1.010) \\ 
 256 \textmu g/L & -0.221 & (-0.434, -0.008) & -1.708 & (-3.312, -0.104) \\ 
-512 \textmu g/L  & \textbf{-0.727} & \textbf{(-0.941, -0.514)} & \textbf{-3.675} & \textbf{(-5.244, -2.107)} \\ 
+512 \textmu g/L  & -0.727 & (-0.941, -0.514)$*$ & -3.675 & (-5.244, -2.107)$*$ \\ 
 \hline
 \end{tabular}
 \end{table}

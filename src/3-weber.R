@@ -43,8 +43,9 @@ plot(fitted(modlm), residuals(modlm)); abline(h = 0)
 # F-test
 drop1(modlm, test = 'F')
 # LOEC
-summary(glht(modlm, linfct = mcp(conc = 'Dunnett')), test = adjusted('holm'))
-bartlett.test(dfm$y_asin, dfm$conc)
+# one-sided dunnett
+summary(glht(modlm, linfct = mcp(conc = 'Dunnett'), alternativ = 'less'))
+
 
 ### -------- Binomial GLM
 modglm <- glm(y ~ conc , data = dfm, family = binomial(link = 'logit'), weights = rep(10, nrow(dfm)))
@@ -52,9 +53,6 @@ modglm.null <- glm(y ~ 1 , data = dfm, family = binomial, weights = rep(10, nrow
 summary(modglm)
 # LR-test
 drop1(modglm, test = 'Chisq')
-1 - pchisq(- 2 * (logLik(modglm.null) - logLik(modglm)), 5)
-# Chisq
-- 2 * (logLik(modglm.null) - logLik(modglm))
-summary(glht(modglm, linfct = mcp(conc = 'Dunnett')), test = adjusted('holm'))
+summary(glht(modglm, linfct = mcp(conc = 'Dunnett'), alternative = 'less'))
 
 
