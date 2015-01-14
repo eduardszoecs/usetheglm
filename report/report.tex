@@ -257,12 +257,6 @@ Control ($\alpha$) & 1.331 & (1.180, 1.481) & 2.994 & (1.523, 4.366) \\
 \end{table}
 
 
-%% --------------------------------
-% \section{Review}
-% The example above shows that different models and methods may lead to different conclusions.
-% We now look at methods that are currently used by ecotoxicologists.
-
-
 
 \section{Simulations}
 We used simulations to compare the methods described above to analyse count and binomial data.
@@ -276,14 +270,22 @@ Source code for the simulations is available online at \url{https://github.com/E
 \subsection{Count data}
 \subsubsection{Methods}
 We simulated count data that mimics count data encountered in mesocosm experiments, with five treatments (T1 - T5) and one control group (C).
-Counts were drawn from a negative binomial distribution with slight over dispersion (dispersion parameter for all treatments: $\kappa = 3.91$).
+Counts were drawn from a negative binomial distribution with slight over dispersion (dispersion parameter for all treatments: $\kappa = 0.25$).
 We simulated datasets with different number of replicates (N = \{3, 6, 9\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 64, 128\}). 
 For power estimation mean abundance in treatments T2 - T5 was reduced to half of control and T1 ($\mu_\text{\tiny T2}~=~...~=~\mu_\text{\tiny T5}~=~0.5~\mu_\text{\tiny C} = 0.5~\mu_\text{\tiny T1}$), resulting to a theoretical LOEC at T2.
 For Type I error estimation mean abundance was kept equal between all groups.
 
 For each combination we generated 100 datasets. 
-For each dataset we tested the treatment effect using linear model after log (Ax + 1) transformation ($LM$), negative binomial GLM with LRT ($GLM_{nb}$), negative binomial GLM with parametric boostrap ($GLM_{pb}$), quasi-Poisson GLM ($GLM_{qp}$) and Kruskal-Wallis test on untransformed data ($NP$).
-Moreover, we compared the methods ability to determine the LOEC (T2 in our simulation design) by comparing inferences on model parameters and a pairwise Wilcoxon test.
+We fitted a linear model after log (Ax + 1) transformation ($LM$), negative binomial GLM ($GLM_{nb}$) and quasi-Poisson GLM ($GLM_{qp}$) to this datasets. 
+
+We tested a general treatment effect using F tests ($LM$ and $GLM_qp$) and LR tests ($GLM_nb$). Additionally, we applied used parametric boostrap to assess the LR in the negative binomial model ($GLM_pb$) and used a Kruskal-Wallis test on untransformed data as non-parametric method.
+
+Moreover, we compared the methods ability to determine the LOEC (T2 in our simulation design).
+
+\todo{hier noch besser machen!}
+As our simulation
+We used one-sided Dunnett tests 
+ by comparing inferences on model parameters and using pairwise Wilcoxon test as non-parametric method.
 
 \subsubsection{Results}
 For this simulation design (reduction in abundance by 50\%) a sample size of n = 9 was needed to achieve a power greater then 80\%.

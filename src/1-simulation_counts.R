@@ -23,7 +23,7 @@ ctrl <- 2^(c(1:7))
 # both as grid
 todo1_c <- expand.grid(N = N, ctrl = ctrl)
 # fixed theta
-theta  <- rep(3.91, 6)  
+theta  <- rep(4, 6)  
 
 
 #####------------------------------------

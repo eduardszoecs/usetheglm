@@ -146,8 +146,6 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
         
     # ------------- 
     # Test of effects
-    # LR Tests (+ bootstrap)
-    lm_lr <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
     # check convergence
     if(!is.null(modglm[['th.warn']]) | !is.null(modglm.null[['th.warn']])){
       glm_lr <- 'convergence error'
