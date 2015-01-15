@@ -95,6 +95,7 @@ plot_pow_glob_c <- ggplot(pow_glob_c) +
   ylim(c(0,1))
 plot_pow_glob_c
 
+# max power for N = 3, excluding glm_nb
 max(pow_glob_c[pow_glob_c$N == 3 & !pow_glob_c$variable %in% 'glm_nb', 'power'])
 
 
@@ -123,18 +124,26 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
   ylim(c(0,1))
 plot_pow_loec_c
 
-# max(pow_loec_c[pow_loec_c$N == 3 & !pow_loec_c$variable %in% c('glm_nb'), 'power'])
+max(pow_loec_c[pow_loec_c$N == 3 & !pow_loec_c$variable %in% c('glm_nb'), 'power'])
 
 
-# # compare power
-# merged <- merge(pow_glob_c[ , c(1,2,4, 5)], pow_loec_c, by = c('N', 'muc', 'variable'), suffixes = c('glob', 'loec'))
-# merged$ratio <- merged$powerloec / merged$powerglob
-# head(merged)
-# ggplot(merged) +
-#   geom_line(aes(y = ratio- 1, x = log2(muc), group = variable , linetype = variable)) +
-#   facet_grid( ~N, labeller = n_labeller) 
-# mean(merged$ratio)
-# range((merged$ratio[merged$variable %in% c('lm', 'glm_np', 'glm_pb', 'glm_qp') & merged$muc > 4] - 1) * 100)
+# compare power
+merged <- merge(pow_glob_c[ , c(1,2,4, 5)], pow_loec_c, by = c('N', 'muc', 'variable'), suffixes = c('glob', 'loec'))
+merged$ratio <- merged$powerloec / merged$powerglob
+merged$reduction <- (merged$ratio -1) * 100
+head(merged)
+
+# exclude muc <= 4
+merged <- merged[merged$muc > 4, ]
+
+ggplot(merged) +
+  geom_line(aes(y = reduction, x = log2(muc), group = variable , linetype = variable)) +
+  facet_grid( ~N, labeller = n_labeller) 
+
+range(merged$reduction[merged$variable %in% c('lm', 'glm_pb', 'glm_qp')])
+mean(merged$reduction[merged$variable %in% c('lm')])
+
+merged[merged$N == 3 & merged$variable %in% c('lm', 'glm_pb', 'glm_qp'), 'powerloec']
 
 ### ----------------------------------------------------------------------------
 # Type1 Error
@@ -228,3 +237,4 @@ plot_t1_loec_c <- ggplot(t1_loec_c) +
   scale_shape_manual('Method', values=c(16,2,4,17)) +
   scale_linetype_discrete('Method')
 plot_t1_loec_c 
+

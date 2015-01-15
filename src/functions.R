@@ -189,9 +189,11 @@ p_loec1 <- function(u, type = NULL){
   take <- c("loeclm", "loecglm", "loecqglm", "loecpw")
   loecs <- ldply(u, function(w) as.numeric(unlist(w[take])))
   if(type == 't1'){
+    # x should be Inf
     pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / sum(!is.na(x)))
   } 
   if(type == 'power'){
+    # x should be 2
     pow <- apply(loecs, 2, function(x) sum(x == 2, na.rm = TRUE) / sum(!is.na(x)))
   }
   names(pow) <- take

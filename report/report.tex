@@ -92,7 +92,6 @@ Recently studies concluded that data transformations should be avoided and GLMs 
 Especially in the light of low sample sizes, which are common in ecotoxicological studies \citep{sanderson_pesticide_2002,szocs_analysing_2015}, differences between statistical methods may be apparent. 
 
 We first give two motivating examples showing that different methods may lead to different conclusions. 
-% Then review what types of analysis are used by ecotoxicologists.
 Then we compare three types of statistical methods (transformation and normality assumption, GLM, non-parametric tests) using simulations.
 
 
@@ -101,8 +100,8 @@ Then we compare three types of statistical methods (transformation and normality
 \citet{brock_minimum_2014} provides a typical example data from a mesocosm study of mayfly larvae counts on artificial substrate samplers at one sampling day (Figure \ref{fig:example}). 
 18 mesocosms have been sampled, with 6 treatments (Control, n = 4; 0.1 mg/L, 0.3mg/L, 1mg/l, 3mg/L, n = 3; 10 mg/L, n = 2).
 We will use this data to demonstrate the differences between transformations, different GLMs and a non-parametric approach.
-A full exemplary analysis of this data using R can be found in the supplement.
-\todo{add R reference}
+A full exemplary analysis of this data using R \citep{r_core_team_r:_2014} can be found in the supplement.
+
 
 \subsubsection{The linear model}
 To fit the standard linear model, we first transform the counts following \citet{van_den_brink_impact_2000}:
@@ -265,8 +264,7 @@ We used simulations to compare the methods described above to analyse count and 
 Methods were compare in terms of Type I error (maintain a significance level of 0.05 when there is no effect) and power (detect an effect when it is present). 
 We fitted the models and tested hypotheses on the simulated data as described in the motivating example.
 
-All simulations were done in R (Version 3.1.2) on a 64-bit Linux machine with 8 GB and 2.2 GHz.
-\todo{add R reference}
+All simulations were done in R (Version 3.1.2) \citep{r_core_team_r:_2014} on a 64-bit Linux machine with 8 GB and 2.2 GHz.
 Source code for the simulations is available online at \url{https://github.com/EDiLD/usetheglm}. \todo{git repo currently private -> tidy}
 
 \subsection{Count data}
@@ -284,14 +282,13 @@ To assess the performance in detecting the LOEC (T2 in our simulation design) we
  
 
 \subsubsection{Results}
+For small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of the negative binomial models ($GLM_{nb}$ and $GLM_{pb}$) did not converge to a solution (convergence rate \textless 80\% of the simulations, see supplement).  \todo{Supplement Convergence table.}
 For this simulation design (reduction in abundance by 50\%) a sample size of n = 9 was needed to achieve a power greater then 80\%.
-For small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of the negative binomial models ($GLM_{nb}$ and $GLM_{pb}$) did not converge to a solution (convergence rate \textless 80\% of the simulations). \todo{Supplement Convergence table.}
-
 $GLM_{nb}$ showed an increased Type I error at low sample sizes for the test of treatment effect. 
-However, this decreased to an acceptable limit with increasing sample sizes (Figure \ref{fig:p_glob_c}, bottom).
+However, this decreased with increasing sample sizes (Figure \ref{fig:p_glob_c}, bottom).
 $LM$, $GLM_{qp}$ and $GLM_{pb}$ maintained an appropriate Type I error, with $GLM_{qp}$ having greatest power.
 The Kruskal-Wallis test showed least power, with low Type I error at small sample sizes. 
-At bigger sample sizes (n = 9) all GLM had higher power than LM or the Kruskal test (Figure \ref{fig:p_glob_c}). 
+With increasing sample sizes all GLM showed greater power than LM or the Kruskal test (Figure \ref{fig:p_glob_c}, top). 
 
 \begin{figure}[h]
   \centering
@@ -301,10 +298,9 @@ At bigger sample sizes (n = 9) all GLM had higher power than LM or the Kruskal t
   \label{fig:p_glob_c}
 \end{figure}
 
-The inferences on parameters showed up to 87\% less power compared to the test of a general treatment effect (excluding $\mu_C$ = \{2, 4\} due to convergence problems and the pairwise wilcox test; Figures \ref{fig:p_glob_c} and \ref{fig:p_loec_c}).
-The pairwise Wilcoxon Test had no power at all to detect the correct LOEC.
-$GLM_{nb}$ and $GLM_{pb}$ showed an increased Type 1 error at low sample sizes and $GLM_{qp}$ beeing slightly conservative.
-$GLM_{pb}$ and $LM$ yielded to comparable power.
+The inferences on parameters showed up to 55\% less power compared to the test of a general treatment effect (excluding $\mu_C$ = \{2, 4\} due to convergence problems and the pairwise wilcox test; Figures \ref{fig:p_glob_c} and \ref{fig:p_loec_c}).
+At low sample sizes $GLM_{nb}$ showed an increased Type 1 error and the pairwise Wilcoxon Test had no power at all to detect the correct LOEC.
+$GLM_{qp}$ and $LM$ yielded comparable Type 1 errors, with $GLM_{qp}$ having greater power.
 
 \begin{figure}[h]
   \centering
@@ -351,48 +347,62 @@ The differences in power to detect a LOEC vanished quickly with increasing sampl
   \label{fig:p_loec_p}
 \end{figure}
 
+\todo{Warum sackt glmm so ab im T1 error?}
+
 
 
 \section{Discussion}
-Statistical hypothesis tests are commonly used to make ecotoxicological inferences. 
-Often these inferences are based on experiments with small sample sizes due to practical contraints.
-\todo{Überleitung}
-
+Statistical hypothesis tests are commonly used in ecotoxicology to make inferences on pesticide effects.
+The choice how we treat, model and test the data can have massive impacts on the conclusions we draw from experiments. 
 We showed for two common data types in ecotoxicology, that using an appropriate model yielded higher statistical power, than trying to meet the assumptions of normality and variance homogeneity using transformations. 
-How should one choose 
+Therefore, we cannot recommend the current practice to either transform the data or use non-parametric approaches if data is not normally distributed, but instead use models fitting to the data.
 
-%% --- Normality testing - choosing the correct model
+%% --- general low power
+Ecotoxicology experiments are often planned with small sample sizes due to practical constraints. 
+For example, extremely low samples sizes (n \textless 5) are common in mesocosm experiments \citep{sanderson_pesticide_2002,szocs_analysing_2015}.
+Statistical power is crucial for the determination of LOEC/NOEC values.
+Although, the use of LOEC/NOEC has been heavily criticized in the past \citep{landis_well_2011}  they are still regularly used in ecotoxicology \citep{jager_bad_2012}.
+Especially in mesocosm studies NOEC calculations are used in the majority of mesocosm experiments \citep{brock_minimum_2014,efsa_ppr_guidance_2013}.
+To counteract the problems with low power \citet{brock_minimum_2014} proposed to take the Minimum Detectable Difference (MDD), a methods to assess statistical power \emph{a posteriori} for decision into account.
+Our results suggest that power in common mesocosm experiment is low.
+For common samples sizes and a reduction in abundance of 50\% we found a unacceptably low power to detect any treatment related effect (\textless 50\% for methods with appropriate Type 1 error, Figure \ref{fig:p_glob_c}).
+This was even worse for detecting the correct LOEC with power less than 30\%.
+This suggests that reported NOEC from mescosm experiments should be interpreted with caution.
 
-%% -- GLM / LR test not so good for low sample sizes.
+Moreover, \citet{brock_minimum_2014} proposed that statistical power of mesocosm experiments can be increased by reducing sampling variability by better sampling and quantification methods. 
+But they also caution to avoid depleting populations by increasing sampling efficiency.
+As we showed, using appropriate statistical methods (like GLMs) can enhance the power at no extra costs.
+
+%% --- Non-parametric
+It has been advocated that, in the typical case of small sample sizes (n \textless 20) and non-normal data, non-parametric tests perform better than parametric tests assuming normality \citep{wang_making_2011}.
+In contrast our results showed that the often applied Kruskal test and pairwise Wilcoxon test have equal or less power compared to tests assuming normality after data transformation.
+Moreover, GLMs always performed better than non-parametric tests. 
+However, there might be more powerful non-parametric tests available \citep{konietschke_rank-based_2012} which we did not investigate.
+Non-parametric statistics are focused on testing, but not on estimation of effects.
+Additional to testing GLM allow the estimation and interpretation of effects that might not be statistically significant, but ecologically relevant.
+Therefore, we do not advise to generally use non-parametric tests for non-normal data, but instead try to fit GLMs.
 
 %% --- Multivariate + GLMM -------
 Although, our simulations covered only simple experimental designs, these findings may also extend to more complex designs. 
 Nested or repeated designs with non-normal data could be analysed using Generalized Linear Mixed Models (GLMM) and may have advantages with respect to power \citep{stroup_rethinking_2014}.
 For community analyses \emph{GLM for multivariate data} have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \citep{warton_distance-based_2012,szocs_analysing_2015}.
 
-%% --- Non-parametric
-It has been advocated that, in the typical case of small sample sizes (n \textless 20) and non-normal data, non-parametric tests perform better than parametric tests assuming normality \citep{wang_making_2011}.
-In contrast our results showed that the often applied Kruskal test and pairwise Wilcoxon test have equal or less power compared to tests assuming normality after data transformation.
-GLM always performed better than non-parametric tests. 
-However, there might be more powerful non-parametric tests available \citep{konietschke_rank-based_2012}.
-Non-parametric statistics are focussing on testing, but not on estimation of effects.
-GLM allows the estimation, additional to testing, and the interpretation of effects that might not be statistically significant, but ecologically relevant.
-Therefore, we do not advise to use non-parametric tests for non-normal data, but instead use GLMs.
-
-%% --- general low power
-Extremely low samples sizes (n \textless 5) are common in mesocosm experiments \citep{sanderson_pesticide_2002,szocs_analysing_2015}.
-We simulated a reduction of 50\% in abundance and with such low sample sizes power to detect a treatment effect was unacceptably low (\textless 50\% for methods with appropriate Type 1 error, Figure \ref{fig:p_glob_c}).
-This is even worse for detecting the correct LOEC with power less than 15\%.
-Although, the use of LOEC/NOEC has been heavily criticized in the past \citep{landis_well_2011}  they are still regularly used in ecotoxicology \citep{jager_bad_2012}, especially in mesocosm studies NOEC calculations are used in the majority of mesocosm experiments \citep{brock_minimum_2014,efsa_ppr_guidance_2013}.
-% lesen honing, brock EFSA etc. aufpassen!
-% Auf MDD eingehen!
-% 50% reduction = class 4 for MDD (small effects can be determined?! - check)
-Our results suggest, that
+Binomial data is often collected in lab trials, where increasing sample 
 
 
+
+
+%% --- Normality testing - choosing the correct model
+
+%% -- GLM / LR test not so good for low sample sizes.
 
 %% Convergence MASS glm.nb not best algorithm
 
+%% Power analysis
+
+%% statistically sound model
+
+%% binomial data
 
 
 
