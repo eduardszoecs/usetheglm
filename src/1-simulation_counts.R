@@ -73,14 +73,8 @@ if(sim1){
 # Results
 # global power
 pow_glob_c <- ldply(res1_c, p_glob1)
-pow_glob_c$muc <- rep(todo1_c$ctrl, each  = 6)
-pow_glob_c$N <- rep(todo1_c$N, each = 6)
-
-# rm lm_lr
-pow_glob_c  <- pow_glob_c[!pow_glob_c$variable %in% 'lm_lr', ]
-pow_glob_c$variable  <-  factor(pow_glob_c$variable, unique(pow_glob_c$variable)[c(2, 1, 3, 4,5)], 
-                                labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'np'))
-
+pow_glob_c$muc <- rep(todo1_c$ctrl, each  = 5)
+pow_glob_c$N <- rep(todo1_c$N, each = 5)
 
 plot_pow_glob_c <- ggplot(pow_glob_c) +
   geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable)) +
@@ -94,7 +88,7 @@ plot_pow_glob_c <- ggplot(pow_glob_c) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(0,2,4,16,17)) +
+  scale_shape_manual('Method', values=c(16,2,4,0,17)) +
   scale_linetype_discrete('Method') +
   ylim(c(0,1))
 plot_pow_glob_c
@@ -107,8 +101,8 @@ pow_loec_c <- ldply(res1_c, p_loec1, type = 'power')
 pow_loec_c$muc <- todo1_c$ctrl
 pow_loec_c$N <- todo1_c$N
 pow_loec_c  <- melt(pow_loec_c, id.vars = c('muc', 'N'), value.name = 'power')
-pow_loec_c$variable  <-  factor(pow_loec_c$variable, unique(pow_loec_c$variable)[1:5], 
-                                labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'np'))
+pow_loec_c$variable  <-  factor(pow_loec_c$variable, unique(pow_loec_c$variable)[1:4], 
+                                labels = c('lm', 'glm_nb', 'glm_qp', 'np'))
 
 plot_pow_loec_c <- ggplot(pow_loec_c) +
   geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable)) +
@@ -122,23 +116,23 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(0,2,4,16,17)) +
+  scale_shape_manual('Method', values=c(16,2,4,17)) +
   scale_linetype_discrete('Method') +
   ylim(c(0,1))
 plot_pow_loec_c
 
-max(pow_loec_c[pow_loec_c$N == 3 & !pow_loec_c$variable %in% c('glm_nb', 'glm_pb'), 'power'])
+# max(pow_loec_c[pow_loec_c$N == 3 & !pow_loec_c$variable %in% c('glm_nb'), 'power'])
 
 
-# compare power
-merged <- merge(pow_glob_c[ , c(1,2,4, 5)], pow_loec_c, by = c('N', 'muc', 'variable'), suffixes = c('glob', 'loec'))
-merged$ratio <- merged$powerloec / merged$powerglob
-head(merged)
-ggplot(merged) +
-  geom_line(aes(y = ratio- 1, x = log2(muc), group = variable , linetype = variable)) +
-  facet_grid( ~N, labeller = n_labeller) 
-mean(merged$ratio)
-range((merged$ratio[merged$variable %in% c('lm', 'glm_np', 'glm_pb', 'glm_qp') & merged$muc > 4] - 1) * 100)
+# # compare power
+# merged <- merge(pow_glob_c[ , c(1,2,4, 5)], pow_loec_c, by = c('N', 'muc', 'variable'), suffixes = c('glob', 'loec'))
+# merged$ratio <- merged$powerloec / merged$powerglob
+# head(merged)
+# ggplot(merged) +
+#   geom_line(aes(y = ratio- 1, x = log2(muc), group = variable , linetype = variable)) +
+#   facet_grid( ~N, labeller = n_labeller) 
+# mean(merged$ratio)
+# range((merged$ratio[merged$variable %in% c('lm', 'glm_np', 'glm_pb', 'glm_qp') & merged$muc > 4] - 1) * 100)
 
 ### ----------------------------------------------------------------------------
 # Type1 Error

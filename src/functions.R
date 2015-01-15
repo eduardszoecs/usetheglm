@@ -172,7 +172,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
 # Power
 p_glob1 <- function(z){ 
   # extract p-values
-  take <- c('lm_lr', 'glm_lr', 'lm_f', 'glm_lrpb', 'qglm_f', 'pk')
+  take <- c('p_lm_f', 'p_glm_lr','p_qglm_f', 'p_glm_lrpb', 'p_k')
   ps <- ldply(z, function(w) as.numeric(unlist(w[take])))
   names(ps) <- take
   ps <- melt(ps)
@@ -186,7 +186,7 @@ p_glob1 <- function(z){
 # loec
 p_loec1 <- function(u, type = NULL){
   # extract p-values
-  take <- c("loeclm", "loecglm", "loecglm_pb", "loecqglm", "loecpw")
+  take <- c("loeclm", "loecglm", "loecqglm", "loecpw")
   loecs <- ldply(u, function(w) as.numeric(unlist(w[take])))
   if(type == 't1'){
     pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / sum(!is.na(x)))
