@@ -76,7 +76,7 @@ plot_pow_glob_p <- ggplot(pow_glob_p) +
        y = expression(paste('Power (global test , ', alpha, ' = 0.05)'))) +
   # appearance
   mytheme +
-  scale_shape_manual('Method', values=c(0,2,4)) +
+  scale_shape_manual('Method', values=c(16,2,17)) +
   scale_linetype_discrete('Method') +
   ylim(c(0,1))
 plot_pow_glob_p
@@ -101,7 +101,7 @@ plot_pow_loec_p <- ggplot(pow_loec_p) +
   labs(x = 'pE', 
        y = expression(paste('Power (LOEC , ', alpha, ' = 0.05)'))) + 
   mytheme +
-  scale_shape_manual('Method', values=c(0,2,4)) +
+  scale_shape_manual('Method', values=c(16,2,17)) +
   scale_linetype_discrete('Method') +
   ylim(c(0,1))
 plot_pow_loec_p
@@ -167,7 +167,7 @@ plot_t1_glob_p <- ggplot(t1_glob_p) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(0,2,4)) +
+  scale_shape_manual('Method', values=c(16,2,17)) +
   scale_linetype_discrete('Method') 
 plot_t1_glob_p
 
@@ -193,7 +193,7 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(0,2,4)) +
+  scale_shape_manual('Method', values=c(16,2,17)) +
   scale_linetype_discrete('Method')
 plot_t1_loec_p
 

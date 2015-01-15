@@ -75,6 +75,8 @@ if(sim1){
 pow_glob_c <- ldply(res1_c, p_glob1)
 pow_glob_c$muc <- rep(todo1_c$ctrl, each  = 5)
 pow_glob_c$N <- rep(todo1_c$N, each = 5)
+pow_glob_c$variable <-  factor(pow_glob_c$variable, unique(pow_glob_c$variable)[1:5], 
+       labels = c('lm', 'glm_nb', 'glm_qp', 'glm_pb', 'np'))
 
 plot_pow_glob_c <- ggplot(pow_glob_c) +
   geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable)) +
@@ -178,10 +180,9 @@ if(sim1){
 # Results
 # Global test (how often wrongly assigned an effect)
 t1_glob_c <- ldply(res2_c, p_glob1)
-t1_glob_c$muc <- rep(todo2_c$ctrl, each  = 6)
-t1_glob_c$N <- rep(todo2_c$N, each = 6)
-t1_glob_c  <- t1_glob_c[!t1_glob_c$variable %in% 'lm_lr', ]
-t1_glob_c$variable  <-  factor(t1_glob_c$variable, unique(t1_glob_c$variable)[c(2, 1, 3, 4, 5)], 
+t1_glob_c$muc <- rep(todo2_c$ctrl, each  = 5)
+t1_glob_c$N <- rep(todo2_c$N, each = 5)
+t1_glob_c$variable  <-  factor(t1_glob_c$variable, unique(t1_glob_c$variable)[c(1, 2, 3, 4, 5)], 
                                 labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'np'))
 
 plot_t1_glob_c  <- ggplot(t1_glob_c) +
@@ -197,7 +198,7 @@ plot_t1_glob_c  <- ggplot(t1_glob_c) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(0,2,4,16,17)) +
+  scale_shape_manual('Method', values=c(16,2,4,0,17)) +
   scale_linetype_discrete('Method')
 plot_t1_glob_c
 
@@ -207,8 +208,8 @@ t1_loec_c <- ldply(res2_c, p_loec1, type = 't1')
 t1_loec_c$muc <- todo2_c$ctrl
 t1_loec_c$N <- todo2_c$N
 t1_loec_c <- melt(t1_loec_c, id.vars = c('muc', 'N'), value.name = 't1')
-t1_loec_c$variable  <-  factor(t1_loec_c$variable, unique(t1_loec_c$variable)[c(1, 2, 3, 4, 5)], 
-                                labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'np'))
+t1_loec_c$variable  <-  factor(t1_loec_c$variable, unique(t1_loec_c$variable)[c(1, 2, 3, 4)], 
+                                labels = c('lm', 'glm_nb', 'glm_qp', 'np'))
 
 plot_t1_loec_c <- ggplot(t1_loec_c) +
   geom_line(aes(y = t1, x = log2(muc), group = variable, linetype = variable)) +
@@ -219,11 +220,11 @@ plot_t1_loec_c <- ggplot(t1_loec_c) +
   # axes
   labs(x = expression(mu[C]), 
        y = expression(paste('Type 1 error (LOEC , ', alpha, ' = 0.05)'))) + 
-  scale_x_continuous(breaks = log2(round(unique(todo1_c$ctrl), 0)), 
-                     labels = round(unique(todo1_c$ctrl), 0)) +
+  scale_x_continuous(breaks = log2(round(unique(todo2_c$ctrl), 0)), 
+                     labels = round(unique(todo2_c$ctrl), 0)) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(0,2,4,16,17)) +
+  scale_shape_manual('Method', values=c(16,2,4,17)) +
   scale_linetype_discrete('Method')
 plot_t1_loec_c 
