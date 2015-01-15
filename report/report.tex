@@ -101,6 +101,8 @@ Then we compare three types of statistical methods (transformation and normality
 \citet{brock_minimum_2014} provides a typical example data from a mesocosm study of mayfly larvae counts on artificial substrate samplers at one sampling day (Figure \ref{fig:example}). 
 18 mesocosms have been sampled, with 6 treatments (Control, n = 4; 0.1 mg/L, 0.3mg/L, 1mg/l, 3mg/L, n = 3; 10 mg/L, n = 2).
 We will use this data to demonstrate the differences between transformations, different GLMs and a non-parametric approach.
+A full exemplary analysis of this data using R can be found in the supplement.
+\todo{add R reference}
 
 \subsubsection{The linear model}
 To fit the standard linear model, we first transform the counts following \citet{van_den_brink_impact_2000}:
@@ -161,8 +163,8 @@ The above described models are most commonly used in ecology, although other dis
 \subsubsection{Hypothesis testing}
 
 On this data, we could test different hypotheses like (i) if is there any effect of the treatment or (ii) test single parameters (treatments) to determine the LOEC.
-We used F-tests for the normal and quasi-Poisson models and Likelihood-Ratio (LR) tests for Poisson and negative binomial models to test if there is any treatment related effect.
-To assess the LOEC we used Dunnett contrasts with one-sided Wald t tests (normal and quasi-poisson) and one-sided Wald Z tests (Poisson and negative binomial) following general recommendations \citep{bolker_generalized_2009}. 
+We used, following general recommendations \citep{bolker_generalized_2009}, F-tests for the normal and quasi-Poisson models and Likelihood-Ratio (LR) tests for Poisson and negative binomial models to test if there is any treatment related effect.
+To assess the LOEC we used Dunnett contrasts with one-sided Wald t tests (normal and quasi-poisson) and one-sided Wald Z tests (Poisson and negative binomial).
 % Moreover, we used parametric bootstrap (with 2000 bootstrap samples) to assess the LR and parameters in the negative binomial model \citep{faraway_extending_2006}.
 % For comparison, we also performed the commonly used non-parametric Kruskal-Wallis test and pairwise Wilcoxon test on untransformed data.
 % P-values from multiple comparisons where adjusted using the method of \citet{holm_simple_1979}.
@@ -264,7 +266,7 @@ Methods were compare in terms of Type I error (maintain a significance level of 
 We fitted the models and tested hypotheses on the simulated data as described in the motivating example.
 
 All simulations were done in R (Version 3.1.2) on a 64-bit Linux machine with 8 GB and 2.2 GHz.
-Exemplary analysis of data in the motivating example can be found in the supplement.
+\todo{add R reference}
 Source code for the simulations is available online at \url{https://github.com/EDiLD/usetheglm}. \todo{git repo currently private -> tidy}
 
 \subsection{Count data}
@@ -277,15 +279,8 @@ For Type I error estimation mean abundance was kept equal between all groups.
 
 For each combination we generated 100 datasets. 
 We fitted a linear model after log (Ax + 1) transformation ($LM$), negative binomial GLM ($GLM_{nb}$) and quasi-Poisson GLM ($GLM_{qp}$) to this datasets. 
-
-We tested a general treatment effect using F tests ($LM$ and $GLM_qp$) and LR tests ($GLM_nb$). Additionally, we applied used parametric boostrap to assess the LR in the negative binomial model ($GLM_pb$) and used a Kruskal-Wallis test on untransformed data as non-parametric method.
-
-Moreover, we compared the methods ability to determine the LOEC (T2 in our simulation design).
-
-\todo{hier noch besser machen!}
-As our simulation
-We used one-sided Dunnett tests 
- by comparing inferences on model parameters and using pairwise Wilcoxon test as non-parametric method.
+We tested a general treatment effect using F tests ($LM$ and $GLM_{qp}$) and LR tests ($GLM_{nb}$). Additionally, we applied parametric boostrap to assess the LR in the negative binomial model ($GLM_{pb}$) and used a Kruskal-Wallis test on untransformed data as non-parametric method.
+To assess the performance in detecting the LOEC (T2 in our simulation design) we used a one-sided Dunnett test for all models and a pairwise Wilcoxon test as non-parametric method.
  
 
 \subsubsection{Results}

@@ -1,5 +1,4 @@
 \documentclass{scrartcl}
-
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}%GRaphiken
 \usepackage{tabularx}%Tabellen!
@@ -50,14 +49,17 @@
 \linespread{1}% 1.5 Zeilenabstand			
 \graphicspath{{fig/}}                     % path to graphics
 
-\title{Use the GLM, Luke!}
+%% ----------------------------------------------------------------------------
+\title{Ecotoxicology is not normal.}
 \subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
-\author{Eduard Szöcs}
+\author{Eduard Szöcs, Ralf B. Schäfer}
 \date{\today}
 
+
+% ----------------------------------------------------------------------------
 \begin{document}
 \maketitle
-\section{Supplement 2 - Examples}
+\section{Supplement 2 - Motivating examples}
 \subsection{Binomial data}
 \subsubsection{Introduction}
 Here we will show how to analyse binomial data. 
@@ -147,7 +149,6 @@ or using the lmtest package \citep{zeileis_diagnostic_2002}:
 <<bin_mod1_lmtest, message=FALSE>>=
 require(lmtest)
 lrtest(mod_normal)
-
 @
 
 
