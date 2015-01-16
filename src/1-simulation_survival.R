@@ -5,10 +5,17 @@ if(!exists("prj")){
   source(file.path(prj, "src", "0-load.R"))
 }
 
+### ----------------------------------------------------------------------------
+### Simulation 2 -  Binomial data
+### Written by Eduard Szöcs
+### ----------------------------------------------------------------------------
+
 #####--------------------------------------------------------------------------
-### Simulation 2 - Proportions
-### Power
+### Power Simulations
+
+
 #####------------------------------------
+### simulate data
 # Settings
 # no of simulated datasets
 nsims <- 250
@@ -20,10 +27,7 @@ pEs <- seq(0.6, 0.95, 0.05)
 # both as grid
 todo1_p <- expand.grid(N = N, pE = pEs)
   
-
-
-#####------------------------------------
-# simulate data
+# create simulate data
 sims1_p <- NULL
 set.seed(1234)
 for(i in seq_len(nrow(todo1_p))){
@@ -64,8 +68,6 @@ pow_glob_p <- ldply(res1_p, p_glob)
 pow_glob_p$pE <- todo1_p$pE
 pow_glob_p$N <- todo1_p$N
 pow_glob_p <- melt(pow_glob_p, id.vars = c('pE', 'N'))
-pow_glob_p$variable <- factor(pow_glob_p$variable, unique(pow_glob_p$variable)[c(2,1,3)],
-                              c('lm', 'glm', 'np'))
 
 plot_pow_glob_p <- ggplot(pow_glob_p) +
   geom_line(aes(y = value, x = pE, group = variable, linetype = variable)) +
@@ -89,9 +91,6 @@ pow_loec_p <- ldply(res1_p, p_loec, type = 'power')
 pow_loec_p$pE <- todo1_p$pE
 pow_loec_p$N <- todo1_p$N
 pow_loec_p  <- melt(pow_loec_p, id.vars = c('pE', 'N'))
-pow_loec_p <- pow_loec_p[pow_loec_p$variable %in% c('loeclm', 'loecglm', 'loecpw'), ]
-pow_loec_p$variable <- factor(pow_loec_p$variable, unique(pow_loec_p$variable), 
-                              labels = c('lm', 'glm', 'np'))
 
 plot_pow_loec_p <- ggplot(pow_loec_p) +
   geom_line(aes(y = value, x = pE, group = variable, linetype = variable)) +
@@ -105,13 +104,15 @@ plot_pow_loec_p <- ggplot(pow_loec_p) +
   scale_linetype_discrete('Method') +
   ylim(c(0,1))
 plot_pow_loec_p
-# clean up
-# rm(res1_p, df, sims1_p, todo1_p, pEs, n_animals, N)
+
 
 
 
 ### ----------------------------------------------------------------------------
-# Type1 Error
+# Type1 Error simulations
+
+#####------------------------------------
+### simulate data
 # Settings
 # sample sizes
 N <- c(3, 6 ,9)
@@ -121,9 +122,7 @@ ps <- seq(0.6, 0.95, 0.05)
 # both as grid
 todo2_p <- expand.grid(N = N, ps = ps)
 
-
-#####------------------------------------
-# simulate data
+# create simulate data
 sims2_p <- NULL
 for(i in seq_len(nrow(todo2_p))){
   sims2_p[[i]] <- dosim2(N = todo2_p[i, 'N'], 
@@ -150,9 +149,6 @@ t1_glob_p <- ldply(res2_p, p_glob)
 t1_glob_p$ps <- todo2_p$ps
 t1_glob_p$N <- todo2_p$N
 t1_glob_p <- melt(t1_glob_p, id.vars = c('ps', 'N'))
-t1_glob_p$variable <- factor(t1_glob_p$variable, unique(t1_glob_p$variable)[c(2,1,3)],
-                             c('lm', 'glm', 'np'))
-
 
 plot_t1_glob_p <- ggplot(t1_glob_p) +
   geom_line(aes(y = value, x = ps, group = variable, linetype = variable)) +
@@ -177,8 +173,6 @@ t1_loec_p <- ldply(res2_p, p_loec, type = 't1')
 t1_loec_p$ps <- todo2_p$ps
 t1_loec_p$N <- todo2_p$N
 t1_loec_p <- melt(t1_loec_p, id.vars = c('ps', 'N'))
-t1_loec_p$variable <- factor(t1_loec_p$variable, unique(t1_loec_p$variable), 
-                              labels = c('lm', 'glm', 'np'))
 
 plot_t1_loec_p <- ggplot(t1_loec_p) +
   geom_line(aes(y = value, x = ps, group = variable, linetype = variable)) +
@@ -197,5 +191,3 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
   scale_linetype_discrete('Method')
 plot_t1_loec_p
 
-# clean up
-# rm(res2_p, sims2_p, todo2_p, ps, n_animals, N)
