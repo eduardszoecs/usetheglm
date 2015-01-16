@@ -44,7 +44,7 @@ plot(fitted(modlm), residuals(modlm)); abline(h = 0)
 drop1(modlm, test = 'F')
 # LOEC
 # one-sided dunnett
-summary(glht(modlm, linfct = mcp(conc = 'Dunnett'), alternativ = 'less'))
+summary(glht(modlm, linfct = mcp(conc = 'Dunnett'), alternative = 'less'))
 
 
 ### -------- Binomial GLM
@@ -53,6 +53,7 @@ modglm.null <- glm(y ~ 1 , data = dfm, family = binomial, weights = rep(10, nrow
 summary(modglm)
 # LR-test
 drop1(modglm, test = 'Chisq')
+# one-sided Dunnett contrasts
 summary(glht(modglm, linfct = mcp(conc = 'Dunnett'), alternative = 'less'))
 
 

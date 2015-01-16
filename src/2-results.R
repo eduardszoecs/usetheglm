@@ -1,35 +1,43 @@
-if(!exists('ld')){
-  source("/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/src/0-load.R")
+if(!exists("prj")){
+  stop("You need to create a object 'prj' that points to the top folder, 
+       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project'!")
+} else {
+  source(file.path(prj, "src", "0-load.R"))
 }
 
+### ----------------------------------------------------------------------------
+### Compile results
+### Written by Eduard Szöcs
+### ----------------------------------------------------------------------------
 
-### --------------------------------------------
-# data to nice graphs
-# Counts
+#####--------------------------------------------------------------------------
+# Count simulations
+
+# run simulations
 source(file.path(srcdir, '1-simulation_counts.R'))
-# global
+# global test
 plot_pow_glob_c
 plot_t1_glob_c
 leg <- g_legend(plot_pow_glob_c + 
                   theme(legend.key = element_blank())
                 )
-plot(leg)
-
+# plot(leg)
+# combine plots and legend
 p_glob_c <- arrangeGrob(
   plot_pow_glob_c + theme(legend.position="none") + labs(x = NULL),
   plot_t1_glob_c + theme(legend.position="none"),
   leg,
-  nrow = 3, 
+  nrow = 3,
   heights = c(10, 10, 2))
 p_glob_c
-ggsave(file.path(figdir, 'p_glob_c.pdf'), p_glob_c, width = 10, height = 8)
+if(exp_plot)
+  ggsave(file.path(figdir, 'p_glob_c.pdf'), p_glob_c, width = 10, height = 8)
 
 # loec
 plot_pow_loec_c
 plot_t1_loec_c 
 leg <- g_legend(plot_pow_loec_c + 
                   theme(legend.key = element_blank()))
-leg
 p_loec_c <- arrangeGrob(
   plot_pow_loec_c + theme(legend.position="none") + labs(x = NULL),
   plot_t1_loec_c + theme(legend.position="none"),
@@ -37,11 +45,12 @@ p_loec_c <- arrangeGrob(
   nrow = 3,
   heights = c(10, 10, 2))
 p_loec_c
-ggsave(file.path(figdir, 'p_loec_c.pdf'), p_loec_c, width = 10, height = 8)
+if(exp_plot)
+  ggsave(file.path(figdir, 'p_loec_c.pdf'), p_loec_c, width = 10, height = 8)
 
 
-### --------------------------------------------
-# Binomial data
+#####--------------------------------------------------------------------------
+# Binomial simulations
 source(file.path(srcdir, '1-simulation_survival.R'))
 # global
 plot_pow_glob_p
@@ -57,7 +66,8 @@ p_glob_p <- arrangeGrob(
   nrow = 3,
   heights = c(10, 10, 2))
 p_glob_p
-ggsave(file.path(figdir, 'p_glob_p.pdf'), p_glob_p, width = 10, height = 8)
+if(exp_plot)
+  ggsave(file.path(figdir, 'p_glob_p.pdf'), p_glob_p, width = 10, height = 8)
 
 
 # loec
@@ -72,5 +82,6 @@ p_loec_p <- arrangeGrob(
   nrow = 3,
   heights = c(10, 10, 2))
 p_loec_p
-ggsave(file.path(figdir, 'p_loec_p.pdf'), p_loec_p, width = 10, height = 8)
+if(exp_plot)
+  ggsave(file.path(figdir, 'p_loec_p.pdf'), p_loec_p, width = 10, height = 8)
 

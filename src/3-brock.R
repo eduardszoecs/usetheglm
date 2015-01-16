@@ -1,42 +1,13 @@
-### ----------------------------------------------------------------------------
-### Motivating Example - Count data
-### Written by Eduard Szöcs
-
-
-rm(list = ls()[!ls() %in% 'prj'])
-#####--------------------------------------------------------------------------
-### Setup project structure
-
-# Project Path
-## You have to change this!
-# prj <- "/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/"
-# prj <- 'C:\\Users\\Edi\\Documents\\usetheglm'
 if(!exists("prj")){
   stop("You need to create a object 'prj' that points to the top folder, 
        e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project'!")
+} else {
+  source(file.path(prj, "src", "0-load.R"))
 }
-
-
-# Subfolder paths
-srcdir <- file.path(prj, "src")     # source code
-datadir <- file.path(prj, "data")   # data
-figdir <- file.path(prj, "report", "fig") # figures for latex
-
-
-#####--------------------------------------------------------------------------
-### install missing if needed!
-require(MASS)
-require(ggplot2)
-require(grid)
-require(plyr)
-require(multcomp)
-
-
-#####--------------------------------------------------------------------------
-### Source defined functions
-source(file.path(srcdir, "functions.R"))
-
-
+### ----------------------------------------------------------------------------
+### Motivating Example - Count data
+### Written by Eduard Szöcs
+### ----------------------------------------------------------------------------
 
 ### -------- Load + Clean ------------------------------------------------------
 df <- read.table(file.path(datadir, 'brock.csv'), header = TRUE, sep = ';')
@@ -48,7 +19,7 @@ ddply(df, .(Concentration), summarize, mean(Abundance))
 
 
 ### -------- Methods -----------------------------------------------------------
-### --------
+### -----------------------------
 ### Normal + Transformation
 ## log(Ax+1) transformation
 # Ax = 2 , for min(x) & x != 0
@@ -80,7 +51,7 @@ modlm_upr <- (exp(modlm_p$fit + 1.96*modlm_p$se.fit) - 1) / A
 
 
 
-### --------
+### -----------------------------
 ### Poisson GLM
 modpois <- glm(Abundance ~ Concentration, data = df, family = poisson)
 
@@ -104,7 +75,7 @@ modpois_lwr <- modpois$family$linkinv(modpois_p$fit - 1.96 * modpois_p$se.fit)
 modpois_upr <- modpois$family$linkinv(modpois_p$fit + 1.96 * modpois_p$se.fit)
 
 
-### --------
+### -----------------------------
 ### quasi-Poisson GLM
 modqpois <- glm(Abundance ~ Concentration, data = df, family = quasipoisson)
 summary(modqpois)
@@ -126,7 +97,7 @@ modqpois_upr <- modqpois$family$linkinv(modqpois_p$fit + 1.96 * modqpois_p$se.fi
 
 
 
-### --------
+### -----------------------------
 ### Negative binomial GLM
 modnb <- glm.nb(Abundance ~ Concentration, data = df)
 
@@ -151,7 +122,8 @@ modnb_upr <- modnb$family$linkinv(modnb_p$fit + 1.96 * modnb_p$se.fit)
 
 
 ### --------------- Summarize --------------------------------------------------
-### Mean variance relationship
+### -----------------------------
+### Mean variance relationships
 mv <- ddply(df, .(Concentration), summarise,
       m = mean(Abundance),
       var = var(Abundance))
@@ -169,6 +141,7 @@ legend(80, 1000,
 
 
 
+### -----------------------------
 ### Plot data and model results
 moddf <- data.frame(conc = rep(unique(df$Concentration), 4),
                     fit = c(modlm_fit, modpois_fit, modqpois_fit, modnb_fit),
@@ -214,5 +187,6 @@ p <- ggplot() +
         legend.background = element_rect(color = 'black')
         )
 p
-ggsave(file.path(figdir, 'example.pdf'), p, height = 6, width = 8)
+if(exp_plot)
+  ggsave(file.path(figdir, 'example.pdf'), p, height = 6, width = 8)
 
