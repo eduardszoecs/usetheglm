@@ -22,3 +22,7 @@
 # data
 *data
 *review*
+
+# sublime
+*.sublime-project
+*.sublime-workspace
