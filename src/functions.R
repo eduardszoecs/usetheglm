@@ -1,5 +1,8 @@
-#! TODO:
-#! Remove unused stuff from functions!
+### ----------------------------------------------------------------------------
+### Custom function for simulation and plotting
+### Written by Eduard Szöcs
+### ----------------------------------------------------------------------------
+
 
 ### ----------------------------------------------------------------------------
 #' pairwise wilcox.test
@@ -7,7 +10,7 @@
 #' @param g factor; grouping vector
 #' @param dunnett logical; if TRUE dunnett contrast, otherwise Tukey-contrasts
 #' @param padj character; method for p-adjustment, see ?p.adjust.
-pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
+pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm', alternative = 'less'){
   tc <- t(combn(nlevels(g), 2))
   # take on dunnett comparisons
   if(dunnett){
@@ -16,8 +19,9 @@ pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
   pval <- numeric(nrow(tc))
   # use wilcox.exact (for tied data)
   for(i in seq_len(nrow(tc))){
-    pval[i] <- wilcox.exact(y[as.numeric(g) == tc[i, 1]], 
-                           y[as.numeric(g) == tc[i, 2]], exact = TRUE)$p.value
+    pval[i] <- wilcox.exact(y[as.numeric(g) == tc[i, 2]], 
+                           y[as.numeric(g) == tc[i, 1]], exact = TRUE, 
+                           alternative = alternative)$p.value
   }
   pval <- p.adjust(pval, padj)
   names(pval) = paste(tc[,1], tc[,2], sep = '-')
@@ -27,15 +31,16 @@ pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm'){
 
 ### ----------------------------------------------------------------------------
 ### Parametric bootstrap (PB)
-
-### --------------------
-### PB of LR statistic
-
+#' PB of LR statistic
+#' @param m1 Full model
+#' @param m0 reduced model
+#' @param  data data used in the models
+#' @return LR of boostrap
 # generate reference distribution
 myPBrefdist <- function(m1, m0, data){
   # simulate from null
   x0 <- simulate(m0)
-  # refit null
+  # refit with new data
   newdata0 <- data
   newdata0[ , as.character(formula(m0)[[2]])] <- x0
   m1r <-  try(update(m1, .~., data = newdata0))
@@ -50,6 +55,12 @@ myPBrefdist <- function(m1, m0, data){
   return(LR)
 }
 
+#' generate LR distribution and return p value
+#' @param m1 Full model
+#' @param m0 reduced model
+#' @param data data used in m1 and m0
+#' @param npb number of bootstrap samples
+#' @return p-value of boostrapped LR values
 myPBmodcomp <- function(m1, m0, data, npb){
   ## calculate reference distribution
   LR <- replicate(npb, myPBrefdist(m1 = m1, m0 = m0, data = data), 
@@ -65,21 +76,40 @@ myPBmodcomp <- function(m1, m0, data, npb){
 }
 
 
+
 ### ----------------------------------------------------------------------------
 ##### Simulation 1 -  Count data
-#' Function to create simulated data
+### ----------------------
+#' Function to create simulated data (6 groups)
+#' @param N number of replicates per group
+#' @param mu group means (vector of length 6)
+#' @param theta overdispersion per group (vector of length 6) [variance = mu + mu^2/theta.]
+#' @param nsims number of simulated datasets
+#' @return list of two: x - factor of groups, y - simulated counts
 dosim1 <- function(N, mu, theta, nsims = 100){
   Nj     <- rep(N, time = 6)                # 6 groups
   mus    <- rep(mu, times = Nj)             # vector of mus
   thetas <- rep(theta, times=Nj)            # vector of thetas
   x      <- factor(rep(1:6, times=Nj))      # factor
-  y      <- replicate(nsims, rnegbin(sum(Nj), mus, thetas))
+  y      <- replicate(nsims, rnegbin(sum(Nj), mus, thetas)) # draw from negative binomial distribution
   return(list(x = x, y = y))
 }
 
-
+### -----------------------------
 #' Function to analyse simulated datasets
-#! TODO: Check convergence (th.warn.)
+#' @param z a list as returned by dosim1
+#' @param verbose logical; print output during run?
+#' @param npb number of boostrap samples
+#' @return list of 9, with p-values and loecs from:
+#' 1) F test for lm on ln(Ax+1) transformed variables [p_lm_f]
+#' 2) LR test for neg.bin. glm [p_glm_lr]
+#' 3) F test for quasi-poisson glm [p_qglm_f]
+#' 4) parametric boostrap of neg.bin glm [p_glm_lrpb]
+#' 5) kruskal-test
+#' 6) LOEC from LM using one-sided Dunnett test [loeclm]
+#' 7) LOEC from neg.bin. glm using one-sided Dunnett test [loecglm]
+#' 8) LOEC from quasi-poisson glm using one-sided Dunnett test [loecqglm]
+#' 9) LOEC from one-sided pairwise Wilcoxon with Holm-correction
 resfoo1 <- function(z, verbose = TRUE, npb = 400){
   if(verbose){
     message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
@@ -164,12 +194,16 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
                 )
            )
   }
-  # run on simulated data
+  # run on each simulated data
   res <- apply(z$y, 2, ana, x = z$x, npb = npb)
   return(res)
 }
 
-# Power
+
+### -----------------------------
+#' Helper function to extract power for global tests from object returned by resfoo1
+#' @param z an object as returned by resfoo1
+#' @return a data.frame with power and convergence values
 p_glob1 <- function(z){ 
   # extract p-values
   take <- c('p_lm_f', 'p_glm_lr','p_qglm_f', 'p_glm_lrpb', 'p_k')
@@ -183,7 +217,13 @@ p_glob1 <- function(z){
 }
 
 
-# loec
+### -----------------------------
+#' Helper function to extract power for LEOC from object returned by resfoo1
+#' @param u n object as returned by resfoo1
+#' @param type what type of simulation was run ('t1' or 'power')
+#' @return a data.frame with power values
+#' @note for t1 error estimation LOEC should Inf (not there)
+#' for power estimation loec should be at concentration 2
 p_loec1 <- function(u, type = NULL){
   # extract p-values
   take <- c("loeclm", "loecglm", "loecqglm", "loecpw")
@@ -206,11 +246,10 @@ p_loec1 <- function(u, type = NULL){
 
 ### ----------------------------------------------------------------------------
 ##### Simulation 2 -  Proportions
+
+### -----------------------------
 #' Function to create simulated binomial data
-#' 
-#' @description 
-#' Simulate data from binomial distribution.
-#' 
+#' @description Simulate data from binomial distribution.
 #' @param N Number of replicates per group
 #' @param pC probabilty in control groups
 #' @param pE probabilty on effect groups
@@ -231,14 +270,21 @@ dosim2 <- function(N, pC = 0.95, pE = 0.3, nsim = 100, n_animals = 10){
   return(list(x = x, y = y, n_animals = n_animals))
 }
 
+
+### -----------------------------
 #' Function to analyse simulated datasets
-#' 
 #' @description Runs a normal model, a logistic model and a non-parametric tests on the simulated data
 #' 
 #' @param z simulated data, generated by dosim2()
 #' @param verbose print status on the console?
 #' @param asin Type of arcsine transformation. 'ecotox' or 'asin'. If 'ecotox' a special asin transformation is performed
-#' 
+#' @return list of 6, with p-values and loec from:
+#' 1) F test for lm on arcsine transformed variables [lm_f]
+#' 2) LR test for bin. glm [glm_lr]
+#' 3) kruskal-test on untransformed values
+#' 4) LOEC from LM using one-sided Dunnett test [loeclm]
+#' 5) LOEC from bin. glm using one-sided Dunnett test [loecglm]]
+#' 6) LOEC from one-sided pairwise Wilcoxon with Holm-correction
 #' @example
 #' sims <- dosim2(3)
 #' resfoo2(sims)
@@ -270,50 +316,40 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
                   family = binomial(link = 'logit'))
     modglm.null <- glm(cbind(y, n_animals - y) ~ 1, data = df, 
                        family = binomial(link = 'logit'))
-#     # quasibinomial
-#     modqglm <- glm(cbind(y, n_animals - y) ~ x, data = df, 
-#                   family = quasibinomial(link = 'logit'))
-#     modqglm.null <- glm(cbind(y, n_animals - y) ~ 1, data = df, 
-#                   family = quasibinomial(link = 'logit'))
 
     # ------------- 
     # Tests
     # LR Tests
-#     lm_lr <- lrtest(modlm, modlm.null)[2, 'Pr(>Chisq)']
-    glm_lr <- lrtest(modglm, modglm.null)[2, 'Pr(>Chisq)']
+    glm_lr <- anova(modglm, modglm.null, test = 'Chisq')[2 , 'Pr(>Chi)']
     # F Tests
     lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
-#     qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
-    # non-parametric test
+    # kruskal test
     pk <- kruskal.test(y ~ x, data = df)$p.value
     
-    # ------------------------------------------------------------
+    # --------------
     # LOECs
-    # multiple comparisons using Dunnett-contrasts
-    pmclm <- p.adjust(coef(summary(modlm))[2:6 , 'Pr(>|t|)'], method = 'holm')
-    pmcglm <- p.adjust(coef(summary(modglm))[2:6 , 'Pr(>|z|)'], method = 'holm')
-#     pmcqglm <-  p.adjust(coef(summary(modqglm))[2:6 , 'Pr(>|t|)'], method = 'holm')
-    # pairwise wilcox
+    # multiple comparisons using one-sided Dunnett-contrasts
+    mc_lm <- summary(glht(modlm, linfct = mcp(x = 'Dunnett'),  
+                          alternative = 'less'))$test$pvalues
+    suppressWarnings( # intended warnings about no min -> no LOEC
+      loeclm <- min(which(mc_lm < 0.05))
+    )
+    mc_glm <- summary(glht(modglm, linfct = mcp(x = 'Dunnett'),  
+                           alternative = 'less'))$test$pvalues
     suppressWarnings(
-      pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE))
+      loecglm <- min(which(mc_glm  < 0.05))
+    )
+    suppressWarnings(
+      pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
+      )
+    suppressWarnings(
+      loecpw <- min(which(pw < 0.05))
+      )
 
-    # extract LOEC (which level? 0 = Control)
-    suppressWarnings(
-      loeclm <- min(which(pmclm < 0.05)))
-    suppressWarnings(
-      loecglm <- min(which(pmcglm < 0.05)))
-#     suppressWarnings(
-#       loecqglm <- min(which(pmcqglm < 0.05)))
-    suppressWarnings(
-      loecpw <- min(which(pw < 0.05)))
-    
     # --------------------------------------------
     # return object
-    return(list(#lm_lr = lm_lr, 
-                glm_lr = glm_lr, lm_f = lm_f, # qglm_f = qglm_f,
-      pk = pk, 
-      loeclm = loeclm, loecglm = loecglm, #loecqglm = loecqglm, 
-      loecpw = loecpw
+    return(list(lm_f = lm_f, glm_lr = glm_lr, pk = pk, 
+      loeclm = loeclm, loecglm = loecglm, loecpw = loecpw
     ))
     
   }
@@ -323,8 +359,10 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
 }
 
 
-#### -----------------------------
-### Extractor functions
+### -----------------------------
+#' Helper function to extract power for global tests from object returned by resfoo2
+#' @param z an object as returned by resfoo2
+#' @return a data.frame with power values
 p_glob <- function(z){ 
   # extract p-values
   ps <- ldply(z, function(w) unlist(w)[1:3])
@@ -332,7 +370,13 @@ p_glob <- function(z){
   return(pow)
 }
 
-# loec
+### -----------------------------
+#' Helper function to extract power for LEOC from object returned by resfoo2
+#' @param z n object as returned by resfoo2
+#' @param type what type of simulation was run ('t1' or 'power')
+#' @return a data.frame with power values
+#' @note for t1 error estimation LOEC should Inf (not there)
+#' for power estimation loec should be at concentration 2
 p_loec <- function(z, type = NULL){
   # extract p-values
   loecs <- ldply(z, function(w) unlist(w)[4:6])
@@ -368,7 +412,7 @@ n_labeller <- function(var, value){
   return(value)
 }
 
-# custom theme
+# custom ggplot2 theme
 mytheme <- theme_bw(base_size = 12, base_family = "Helvetica") + 
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), 
