@@ -26,6 +26,14 @@ boxplot(y ~ conc, data = dfm,
         xlab = 'conc', ylab = 'Proportion surv.')
 
 
+# elaborate glm parameters
+mean(dfm$y[dfm$conc == 0])
+exp(2.994)
+mean(dfm$y[dfm$conc == 512])
+exp(3.67)
+
+
+
 ### -------- Methods -----------------------------------------------------------
 ### -------- Normal + Transformation
 dfm$y_asin <- ifelse(dfm$y == 1, 

@@ -6,11 +6,11 @@
 \usepackage{url}% Urls besser
 \usepackage{textcomp}% Sonderzeichen
 \usepackage{amsmath}%maths / equations
-\usepackage{helvet}% Schrift Helvetica
-% \usepackage[helvet]{sfmath}% Helvet also in Math modes
-% \renewcommand\familydefault{\sfdefault}
-\usepackage{sansmath} % sans in math
-\usepackage[]{color}
+% \usepackage{helvet}% Schrift Helvetica
+% % \usepackage[helvet]{sfmath}% Helvet also in Math modes
+% % \renewcommand\familydefault{\sfdefault}
+% \usepackage{sansmath} % sans in math
+% \usepackage[]{color}
 \usepackage{booktabs} % for cmidrule
 \usepackage{siunitx} % to aling column s on dots
 \usepackage{todonotes}
@@ -44,7 +44,6 @@
 	%nonamebreak,     % keeps all the authors names in a citation on one line;
                    %causes overfull hboxes but helps with some hyperref problems.
 ]{natbib}											    			% Literaturverzeichnis
-\usepackage{scrhack}   % kills \float@addtolists!  warning
 \usepackage[pdfpagelabels,plainpages=false, pageanchor=false]{hyperref}	
 
 
@@ -66,9 +65,21 @@
 \maketitle
 
 \section*{Abstract}
+Ecotoxicologist are often confronted with data that is inherently not normally distributed.
+To achieve the assumptions of normality and heteroscedasticity is has been a standard procedure to either transform the data or use non-parametric methods if this fails.
+Here, we argue that using appropriate models, namely Generalised Linear Models (GLM), can enhance statistical power.
+
+We present examples of ecotoxicological studies illustrating the differences and advantages of GLM.
+Using simulations of two common data types (counts and discrete proportions), we show that GLMs provide a gain in statistical power compared to the analysis of transformed data or using non-parametric methods.
+Moreover GLMs provide a gain in interpretability of results.
+
+GLMs should become a standard method in ecotoxicology to analyse data that is inherently not normally distributed.
+
+
 
 
 %% --------------------------------
+\newpage
 \section{Introduction}
 In environmental risk assessments (ERA) statistical tests play an important role to evaluate the effects of pesticides. 
 Despite criticism (e.g. \citet{landis_well_2011}) statistics like the No Observed Effect Concentration (NOEC) are still regularly used to report results experiments \citep{jager_bad_2012}. 
@@ -95,6 +106,8 @@ We first give two motivating examples showing that different methods may lead to
 Then we compare three types of statistical methods (transformation and normality assumption, GLM, non-parametric tests) using simulations.
 
 
+%% --------------------------------
+\newpage
 \section{Motivating examples}
 \subsection{Count data}
 \citet{brock_minimum_2014} provides a typical example data from a mesocosm study of mayfly larvae counts on artificial substrate samplers at one sampling day (Figure \ref{fig:example}). 
@@ -120,7 +133,7 @@ We fit the well known linear model:
   var(y_i^T) &= \sigma^2 \nonumber
 \end{align}
 This model assumes a normal distributed response with constant variance ($\sigma^2$).
-Note, that we it parametrised as contrast ($\beta x_i$) to the control group ($\alpha$) so that the LOEC can be directly deduced from the estimates of $\beta$ (eqn. \ref{eqn:normal}).
+Note, that we it parametrised as contrast ($\beta x_i$) to the control group ($\alpha$) so that the parameters ($\beta$) are directly interpretable as changes from the control group (eqn. \ref{eqn:normal}).
 
 
 \subsubsection{Generalized Linear Models}
@@ -161,7 +174,6 @@ The above described models are most commonly used in ecology \citep{ver_hoef_qua
 
 
 \subsubsection{Hypothesis testing}
-
 On this data, we could test different hypotheses like (i) if is there any effect of the treatment or (ii) test single parameters (treatments) to determine the LOEC.
 We used, following general recommendations \citep{bolker_generalized_2009}, F-tests for the normal and quasi-Poisson models and Likelihood-Ratio (LR) tests for Poisson and negative binomial models to test if there is any treatment related effect.
 To assess the LOEC we used Dunnett contrasts with one-sided Wald t tests (normal and quasi-poisson) and one-sided Wald Z tests (Poisson and negative binomial).
@@ -212,10 +224,11 @@ To accommodate the assumption for the standard linear model the EPA suggests a s
 \end{align}
 
 , where $y_i^T$ are the transformed proportions and N is the number of exposed animals.
-The transformed proportions are then analysed using the standard linear model (see above).
+The transformed proportions are then analysed using the standard linear model (eqn. \ref{eqn:normal}).
+Note, that the parameters of this are not directly interpretable due to the transformation applied.
+
 
 \subsubsection{Generalized Linear Models}
-
 Data of type \emph{x out of n} are typically modelled by a binomial distribution with parameters N and $\pi$:
 
 \begin{align}
@@ -226,6 +239,7 @@ Data of type \emph{x out of n} are typically modelled by a binomial distribution
 
 , with N = number of exposed animals and $\pi$ is the probability of survival.
 The variance of the binomial distribution is a quadratic function of the mean (eqn. \ref{eqn:bin}).
+The parameters $\beta$ of this model are directly interpretable as changes in log odds compared to the control group.
 
 We used F-test for the normal and LR test for binomial GLM to determine a general treatment effect.
 LOEC was assessed using one-sided Dunnett contrasts.
@@ -235,7 +249,11 @@ LOEC was assessed using one-sided Dunnett contrasts.
 For this dataset, both methods yielded to same ecotoxicological inferences:
 The global tests of both methods indicated a strong effect of NaPCP on larval survival (linear model: F = 13.31, p \textless 0.001; GLM: LR = 64.79, p \textless 0.001).
 Moreover, both methods identified the highest concentration (512 \textmu g/L) as LOEC. 
-However, the coefficients of the binomial model are directly interpretable as change in the odds ratio, whereas this is not possible with the transformed data (Table \ref{tab:ex_bin}).
+However, the coefficients of the binomial model are directly interpretable as change in the odds ratio:
+In the control group the odds of death are 1:20 ($e^{2.994}$), 
+\todo{further elaborate}
+
+ whereas this is not possible with the transformed data (Table \ref{tab:ex_bin}).
 
 \begin{table}[h]
 \centering
@@ -258,8 +276,11 @@ Control ($\alpha$) & 1.331 & (1.180, 1.481) & 2.994 & (1.523, 4.366) \\
 \end{tabular}
 \end{table}
 
+\todo{explain parameters = change in log odds.}
 
 
+%% --------------------------------
+\newpage
 \section{Simulations}
 We used simulations to compare the methods described above to analyse count and binomial data.
 Methods were compare in terms of Type I error (maintain a significance level of 0.05 when there is no effect) and power (detect an effect when it is present). 
@@ -355,6 +376,8 @@ Differences in power to detect a LOEC was only apparent at n = 3 and vanished qu
 
 
 
+%% --------------------------------
+\newpage
 \section{Discussion}
 Statistical hypothesis tests are commonly used in ecotoxicology to make inferences on pesticide effects.
 The choice how we treat, model and test the data can have massive impacts on the conclusions we draw from experiments. 
@@ -423,10 +446,14 @@ Therefore, we recommend to use a binomial GLM instead of the arcsine transformat
 \todo{robust SE for lower T1 error in glm nb?}
 \todo{Kritik an NOEC}
 
+
+%% --------------------------------
+\newpage
 \section{Conclusions}
 
 
-
+%% --------------------------------
+\newpage
 \bibliography{references}
 \bibliographystyle{apalike}
 
