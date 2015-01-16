@@ -100,7 +100,9 @@ plot_pow_glob_c
 
 # max power for N = 3, excluding glm_nb
 max(pow_glob_c[pow_glob_c$N == 3 & !pow_glob_c$variable %in% 'glm_nb', 'power'])
-
+diffdf <- dcast(pow_glob_c, muc + N ~ variable, value.var = 'power')
+diffdf$diff_lm_qp <- diffdf$lm - diffdf$glm_qp
+diffdf
 
 ### loec
 pow_loec_c <- ldply(res1_c, p_loec1, type = 'power')
@@ -132,21 +134,15 @@ max(pow_loec_c[pow_loec_c$N == 3 & !pow_loec_c$variable %in% c('glm_nb'), 'power
 
 # compare power
 merged <- merge(pow_glob_c[ , c(1,2,4, 5)], pow_loec_c, by = c('N', 'muc', 'variable'), suffixes = c('glob', 'loec'))
-merged$ratio <- merged$powerloec / merged$powerglob
-merged$reduction <- (merged$ratio -1) * 100
-head(merged)
+merged$diff <- merged$powerloec - merged$powerglob
+plot(merged$diff)
+max(abs(merged$diff[!merged$variable %in% c('glm_nb', 'np')]))
+max(abs(merged$diff[merged$variable %in% c('lm')]))
 
-# exclude muc <= 4
-merged <- merged[merged$muc > 4, ]
+diffdf <- dcast(pow_loec_c, muc + N ~ variable, value.var = 'power')
+diffdf$diff_lm_qp <- diffdf$lm - diffdf$glm_qp
+diffdf
 
-ggplot(merged) +
-  geom_line(aes(y = reduction, x = log2(muc), group = variable , linetype = variable)) +
-  facet_grid( ~N, labeller = n_labeller) 
-
-range(merged$reduction[merged$variable %in% c('lm', 'glm_pb', 'glm_qp')])
-mean(merged$reduction[merged$variable %in% c('lm')])
-
-merged[merged$N == 3 & merged$variable %in% c('lm', 'glm_pb', 'glm_qp'), 'powerloec']
 
 
 ### ----------------------------------------------------------------------------

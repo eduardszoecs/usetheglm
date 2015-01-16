@@ -168,6 +168,11 @@ plot_t1_glob_p <- ggplot(t1_glob_p) +
   scale_linetype_discrete('Method') 
 plot_t1_glob_p
 
+## differcen in power
+compdf <- dcast(pow_glob_p, pE + N ~ variable)
+compdf$diff <- compdf$lm - compdf$glm
+compdf [compdf$N == 9, ]
+
 
 # LOEC
 t1_loec_p <- ldply(res2_p, p_loec, type = 't1')
