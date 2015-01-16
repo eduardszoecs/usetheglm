@@ -68,6 +68,7 @@ pow_glob_p <- ldply(res1_p, p_glob)
 pow_glob_p$pE <- todo1_p$pE
 pow_glob_p$N <- todo1_p$N
 pow_glob_p <- melt(pow_glob_p, id.vars = c('pE', 'N'))
+levels(pow_glob_p$variable) <- c('lm', 'glm', 'np')
 
 plot_pow_glob_p <- ggplot(pow_glob_p) +
   geom_line(aes(y = value, x = pE, group = variable, linetype = variable)) +
@@ -84,13 +85,12 @@ plot_pow_glob_p <- ggplot(pow_glob_p) +
 plot_pow_glob_p
 
 
-
-
 ### loec
 pow_loec_p <- ldply(res1_p, p_loec, type = 'power')
 pow_loec_p$pE <- todo1_p$pE
 pow_loec_p$N <- todo1_p$N
 pow_loec_p  <- melt(pow_loec_p, id.vars = c('pE', 'N'))
+levels(pow_loec_p$variable) <- c('lm', 'glm', 'np')
 
 plot_pow_loec_p <- ggplot(pow_loec_p) +
   geom_line(aes(y = value, x = pE, group = variable, linetype = variable)) +
@@ -149,6 +149,7 @@ t1_glob_p <- ldply(res2_p, p_glob)
 t1_glob_p$ps <- todo2_p$ps
 t1_glob_p$N <- todo2_p$N
 t1_glob_p <- melt(t1_glob_p, id.vars = c('ps', 'N'))
+levels(t1_glob_p$variable) <- c('lm', 'glm', 'np')
 
 plot_t1_glob_p <- ggplot(t1_glob_p) +
   geom_line(aes(y = value, x = ps, group = variable, linetype = variable)) +
@@ -173,6 +174,8 @@ t1_loec_p <- ldply(res2_p, p_loec, type = 't1')
 t1_loec_p$ps <- todo2_p$ps
 t1_loec_p$N <- todo2_p$N
 t1_loec_p <- melt(t1_loec_p, id.vars = c('ps', 'N'))
+levels(t1_loec_p$variable) <- c('lm', 'glm', 'np')
+
 
 plot_t1_loec_p <- ggplot(t1_loec_p) +
   geom_line(aes(y = value, x = ps, group = variable, linetype = variable)) +
