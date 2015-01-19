@@ -99,18 +99,19 @@ Generalized linear models (GLM) are a third possibility to analyse such not norm
 GLMs can handle various types of data distributions, e.g. Poisson or negative binomial (for count data) or binomial (for discrete proportions); the normal distribution being a special case of GLMs.
 Despite that GLMs were available more than 40 years now, ecotoxicologists do not regularly make use of them.
 
-Recently studies concluded that data transformations should be avoided and GLMs be used as they have better statistical properties (\emph{Do not log-transform count data}, \citep{ohara_not_2010}; \emph{The arcsine is asinine}, \citep{warton_arcsine_2011}).
+Recent studies concluded that data transformations should be avoided and GLMs be used as they have better statistical properties (\emph{Do not log-transform count data}, \citep{ohara_not_2010}; \emph{The arcsine is asinine}, \citep{warton_arcsine_2011}).
 Especially in the light of low sample sizes, which are common in ecotoxicological studies \citep{sanderson_pesticide_2002,szocs_analysing_2015}, differences between statistical methods may be apparent. 
 
 We first give two motivating examples showing that different methods may lead to different conclusions. 
 Then we compare three types of statistical methods (transformation and normality assumption, GLM, non-parametric tests) using simulations.
 
+x
 
 %% --------------------------------
 \newpage
 \section{Motivating examples}
 \subsection{Count data}
-\citet{brock_minimum_2014} provides a typical example data from a mesocosm study of mayfly larvae counts on artificial substrate samplers at one sampling day (Figure \ref{fig:example}). 
+\cgititet{brock_minimum_2014} provides a typical example data from a mesocosm study of mayfly larvae counts on artificial substrate samplers at one sampling day (Figure \ref{fig:example}). 
 18 mesocosms have been sampled, with 6 treatments (Control, n = 4; 0.1 mg/L, 0.3mg/L, 1mg/l, 3mg/L, n = 3; 10 mg/L, n = 2).
 We will use this data to demonstrate the differences between transformations, different GLMs and a non-parametric approach.
 A full exemplary analysis of this data using R \citep{r_core_team_r:_2014} can be found in the supplement.
