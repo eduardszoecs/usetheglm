@@ -251,7 +251,7 @@ The global tests of both methods indicated a strong effect of NaPCP on larval su
 Moreover, both methods identified the highest concentration (512 \textmu g/L) as LOEC. 
 
 The coefficients of the binomial model are directly interpretable as change in the odds ratio:
-Compared to the control group, the odds in the highest treatment are reduced by a factor of $e^{-3.67} = 0.025$.
+Compared to the control group, the odds in the highest treatment are reduced by a factor of $e^{-3.675} = 0.025$.
 Such a direct interpretation of parameters is not possible with the transformed data (Table \ref{tab:ex_bin}).
 
 \begin{table}[h]
@@ -389,7 +389,7 @@ For common samples sizes and a reduction in abundance of 50\% we found a unaccep
 Additionally, \citet{ohara_not_2010} showed that using a log transformation gave unreliable and biased parameter estimates.
 Statistical power to detect the correct LOEC was even worse, with power less than 30\%.
 This suggests that NOEC reported from mesocosm experiments should be interpreted with caution. 
-\emph{A priory} power analyses can be performed easily using simulations, even for complex experimental designs \citep{johnson_power_2014}, and might further help to design and interpret ecotoxicological studies.
+\emph{A priory} power analyses can be performed easily using simulations, even for complex experimental designs \citep{johnson_power_2014}, and might further help to design, interpret and evaluate ecotoxicological studies.
 
 Moreover, \citet{brock_minimum_2014} proposed that statistical power of mesocosm experiments can be increased by reducing sampling variability by better sampling and quantification methods. 
 But they also caution to avoid depleting populations by increasing sampling efficiency.
@@ -423,9 +423,15 @@ The interpretation of binomial GLMs is much simpler then for the arcsine transfo
 Therefore, we recommend to use a binomial GLM instead of the arcsine transformation.
 
 %% ---- Guideline GLMs
-
-In problematic cases (low sample sizes and/or low abundances) a diagnostic plot of the mean-variance relationship might give further insights.
-Especially at small samples sizes and/or low abundances it might be hard to
+In the introduction we pointed out, that there is little advice how to choose from the plenty of possible transformations.
+How do GLMs simplify this problem?
+First of all, the distribution modelled should be chosen to give a statistically sound model.
+Proportions are bounded between 0 and 1 and could be modelled using a binomial distribution.
+Counts are positive discrete values and should be modelled with a discrete distribution.
+In a factorial design the mean-variance relationship can be easily checked with diagnostic plots.
+Moreover, it should be checked for overdispersion. 
+Standard error will be underestimated and significance overestimated, if not accounted for (Figure \ref{fig:example}).
+The model selection process can be guided by the data and diagnostic plots and, therefore, is much more sound then choosing between transformations.
 
 
 %% --- Multivariate + GLMM -------
@@ -435,20 +441,6 @@ For community analyses \emph{GLM for multivariate data} have been proposed as al
 
 
 
-
-%% --- Normality testing - choosing the correct model
-
-%% statistically sound model
-.
-
-%% binomial data
-
-
-
-
-\todo{How to choose models? MV plot,...}
-
-
 %% --------------------------------
 \newpage
 \section{Conclusions}
@@ -456,7 +448,7 @@ Statistical hypothesis tests are commonly used in ecotoxicology to make inferenc
 The choice how we treat, model and test the data can have massive impacts on the conclusions we draw from experiments, especially at extremely low sample sizes.
 We showed for two common data types in ecotoxicology, that using appropriate models yielded higher statistical power, than trying to meet the assumptions of normality and variance homogeneity using transformations. 
 Therefore, we cannot recommend the current practice to either transform the data or use non-parametric approaches if data is not normally distributed, but instead use models fitting to the data. 
-GLMs should become standard method in ecotoxicolgy and guidelines need to be updated accordingly.
+GLMs should become a standard method in ecotoxicolgy and guidelines need to be updated accordingly.
 
 
 
