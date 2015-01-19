@@ -41,6 +41,8 @@ R code has been written hierarchically, so script must be run in a specific orde
 * If the switches `sim1` and `sim2` in `~/0-load.R` are set to `FALSE`, the simulations results are grabbed from cache. Otherwise, the actual simulation will run (takes some hours...).
 
 
+### Information about the R Environment used
+
 ```{r}
 > sessionInfo()
 R version 3.1.2 (2014-10-31)
