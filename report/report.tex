@@ -148,7 +148,7 @@ Instead of transforming the response variable the counts could be directly model
 \end{align}
 
 Again, this model is parametrised as contrast to the control group. 
-The expected values of y ($\lambda$) are linked with a log-function to the predictors, to avoid negative fitted values (eqn. \ref{eqn:pois}). 
+The response variable is linked via a log-function to the predictors, i.a. to avoid negative fitted values (eqn. \ref{eqn:pois}). 
 The Poisson distribution assumes that the mean and the variance are equal - a assumption that is rarely met with ecological data which is typically characterized by greater variance (overdispersion).
 To overcome this problem a quasi-Poisson distribution could be used which introduces an additional overdispersion parameter ($\Theta$) (eqn. \ref{eqn:quasi}).
 
@@ -249,11 +249,10 @@ LOEC was assessed using one-sided Dunnett contrasts.
 For this dataset, both methods yielded to same ecotoxicological inferences:
 The global tests of both methods indicated a strong effect of NaPCP on larval survival (linear model: F = 13.31, p \textless 0.001; GLM: LR = 64.79, p \textless 0.001).
 Moreover, both methods identified the highest concentration (512 \textmu g/L) as LOEC. 
-However, the coefficients of the binomial model are directly interpretable as change in the odds ratio:
-In the control group the odds of death are 1:20 ($e^{2.994}$), 
-\todo{further elaborate}
 
- whereas this is not possible with the transformed data (Table \ref{tab:ex_bin}).
+The coefficients of the binomial model are directly interpretable as change in the odds ratio:
+Compared to the control group, the odds in the highest treatment are reduced by a factor of $e^{-3.67} = 0.025$.
+Such a direct interpretation of parameters is not possible with the transformed data (Table \ref{tab:ex_bin}).
 
 \begin{table}[h]
 \centering
@@ -275,8 +274,6 @@ Control ($\alpha$) & 1.331 & (1.180, 1.481) & 2.994 & (1.523, 4.366) \\
 \hline
 \end{tabular}
 \end{table}
-
-\todo{explain parameters = change in log odds.}
 
 
 %% --------------------------------
@@ -379,10 +376,6 @@ Differences in power to detect a LOEC was only apparent at n = 3 and vanished qu
 %% --------------------------------
 \newpage
 \section{Discussion}
-Statistical hypothesis tests are commonly used in ecotoxicology to make inferences on pesticide effects.
-The choice how we treat, model and test the data can have massive impacts on the conclusions we draw from experiments. 
-We showed for two common data types in ecotoxicology, that using an appropriate model yielded higher statistical power, than trying to meet the assumptions of normality and variance homogeneity using transformations. 
-Therefore, we cannot recommend the current practice to either transform the data or use non-parametric approaches if data is not normally distributed, but instead use models fitting to the data.
 
 %% --- general low power
 Ecotoxicology experiments are often planned with small sample sizes due to practical constraints. 
@@ -390,15 +383,18 @@ For example, extremely low samples sizes (n \textless 5) are common in mesocosm 
 Statistical power is crucial for the determination of LOEC/NOEC values.
 Although, the use of LOEC/NOEC has been heavily criticized in the past \citep{landis_well_2011}  they are still regularly used in ecotoxicology \citep{jager_bad_2012}.
 Especially in mesocosm studies NOEC calculations are used in the majority of mesocosm experiments \citep{brock_minimum_2014,efsa_ppr_guidance_2013}.
-To counteract the problems with low power \citet{brock_minimum_2014} proposed to take the Minimum Detectable Difference (MDD), a methods to assess statistical power \emph{a posteriori} for decision into account.
+To counteract the problems with low power \citet{brock_minimum_2014} proposed to take the Minimum Detectable Difference (MDD), a methods to assess statistical power \emph{a posteriori}, for inference into account.
 Our results suggest that power in common mesocosm experiment is low.
 For common samples sizes and a reduction in abundance of 50\% we found a unacceptably low power to detect any treatment related effect (\textless 50\% for methods with appropriate Type 1 error, Figure \ref{fig:p_glob_c}).
-This was even worse for detecting the correct LOEC with power less than 30\%.
-This suggests that reported NOEC from mescosm experiments should be interpreted with caution.
+Additionally, \citet{ohara_not_2010} showed that using a log transformation gave unreliable and biased parameter estimates.
+Statistical power to detect the correct LOEC was even worse, with power less than 30\%.
+This suggests that NOEC reported from mesocosm experiments should be interpreted with caution. 
+\emph{A priory} power analyses can be performed easily using simulations, even for complex experimental designs \citep{johnson_power_2014}, and might further help to design and interpret ecotoxicological studies.
 
 Moreover, \citet{brock_minimum_2014} proposed that statistical power of mesocosm experiments can be increased by reducing sampling variability by better sampling and quantification methods. 
 But they also caution to avoid depleting populations by increasing sampling efficiency.
 As we showed, using appropriate statistical methods (like GLMs) can enhance the power at no extra costs.
+
 
 %% --- Non-parametric
 It has been advocated that, in the typical case of small sample sizes (n \textless 20) and non-normal data, non-parametric tests perform better than parametric tests assuming normality \citep{wang_making_2011}.
@@ -409,11 +405,16 @@ Non-parametric statistics are focused on testing, but not on estimation of effec
 Additional to testing GLM allow the estimation and interpretation of effects that might not be statistically significant, but ecologically relevant.
 Therefore, we do not advise to generally use non-parametric tests for non-normal data, but instead try to fit GLMs.
 
-%% --- Multivariate + GLMM -------
-Although, our simulations covered only simple experimental designs, these findings may also extend to more complex designs. 
-Nested or repeated designs with non-normal data could be analysed using Generalized Linear Mixed Models (GLMM) and may have advantages with respect to power \citep{stroup_rethinking_2014}.
-For community analyses \emph{GLM for multivariate data} have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \citep{warton_distance-based_2012,szocs_analysing_2015}.
+%% ---- Problems GLM
+At small sample sizes and low abundance a significant amount of negative negative binomial models did not converge.
+We used a iterative algorithm to fit these models \citep{venables_modern_2002} and other methods directly assessing the Likelihood may perform better.
+Moreover, the Likelihood-Ratio test gave increased Type-I error for these models.
+It is well known that the LR statistic is unreliable for small sample sizes \citep{bolker_generalized_2009,wilks_large-sample_1938} and we found that parametric bootstrap provides a valuable alternative in such situations.
+At small samples sizes and / or low abundances it might be hard to decide which mean-variance relationship fits best.
+The quasi-Poisson models assumes a simpler, linear mean-variance relationship, which might explain why it performed best for our simulated data sets. 
 
+
+%% --- binomial data
 Binomial data is often collected in lab trials. where increasing sample size is easier to accomplish. 
 We found notable differences in power to detect a treatment effect up to a sample size of 9.
 Similarly, \citet{warton_arcsine_2011} also found that GLM have higher power than arcsine transformed linear models.
@@ -421,21 +422,24 @@ However, for deriving LOEC the normal model was only at low sample sizes more po
 The interpretation of binomial GLMs is much simpler then for the arcsine transformed data, giving equal or higher power at sample sizes greater then three. 
 Therefore, we recommend to use a binomial GLM instead of the arcsine transformation.
 
+%% ---- Guideline GLMs
+
+In problematic cases (low sample sizes and/or low abundances) a diagnostic plot of the mean-variance relationship might give further insights.
+Especially at small samples sizes and/or low abundances it might be hard to
+
+
+%% --- Multivariate + GLMM -------
+Although, our simulations covered only simple experimental designs, these findings may also extend to more complex designs. 
+Nested or repeated designs with non-normal data could be analysed using Generalized Linear Mixed Models (GLMM) and may have advantages with respect to power \citep{stroup_rethinking_2014}.
+For community analyses \emph{GLM for multivariate data} have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \citep{warton_distance-based_2012,szocs_analysing_2015}.
 
 
 
 
 %% --- Normality testing - choosing the correct model
 
-%% -- GLM / LR test not so good for low sample sizes.
-
-%% Convergence MASS glm.nb not best algorithm
-
-%% Power analysis
-
 %% statistically sound model
-
-%% discuss nb vs qp
+.
 
 %% binomial data
 
@@ -443,13 +447,17 @@ Therefore, we recommend to use a binomial GLM instead of the arcsine transformat
 
 
 \todo{How to choose models? MV plot,...}
-\todo{robust SE for lower T1 error in glm nb?}
-\todo{Kritik an NOEC}
 
 
 %% --------------------------------
 \newpage
 \section{Conclusions}
+Statistical hypothesis tests are commonly used in ecotoxicology to make inferences on pesticide effects.
+The choice how we treat, model and test the data can have massive impacts on the conclusions we draw from experiments, especially at extremely low sample sizes.
+We showed for two common data types in ecotoxicology, that using appropriate models yielded higher statistical power, than trying to meet the assumptions of normality and variance homogeneity using transformations. 
+Therefore, we cannot recommend the current practice to either transform the data or use non-parametric approaches if data is not normally distributed, but instead use models fitting to the data. 
+GLMs should become standard method in ecotoxicolgy and guidelines need to be updated accordingly.
+
 
 
 %% --------------------------------
