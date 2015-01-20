@@ -48,7 +48,6 @@
 \newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
 
 \usepackage{alltt}
-
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}%GRaphiken
 \usepackage{tabularx}%Tabellen!
@@ -99,19 +98,551 @@
 \linespread{1}% 1.5 Zeilenabstand			
 \graphicspath{{fig/}}                     % path to graphics
 
-\title{Use the GLM, Luke!}
+%% ----------------------------------------------------------------------------
+\title{Ecotoxicology is not normal.}
 \subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
-\author{Eduard Szöcs}
+\author{Eduard Szöcs, Ralf B. Schäfer}
 \date{\today}
+
+
+% ----------------------------------------------------------------------------
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 \maketitle
-\section{Supplement 2 - Examples}
-\subsection{Binomial data}
+
+\section{Supplement 2 - Motivating examples}
+\subsection{Count data example}
 \subsubsection{Introduction}
-Here we will show how to analyse binomial data. 
+In this example we will analyse data from \citep{brock_minimum_2015}.
+The data are count of mayfly larvae in Macroinvertebrate Artificial Substrate Samplers in 18 mesocosms at one sampling day.
+There are 5 treatments and one control group.
+
+First we load the data and bring it to the long format and remove NA values.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{df} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlkwc{header} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{text} \hlstd{=} \hlstr{'Control  T0.1 T0.3  T1  T3  T10
+175 29  27  36  26  20
+65  114 78  11  13  37
+154 72  27  105 33  NA
+83  NA  NA  NA  NA  NA
+'}\hlstd{)}
+\hlkwd{require}\hlstd{(reshape2)}
+\hlstd{dfm} \hlkwb{<-} \hlkwd{melt}\hlstd{(df,} \hlkwc{value.name} \hlstd{=} \hlstr{'abu'}\hlstd{,} \hlkwc{variable.name} \hlstd{=} \hlstr{'treatment'}\hlstd{)}
+\hlstd{dfm} \hlkwb{<-} \hlstd{dfm[}\hlopt{!}\hlkwd{is.na}\hlstd{(dfm[}\hlstr{'abu'}\hlstd{]), ]}
+\hlkwd{head}\hlstd{(dfm)}
+\end{alltt}
+\begin{verbatim}
+##   treatment abu
+## 1   Control 175
+## 2   Control  65
+## 3   Control 154
+## 4   Control  83
+## 5      T0.1  29
+## 6      T0.1 114
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+This give a table with two columns - one indicating the treatment and one with the measured abundances.
+
+  
+Let's have a first look at the data:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{boxplot}\hlstd{(abu} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm,} \hlkwc{xlab} \hlstd{=} \hlstr{'Treatment'}\hlstd{,}
+        \hlkwc{ylab} \hlstd{=} \hlstr{'Count'}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'grey75'}\hlstd{,} \hlkwc{main} \hlstd{=} \hlstr{'Raw abundances'}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=0.5\textwidth]{figure/count_raw_plot-1} 
+
+\end{knitrout}
+We clearly see a treatment related response. 
+Moreover, we may note that variances are increasing with increasing abundances.
+
+\subsubsection{Transforming data}
+Next we transform the data using a ln(Ax + 1) transformation.
+A is chosen so that the term Ax equals two for the lowest non-zero abundance.
+We add these transformed abundances as column to our table.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{A} \hlkwb{<-} \hlnum{2} \hlopt{/} \hlkwd{min}\hlstd{(dfm}\hlopt{$}\hlstd{abu[dfm}\hlopt{$}\hlstd{abu} \hlopt{!=} \hlnum{0}\hlstd{])}
+\hlstd{A}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.1818182
+\end{verbatim}
+\begin{alltt}
+\hlstd{dfm}\hlopt{$}\hlstd{abu_t} \hlkwb{<-} \hlkwd{log}\hlstd{(A} \hlopt{*} \hlstd{dfm}\hlopt{$}\hlstd{abu} \hlopt{+} \hlnum{1}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+It looks like the transformation does a good job in eqaulizing the variances:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{boxplot}\hlstd{(abu_t} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm,}
+        \hlkwc{xlab} \hlstd{=} \hlstr{'Treatment'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'Transf. Counts'}\hlstd{,}
+        \hlkwc{col} \hlstd{=} \hlstr{'grey75'}\hlstd{,} \hlkwc{main} \hlstd{=} \hlstr{'Transformed abundances'}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=0.5\textwidth]{figure/plot_count_trans-1} 
+
+\end{knitrout}
+
+
+\subsubsection{Assuming a normal distribtion of transformed abundances}
+We start with analysing this data assuming a normal distribution of the transformed abundances with constant variance.
+This can be easily done using the \texttt{lm()} function:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{modlm} \hlkwb{<-} \hlkwd{lm}\hlstd{(abu_t} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+The \texttt{summary()} gives the estimated parameters with standard errors and Wald t tests:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(modlm)}
+\end{alltt}
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = abu_t ~ treatment, data = dfm)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.94133 -0.31454  0.04576  0.31813  0.96033 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)     3.0468     0.2970  10.260 2.71e-07 ***
+## treatmentT0.1  -0.5267     0.4536  -1.161  0.26814    
+## treatmentT0.3  -0.9558     0.4536  -2.107  0.05682 .  
+## treatmentT1    -1.0069     0.4536  -2.220  0.04646 *  
+## treatmentT3    -1.4121     0.4536  -3.113  0.00897 ** 
+## treatmentT10   -1.2575     0.5144  -2.445  0.03089 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.5939 on 12 degrees of freedom
+## Multiple R-squared:  0.5167,	Adjusted R-squared:  0.3154 
+## F-statistic: 2.566 on 5 and 12 DF,  p-value: 0.08406
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Or, if you want to have the ANOVA table with an F-test:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary.aov}\hlstd{(modlm)}
+\end{alltt}
+\begin{verbatim}
+##             Df Sum Sq Mean Sq F value Pr(>F)  
+## treatment    5  4.526  0.9052   2.566 0.0841 .
+## Residuals   12  4.233  0.3528                 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+From this output we might infer that we cannot detect any treatment effect (F = 2.566, p = 0.084).
+Let's move on to the LOEC determination. This can be easily done using the multcomp package \citep{hothorn_simultaneous_2008}:
+Here we perform a one-sided (\texttt{alternative='less'}) Dunnett (\texttt{mcp(treatment='Dunnett')}) test.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{require}\hlstd{(multcomp)}
+\hlcom{# one-sided Dunnett test}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modlm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),}  \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	 Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Dunnett Contrasts
+## 
+## 
+## Fit: lm(formula = abu_t ~ treatment, data = dfm)
+## 
+## Linear Hypotheses:
+##                     Estimate Std. Error t value Pr(<t)  
+## T0.1 - Control >= 0  -0.5267     0.4536  -1.161 0.3841  
+## T0.3 - Control >= 0  -0.9558     0.4536  -2.107 0.1032  
+## T1 - Control >= 0    -1.0069     0.4536  -2.220 0.0859 .
+## T3 - Control >= 0    -1.4121     0.4536  -3.113 0.0184 *
+## T10 - Control >= 0   -1.2575     0.5144  -2.445 0.0590 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## (Adjusted p values reported -- single-step method)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+This indicates that only treatment 3 shows a statistically significant from control and is therefore the determined LOEC.
+
+
+
+
+\subsubsection{Assuming a Poisson distribtion of abundances}
+
+Instead transforming the data, we could assume a Poisson distribuion and fit a GLM to this data.
+This can be done using the \texttt{glm()} function:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{modpois} \hlkwb{<-} \hlkwd{glm}\hlstd{(abu} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm,} \hlkwc{family} \hlstd{=} \hlkwd{poisson}\hlstd{(}\hlkwc{link} \hlstd{=} \hlstr{'log'}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+, \texttt{family = poisson(link = 'log')} specifies that we want to fit a poisson model using a log link between response and predictors.
+
+The \texttt{summary} gives the estimated parameters, standard errors and Wald Z tests:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(modpois)}
+\end{alltt}
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = abu ~ treatment, family = poisson(link = "log"), 
+##     data = dfm)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -6.7625  -2.7621  -0.8219   2.7172   6.6602  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)    4.78122    0.04579 104.423  < 2e-16 ***
+## treatmentT0.1 -0.50920    0.08214  -6.199 5.69e-10 ***
+## treatmentT0.3 -0.99703    0.09835 -10.138  < 2e-16 ***
+## treatmentT1   -0.85595    0.09314  -9.190  < 2e-16 ***
+## treatmentT3   -1.60317    0.12643 -12.680  < 2e-16 ***
+## treatmentT10  -1.43132    0.14014 -10.213  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 604.79  on 17  degrees of freedom
+## Residual deviance: 273.77  on 12  degrees of freedom
+## AIC: 387.63
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+To perform a LR-Test we can used \texttt{drop1()}:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{drop1}\hlstd{(modpois,} \hlkwc{test} \hlstd{=} \hlstr{'Chisq'}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Single term deletions
+## 
+## Model:
+## abu ~ treatment
+##           Df Deviance    AIC    LRT  Pr(>Chi)    
+## <none>         273.77 387.63                     
+## treatment  5   604.79 708.64 331.02 < 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+which indicates a strong treatment effect.
+
+But is a poisson distribution appropriate here? 
+A property of the poisson distribution is that its variance is equal to the mean. 
+A simple diagnostic would be to plot group variances vs. group means:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{require}\hlstd{(plyr)}
+\hlcom{# mean and variance per treatment}
+\hlstd{musd} \hlkwb{<-} \hlkwd{ddply}\hlstd{(dfm,} \hlkwd{.}\hlstd{(treatment), summarise,}
+              \hlkwc{mu} \hlstd{=} \hlkwd{mean}\hlstd{(abu),}
+              \hlkwc{var} \hlstd{=} \hlkwd{var}\hlstd{(abu))}
+\hlstd{musd}
+\end{alltt}
+\begin{verbatim}
+##   treatment        mu      var
+## 1   Control 119.25000 2857.583
+## 2      T0.1  71.66667 1806.333
+## 3      T0.3  44.00000  867.000
+## 4        T1  50.66667 2370.333
+## 5        T3  24.00000  103.000
+## 6       T10  28.50000  144.500
+\end{verbatim}
+\begin{alltt}
+\hlcom{# plot}
+\hlkwd{plot}\hlstd{(var} \hlopt{~} \hlstd{mu,} \hlkwc{data} \hlstd{= musd,} \hlkwc{xlab} \hlstd{=} \hlstr{'mean'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'variance'}\hlstd{,} \hlkwc{main} \hlstd{=} \hlstr{'Mean-variance relationships'}\hlstd{)}
+\hlcom{# poisson}
+\hlkwd{abline}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{b} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'darkblue'}\hlstd{,} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlcom{# quasi-Poisson}
+\hlkwd{abline}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{b} \hlstd{=} \hlnum{22.41}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'darkgreen'}\hlstd{,} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlcom{# Negative binomial}
+\hlkwd{curve}\hlstd{(x} \hlopt{+} \hlstd{(x}\hlopt{^}\hlnum{2} \hlopt{/} \hlnum{3.91}\hlstd{),} \hlkwc{from} \hlstd{=} \hlnum{24}\hlstd{,} \hlkwc{to} \hlstd{=} \hlnum{119.25}\hlstd{,} \hlkwc{add} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'darkred'}\hlstd{,} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlkwd{legend}\hlstd{(}\hlstr{'topleft'}\hlstd{,} \hlkwd{c}\hlstd{(}\hlstr{'NB(k = 3.91)'}\hlstd{,} \hlstr{'Poisson'}\hlstd{,} \hlstr{'Quasi-Poisson(t = 22.4)'}\hlstd{),}
+       \hlkwc{col} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{'darkred'}\hlstd{,} \hlstr{'darkblue'}\hlstd{,} \hlstr{'darkgreen'}\hlstd{),}
+       \hlkwc{lty} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{1}\hlstd{,} \hlnum{1}\hlstd{),}
+       \hlkwc{lwd} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{2}\hlstd{,} \hlnum{2}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=0.5\textwidth]{figure/mod_count_meanvar-1} 
+
+\end{knitrout}
+
+Here, I also added the assumed mean-variance relationships of the Poisson, quasi-Poisson and negative binomial models.
+We clearly see that the variance increases much more than would be expected under the poisson distribution (the data is overdispersed).
+Moreover, we could check overdispersion from the \texttt{summary}:
+If the ratio of residual deviance to degrees of freedom is \textgreater 1 the data is overdispersed.
+
+
+\subsubsection{Assuming a quasi-Poisson distribtion of abundances}
+The plot suggests that the variance may increasing stronger then the mean and quasi-Poisson or negative binomial models might be more appropriate for this data.
+Fitting a quasi-Poisson GLM is straight forward:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{modqpois} \hlkwb{<-} \hlkwd{glm}\hlstd{(abu} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm,} \hlkwc{family} \hlstd{= quasipoisson)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+The summary gives the estimated parameters:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(modqpois)}
+\end{alltt}
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = abu ~ treatment, family = quasipoisson, data = dfm)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -6.7625  -2.7621  -0.8219   2.7172   6.6602  
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)     4.7812     0.2168  22.058 4.43e-11 ***
+## treatmentT0.1  -0.5092     0.3889  -1.309   0.2149    
+## treatmentT0.3  -0.9970     0.4656  -2.142   0.0534 .  
+## treatmentT1    -0.8560     0.4409  -1.941   0.0761 .  
+## treatmentT3    -1.6032     0.5985  -2.679   0.0201 *  
+## treatmentT10   -1.4313     0.6634  -2.157   0.0519 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for quasipoisson family taken to be 22.41055)
+## 
+##     Null deviance: 604.79  on 17  degrees of freedom
+## Residual deviance: 273.77  on 12  degrees of freedom
+## AIC: NA
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+with the dispersion parameter $\Theta = 22.41055$. 
+Note, that the parameter estimates are the same as from the Poisson model, onle the standard errors are scaled/wider.
+
+An F-test can be performed using \texttt{drop1()}:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{drop1}\hlstd{(modqpois,} \hlkwc{test} \hlstd{=} \hlstr{'F'}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Single term deletions
+## 
+## Model:
+## abu ~ treatment
+##           Df Deviance F value  Pr(>F)  
+## <none>         273.77                  
+## treatment  5   604.79  2.9019 0.06059 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+, which also indicates no treatment effect.
+
+The LOEC can be determined with \texttt{multcomp}:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modqpois,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),}  \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	 Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Dunnett Contrasts
+## 
+## 
+## Fit: glm(formula = abu ~ treatment, family = quasipoisson, data = dfm)
+## 
+## Linear Hypotheses:
+##                     Estimate Std. Error z value Pr(<z)  
+## T0.1 - Control >= 0  -0.5092     0.3889  -1.309 0.3514  
+## T0.3 - Control >= 0  -0.9970     0.4656  -2.142 0.0737 .
+## T1 - Control >= 0    -0.8560     0.4409  -1.941 0.1153  
+## T3 - Control >= 0    -1.6032     0.5985  -2.679 0.0179 *
+## T10 - Control >= 0   -1.4313     0.6634  -2.157 0.0710 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## (Adjusted p values reported -- single-step method)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+
+\subsubsection{Assuming a negative binomial distribtion of abundances}
+To fit a negative binomial GLM we could use \texttt{glm.nb()} from the MASS package \citep{venables_modern_2002}:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{require}\hlstd{(MASS)}
+\hlstd{modnb} \hlkwb{<-} \hlkwd{glm.nb}\hlstd{(abu} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+The estimated parameters:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(modnb)}
+\end{alltt}
+\begin{verbatim}
+## 
+## Call:
+## glm.nb(formula = abu ~ treatment, data = dfm, init.theta = 3.905898474, 
+##     link = log)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.2554  -0.8488  -0.3020   0.5954   1.5899  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)     4.7812     0.2571  18.596  < 2e-16 ***
+## treatmentT0.1  -0.5092     0.3951  -1.289  0.19746    
+## treatmentT0.3  -0.9970     0.3988  -2.500  0.01241 *  
+## treatmentT1    -0.8560     0.3975  -2.153  0.03130 *  
+## treatmentT3    -1.6032     0.4066  -3.943 8.05e-05 ***
+## treatmentT10   -1.4313     0.4601  -3.111  0.00186 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for Negative Binomial(3.9059) family taken to be 1)
+## 
+##     Null deviance: 39.057  on 17  degrees of freedom
+## Residual deviance: 18.611  on 12  degrees of freedom
+## AIC: 181.24
+## 
+## Number of Fisher Scoring iterations: 1
+## 
+## 
+##               Theta:  3.91 
+##           Std. Err.:  1.37 
+## 
+##  2 x log-likelihood:  -167.238
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+, with $\kappa = 1 / 3.905898$ (glm.nb uses a slighty other parametrisation).
+
+For the LR-Test we need to first fit a reduced model:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{modnb.null} \hlkwb{<-} \hlkwd{glm.nb}\hlstd{(abu} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{data} \hlstd{= dfm)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+, so that the dispersion parameter $\kappa$ is reestimated for the reduced model.
+Then we can compare these two models with a LR-Test:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{anova}\hlstd{(modnb, modnb.null,} \hlkwc{test} \hlstd{=} \hlstr{'Chisq'}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Likelihood ratio tests of Negative Binomial Models
+## 
+## Response: abu
+##       Model    theta Resid. df    2 x log-lik.   Test    df LR stat.
+## 1         1 1.861577        17       -181.2281                      
+## 2 treatment 3.905898        12       -167.2383 1 vs 2     5 13.98985
+##    Pr(Chi)
+## 1         
+## 2 0.015674
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+, which suggests a treatment related effect on abundances.
+
+Similar for LOEC:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modnb,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),}  \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	 Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Dunnett Contrasts
+## 
+## 
+## Fit: glm.nb(formula = abu ~ treatment, data = dfm, init.theta = 3.905898474, 
+##     link = log)
+## 
+## Linear Hypotheses:
+##                     Estimate Std. Error z value  Pr(<z)    
+## T0.1 - Control >= 0  -0.5092     0.3951  -1.289 0.31530    
+## T0.3 - Control >= 0  -0.9970     0.3988  -2.500 0.02747 *  
+## T1 - Control >= 0    -0.8560     0.3975  -2.153 0.06494 .  
+## T3 - Control >= 0    -1.6032     0.4066  -3.943 < 0.001 ***
+## T10 - Control >= 0   -1.4313     0.4601  -3.111 0.00444 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## (Adjusted p values reported -- single-step method)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+which suggests a LOEC at the 0.3 treatment.
+
+
+
+\subsection{Binomial data exaple}
+\subsubsection{Introduction}
+Here we will show how to analyse binomial data (\emph{x out of n}). 
 Data is provided in \citet{newman_quantitative_2012} (example 5.1, page 223) and \citet{epa_methods_2002}.
-Ten fathead minnow (\textit{Pimephales promelas} larvals were exposed to sodium pentachlorophenol (NaPCP) and proportions of the total number alive at the end of the exposure reported.
+Ten fathead minnow (\textit{Pimephales promelas}) larvals were exposed to sodium pentachlorophenol (NaPCP) and proportions of the total number alive at the end of the exposure reported.
 
 First we load the data:
 \begin{knitrout}
@@ -167,24 +698,28 @@ Let's have a first look at the data:
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{boxplot}\hlstd{(y} \hlopt{~} \hlstd{conc,} \hlkwc{data} \hlstd{= dfm,}
-        \hlkwc{xlab} \hlstd{=} \hlstr{'Concentration'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'Proportion surv.'}\hlstd{)}
+        \hlkwc{xlab} \hlstd{=} \hlstr{'Concentration'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'Proportion surv.'}\hlstd{,}
+        \hlkwc{main} \hlstd{=} \hlstr{'Raw data'}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'grey75'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\includegraphics[width=0.5\textwidth]{figure/bin_raw_plot} 
+\includegraphics[width=0.5\textwidth]{figure/bin_raw_plot-1} 
 
 \end{knitrout}
+This plot indicates a strong effect at the highest concentration.
 
 
 \subsubsection{Transforming data}
-Next we arcsin transform the proportions:
+Next we arcsine transform the proportions:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{dfm}\hlopt{$}\hlstd{y_asin} \hlkwb{<-} \hlkwd{ifelse}\hlstd{(dfm}\hlopt{$}\hlstd{y} \hlopt{==} \hlnum{1}\hlstd{,} \hlkwd{asin}\hlstd{(}\hlnum{1}\hlstd{)} \hlopt{-} \hlkwd{asin}\hlstd{(}\hlkwd{sqrt}\hlstd{(}\hlnum{1}\hlopt{/}\hlnum{40}\hlstd{)),}
-                                        \hlkwd{ifelse}\hlstd{(dfm}\hlopt{$}\hlstd{y} \hlopt{==} \hlnum{0}\hlstd{,} \hlkwd{asin}\hlstd{(}\hlkwd{sqrt}\hlstd{(}\hlnum{1}\hlopt{/}\hlnum{40}\hlstd{)),}
-                                                \hlkwd{asin}\hlstd{(}\hlkwd{sqrt}\hlstd{(dfm}\hlopt{$}\hlstd{y))}
-                                                \hlstd{)}
-                                        \hlstd{)}
+\hlstd{dfm}\hlopt{$}\hlstd{y_asin} \hlkwb{<-} \hlkwd{ifelse}\hlstd{(dfm}\hlopt{$}\hlstd{y} \hlopt{==} \hlnum{1}\hlstd{,}
+                     \hlkwd{asin}\hlstd{(}\hlnum{1}\hlstd{)} \hlopt{-} \hlkwd{asin}\hlstd{(}\hlkwd{sqrt}\hlstd{(}\hlnum{1}\hlopt{/}\hlnum{10}\hlstd{)),}
+                     \hlkwd{ifelse}\hlstd{(dfm}\hlopt{$}\hlstd{y} \hlopt{==} \hlnum{0}\hlstd{,}
+                            \hlkwd{asin}\hlstd{(}\hlkwd{sqrt}\hlstd{(}\hlnum{1}\hlopt{/}\hlnum{10}\hlstd{)),}
+                            \hlkwd{asin}\hlstd{(}\hlkwd{sqrt}\hlstd{(dfm}\hlopt{$}\hlstd{y))}
+                            \hlstd{)}
+                     \hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -194,215 +729,143 @@ Next we arcsin transform the proportions:
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{boxplot}\hlstd{(y_asin} \hlopt{~} \hlstd{conc,} \hlkwc{data} \hlstd{= dfm,}
-        \hlkwc{xlab} \hlstd{=} \hlstr{'Concentration'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'Proportion surv.'}\hlstd{)}
+        \hlkwc{xlab} \hlstd{=} \hlstr{'Concentration'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'Proportion surv.'}\hlstd{,}
+        \hlkwc{main} \hlstd{=} \hlstr{'Transformed data'}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'grey75'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\includegraphics[width=0.5\textwidth]{figure/bin_trans_plot} 
+\includegraphics[width=0.5\textwidth]{figure/bin_trans_plot-1} 
 
 \end{knitrout}
 
-\subsubsection{Analysing data}
-We will use the bbmle-package \citation{bolker_bbmle:_2014} to fit the models, as we used this also for the simulations.
-However, also standard R functions can be use (see below).
-Let's start with the model assuming a normal distribution of transformed proportions.
-
+\subsubsection{Assuming a normal distribtion of transformed proportions}
+Like in the count data example we fit the model using \texttt{lm()}:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{require}\hlstd{(bbmle)}
-\hlstd{mod_normal} \hlkwb{<-} \hlkwd{mle2}\hlstd{(y_asin} \hlopt{~} \hlkwd{dnorm}\hlstd{(}\hlkwc{mean} \hlstd{= mu,} \hlkwc{sd} \hlstd{= s),}
-                   \hlkwc{parameters} \hlstd{=} \hlkwd{list}\hlstd{(mu} \hlopt{~} \hlstd{conc, s} \hlopt{~} \hlnum{1}\hlstd{),}
-                   \hlkwc{data} \hlstd{= dfm,}
-                   \hlkwc{start} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{mu} \hlstd{=} \hlnum{0.5}\hlstd{,} \hlkwc{s} \hlstd{=} \hlnum{1}\hlstd{)}
-                   \hlstd{)}
-\hlkwd{summary}\hlstd{(mod_normal)}
+\hlstd{modlm} \hlkwb{<-} \hlkwd{lm}\hlstd{(y_asin} \hlopt{~} \hlstd{conc,} \hlkwc{data} \hlstd{= dfm)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+The summary gives the estimated paramaters:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(modlm)}
 \end{alltt}
 \begin{verbatim}
-## Maximum likelihood estimation
 ## 
 ## Call:
-## mle2(minuslogl = y_asin ~ dnorm(mean = mu, sd = s), start = list(mu = 0.5, 
-##     s = 1), data = dfm, parameters = list(mu ~ conc, s ~ 1))
+## lm(formula = y_asin ~ conc, data = dfm)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.28326 -0.03547  0.00000  0.03547  0.18038 
 ## 
 ## Coefficients:
-##                Estimate Std. Error z value   Pr(z)    
-## mu.(Intercept)   1.3305     0.0666   19.97 < 2e-16 ***
-## mu.conc32       -0.1472     0.0942   -1.56   0.118    
-## mu.conc64        0.0407     0.0942    0.43   0.665    
-## mu.conc128      -0.0762     0.0942   -0.81   0.419    
-## mu.conc256      -0.2211     0.0942   -2.35   0.019 *  
-## mu.conc512      -0.7274     0.0942   -7.72 1.2e-14 ***
-## s                0.1333     0.0192    6.93 4.3e-12 ***
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  1.249e+00  5.463e-02  22.866 9.44e-15 ***
+## conc32      -1.064e-01  7.725e-02  -1.378   0.1852    
+## conc64      -1.144e-16  7.725e-02   0.000   1.0000    
+## conc128     -3.547e-02  7.725e-02  -0.459   0.6516    
+## conc256     -1.804e-01  7.725e-02  -2.335   0.0313 *  
+## conc512     -6.459e-01  7.725e-02  -8.360 1.30e-07 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## -2 log L: -28.64
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-This may gives some warnings as we did not put boundaries on the parameters (s cannot be 0 or lower), however we can ignore them.
-The summary gives us the estimated parameters, their standard error and accompanying p-values.
-Note that this model is parametrised a contrast to the control group so we can directly use the summary-output to determine the LOEC.
-Note that these p-values are not adjusted for multiple testing (you can use p.adjust() for this).
-
-The perform a Likelihood-Ratio-Test we specify a null model and compare both.
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{mod_normal.null} \hlkwb{<-} \hlkwd{update}\hlstd{(mod_normal,}
-                     \hlkwc{parameters} \hlstd{=} \hlkwd{list}\hlstd{(mu} \hlopt{~} \hlnum{1}\hlstd{, sd} \hlopt{~} \hlnum{1}\hlstd{)}
-                     \hlstd{)}
-\hlkwd{anova}\hlstd{(mod_normal, mod_normal.null)}
-\end{alltt}
-\begin{verbatim}
-## Likelihood Ratio Tests
-## Model 1: mod_normal, y_asin~dnorm(mean=mu,sd=s): mu~conc, s~1
-## Model 2: mod_normal.null, y_asin~dnorm(mean=mu,sd=s): mu~1, sd~1
-##   Tot Df Deviance Chisq Df Pr(>Chisq)    
-## 1      7   -28.64                        
-## 2      2     8.49  37.1  5    5.7e-07 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Residual standard error: 0.1093 on 18 degrees of freedom
+## Multiple R-squared:  0.8507,	Adjusted R-squared:  0.8092 
+## F-statistic: 20.51 on 5 and 18 DF,  p-value: 7.323e-07
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
-With base R we could do:
+The F-test suggests a treatment related effect:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{mod_normal} \hlkwb{<-} \hlkwd{lm}\hlstd{(y_asin} \hlopt{~} \hlstd{conc,} \hlkwc{data} \hlstd{= dfm)}
-\hlkwd{drop1}\hlstd{(mod_normal,} \hlkwc{test} \hlstd{=} \hlstr{'Chisq'}\hlstd{)}
+\hlkwd{drop1}\hlstd{(modlm,} \hlkwc{test} \hlstd{=} \hlstr{'F'}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
 ## Single term deletions
 ## 
 ## Model:
 ## y_asin ~ conc
-##        Df Sum of Sq   RSS   AIC Pr(>Chi)    
-## <none>              0.426 -84.7             
-## conc    5      1.57 2.001 -57.6  5.7e-07 ***
+##        Df Sum of Sq     RSS      AIC F value    Pr(>F)    
+## <none>              0.21484 -101.181                      
+## conc    5    1.2242 1.43903  -65.538  20.513 7.323e-07 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-or using the lmtest package \citep{zeileis_diagnostic_2002}:
+
+And the LOEC is at the highest concentration:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{require}\hlstd{(lmtest)}
-\hlkwd{lrtest}\hlstd{(mod_normal)}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modlm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{conc} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),} \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
-## Likelihood ratio test
 ## 
-## Model 1: y_asin ~ conc
-## Model 2: y_asin ~ 1
-##   #Df LogLik Df Chisq Pr(>Chisq)    
-## 1   7  14.32                        
-## 2   2  -4.24 -5  37.1    5.7e-07 ***
+## 	 Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Dunnett Contrasts
+## 
+## 
+## Fit: lm(formula = y_asin ~ conc, data = dfm)
+## 
+## Linear Hypotheses:
+##                Estimate Std. Error t value Pr(<t)    
+## 32 - 0 >= 0  -1.064e-01  7.725e-02  -1.378 0.2695    
+## 64 - 0 >= 0  -1.144e-16  7.725e-02   0.000 0.8333    
+## 128 - 0 >= 0 -3.547e-02  7.725e-02  -0.459 0.6652    
+## 256 - 0 >= 0 -1.804e-01  7.725e-02  -2.335 0.0573 .  
+## 512 - 0 >= 0 -6.459e-01  7.725e-02  -8.360 <0.001 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## (Adjusted p values reported -- single-step method)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
 
-
-Next we assume that the number of surviving larvals are drawn from a binomial distribution.
-First we backtransform the proportions reported to counts of surviving and dead larvals:
+\subsubsection{Assuming a binomial distribtion}
+The binomial model with a logit link between predictors and response can be fitted using the \texttt{glm()} function:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{dfm}\hlopt{$}\hlstd{surv} \hlkwb{<-} \hlstd{dfm}\hlopt{$}\hlstd{y} \hlopt{*} \hlnum{10}
-\hlstd{dfm}\hlopt{$}\hlstd{dead} \hlkwb{<-} \hlnum{10} \hlopt{-} \hlstd{dfm}\hlopt{$}\hlstd{surv}
+\hlstd{modglm} \hlkwb{<-} \hlkwd{glm}\hlstd{(y} \hlopt{~} \hlstd{conc ,} \hlkwc{data} \hlstd{= dfm,} \hlkwc{family} \hlstd{=} \hlkwd{binomial}\hlstd{(}\hlkwc{link} \hlstd{=} \hlstr{'logit'}\hlstd{),}
+              \hlkwc{weights} \hlstd{=} \hlkwd{rep}\hlstd{(}\hlnum{10}\hlstd{,} \hlkwd{nrow}\hlstd{(dfm)))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
+Here the weights arguments, indicates how many fish where exposed in each treatment (10).
 
-And then we specify the logistic model:
+The summary gives the estimated paramaters:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{mod_bin} \hlkwb{<-} \hlkwd{mle2}\hlstd{(surv} \hlopt{~} \hlkwd{dbinom}\hlstd{(}\hlkwc{size} \hlstd{=} \hlnum{10}\hlstd{,} \hlkwc{prob} \hlstd{=} \hlkwd{plogis}\hlstd{(lp)),}
-                \hlkwc{parameters} \hlstd{=} \hlkwd{list}\hlstd{(lp} \hlopt{~} \hlstd{conc),}
-                \hlkwc{data} \hlstd{= dfm,}
-                \hlkwc{start} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{lp} \hlstd{=} \hlnum{0}\hlstd{)}
-                \hlstd{)}
-\hlkwd{summary}\hlstd{(mod_bin)}
-\end{alltt}
-\begin{verbatim}
-## Maximum likelihood estimation
-## 
-## Call:
-## mle2(minuslogl = surv ~ dbinom(size = 10, prob = plogis(lp)), 
-##     start = list(lp = 0), data = dfm, parameters = list(lp ~ 
-##         conc))
-## 
-## Coefficients:
-##                Estimate Std. Error z value   Pr(z)    
-## lp.(Intercept)    2.944      0.725    4.06 4.9e-05 ***
-## lp.conc32        -1.210      0.850   -1.42   0.155    
-## lp.conc64         0.719      1.246    0.58   0.564    
-## lp.conc128       -0.747      0.897   -0.83   0.405    
-## lp.conc256       -1.708      0.818   -2.09   0.037 *  
-## lp.conc512       -3.675      0.800   -4.59 4.4e-06 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## -2 log L: 60.86
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-And perform the LRT
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{mod_bin.null} \hlkwb{<-} \hlkwd{update}\hlstd{(mod_bin,}
-                       \hlkwc{parameters} \hlstd{=} \hlkwd{list}\hlstd{(lp} \hlopt{~} \hlnum{1}\hlstd{))}
-\hlkwd{anova}\hlstd{(mod_bin, mod_bin.null)}
-\end{alltt}
-\begin{verbatim}
-## Likelihood Ratio Tests
-## Model 1: mod_bin, surv~dbinom(size=10,prob=plogis(lp)): lp~conc
-## Model 2: mod_bin.null, surv~dbinom(size=10,prob=plogis(lp)): lp~1
-##   Tot Df Deviance Chisq Df Pr(>Chisq)    
-## 1      6     60.9                        
-## 2      1    125.6  64.8  5    1.2e-12 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
-With base R we could use
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{mod_bin_b} \hlkwb{<-} \hlkwd{glm}\hlstd{(}\hlkwd{cbind}\hlstd{(surv, dead)} \hlopt{~} \hlstd{conc,} \hlkwc{data} \hlstd{= dfm,} \hlkwc{family} \hlstd{=} \hlkwd{binomial}\hlstd{(}\hlkwc{link} \hlstd{=} \hlstr{'logit'}\hlstd{))}
-\hlkwd{summary}\hlstd{(mod_bin_b)}
+\hlkwd{summary}\hlstd{(modglm)}
 \end{alltt}
 \begin{verbatim}
 ## 
 ## Call:
-## glm(formula = cbind(surv, dead) ~ conc, family = binomial(link = "logit"), 
-##     data = dfm)
+## glm(formula = y ~ conc, family = binomial(link = "logit"), data = dfm, 
+##     weights = rep(10, nrow(dfm)))
 ## 
 ## Deviance Residuals: 
-##    Min      1Q  Median      3Q     Max  
-## -1.898  -0.572   0.000   0.787   2.258  
+##     Min       1Q   Median       3Q      Max  
+## -1.8980  -0.5723   0.0000   0.7869   2.2578  
 ## 
 ## Coefficients:
 ##             Estimate Std. Error z value Pr(>|z|)    
-## (Intercept)    2.944      0.725    4.06  4.9e-05 ***
-## conc32        -1.210      0.850   -1.42    0.155    
-## conc64         0.719      1.246    0.58    0.564    
-## conc128       -0.747      0.897   -0.83    0.405    
-## conc256       -1.708      0.818   -2.09    0.037 *  
-## conc512       -3.675      0.800   -4.59  4.4e-06 ***
+## (Intercept)   2.9444     0.7255   4.059 4.94e-05 ***
+## conc32       -1.2098     0.8499  -1.423   0.1546    
+## conc64        0.7191     1.2458   0.577   0.5638    
+## conc128      -0.7472     0.8967  -0.833   0.4047    
+## conc256      -1.7077     0.8183  -2.087   0.0369 *  
+## conc512      -3.6753     0.8002  -4.593 4.37e-06 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -410,352 +873,66 @@ With base R we could use
 ## 
 ##     Null deviance: 88.672  on 23  degrees of freedom
 ## Residual deviance: 23.889  on 18  degrees of freedom
-## AIC: 72.86
+## AIC: 72.862
 ## 
 ## Number of Fisher Scoring iterations: 5
 \end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+To perform a LR-test we can used the \texttt{drop1()} function:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{drop1}\hlstd{(mod_bin_b,} \hlkwc{test} \hlstd{=} \hlstr{'Chisq'}\hlstd{)}
+\hlkwd{drop1}\hlstd{(modglm,} \hlkwc{test} \hlstd{=} \hlstr{'Chisq'}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
 ## Single term deletions
 ## 
 ## Model:
-## cbind(surv, dead) ~ conc
-##        Df Deviance   AIC  LRT Pr(>Chi)    
-## <none>        23.9  72.9                  
-## conc    5     88.7 127.6 64.8  1.2e-12 ***
+## y ~ conc
+##        Df Deviance     AIC    LRT  Pr(>Chi)    
+## <none>      23.889  72.862                     
+## conc    5   88.672 127.645 64.783 1.243e-12 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
-
-
-\subsection{Count data}
-\subsubsection{Introduction}
-In this example we will analyse data from \citep{brock_minimum_2014}.
-The data are count of mayfly larvae in Macroinvertebrate Artificial Substrate Samplers in 18 mesocosms at one sampling day.
-There are 5 Treatments and one control group.
-
-First we load the data and bring it to the long format and remove NA values.
+Also with the binomial model the LOEC is at the highest concentration:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{df} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlkwc{header} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{text} \hlstd{=} \hlstr{'Control  T0.1	T0.3	T1	T3	T10
-175	29	27	36	26	20
-65	114	78	11	13	37
-154	72	27	105	33	NA
-83	NA	NA	NA	NA	NA
-'}\hlstd{)}
-\hlstd{dfm} \hlkwb{<-} \hlkwd{melt}\hlstd{(df,} \hlkwc{value.name} \hlstd{=} \hlstr{'n'}\hlstd{,} \hlkwc{variable.name} \hlstd{=} \hlstr{'treatment'}\hlstd{)}
-\hlstd{dfm} \hlkwb{<-} \hlstd{dfm[}\hlopt{!}\hlkwd{is.na}\hlstd{(dfm[}\hlstr{'n'}\hlstd{]), ]}
-\hlkwd{head}\hlstd{(dfm)}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modglm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{conc} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),} \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
-##   treatment   n
-## 1   Control 175
-## 2   Control  65
-## 3   Control 154
-## 4   Control  83
-## 5      T0.1  29
-## 6      T0.1 114
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-	
-Next we have a look at the data:
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{boxplot}\hlstd{(n} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm,} \hlkwc{xlab} \hlstd{=} \hlstr{'Treatment'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'Count'}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\includegraphics[width=0.5\textwidth]{figure/count_raw_plot} 
-
-\end{knitrout}
-
-
-\subsubsection{Transforming data}
-Next we transform the data using a ln(Ax + 1) transformation:
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{A} \hlkwb{<-} \hlnum{1} \hlopt{/} \hlkwd{min}\hlstd{(dfm}\hlopt{$}\hlstd{n[dfm}\hlopt{$}\hlstd{n} \hlopt{!=} \hlnum{0}\hlstd{])}
-\hlstd{dfm}\hlopt{$}\hlstd{nt} \hlkwb{<-} \hlkwd{log}\hlstd{(A} \hlopt{*} \hlstd{dfm}\hlopt{$}\hlstd{n} \hlopt{+} \hlnum{1}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{boxplot}\hlstd{(nt} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm,}
-        \hlkwc{xlab} \hlstd{=} \hlstr{'Treatment'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'Transf. Counts'}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\includegraphics[width=0.5\textwidth]{figure/plot_count_trans} 
-
-\end{knitrout}
-
-
-\subsection{Analsying data}
-Again we start with the model assuming a normal distribution of transformed counts:
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{mod_normal} \hlkwb{<-} \hlkwd{mle2}\hlstd{(nt} \hlopt{~} \hlkwd{dnorm}\hlstd{(}\hlkwc{mean} \hlstd{= mu,} \hlkwc{sd} \hlstd{= s),}
-                   \hlkwc{parameters} \hlstd{=} \hlkwd{list}\hlstd{(mu} \hlopt{~} \hlstd{treatment, s} \hlopt{~} \hlnum{1}\hlstd{),}
-                   \hlkwc{data} \hlstd{= dfm,}
-                   \hlkwc{start} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{mu} \hlstd{=} \hlkwd{mean}\hlstd{(dfm}\hlopt{$}\hlstd{nt),} \hlkwc{s} \hlstd{=} \hlkwd{sd}\hlstd{(dfm}\hlopt{$}\hlstd{nt)))}
-\hlkwd{summary}\hlstd{(mod_normal)}
-\end{alltt}
-\begin{verbatim}
-## Maximum likelihood estimation
 ## 
-## Call:
-## mle2(minuslogl = nt ~ dnorm(mean = mu, sd = s), start = list(mu = mean(dfm$nt), 
-##     s = sd(dfm$nt)), data = dfm, parameters = list(mu ~ treatment, 
-##     s ~ 1))
+## 	 Simultaneous Tests for General Linear Hypotheses
 ## 
-## Coefficients:
-##                  Estimate Std. Error z value   Pr(z)    
-## mu.(Intercept)     2.4035     0.2169   11.08 < 2e-16 ***
-## mu.treatmentT0.1  -0.4894     0.3313   -1.48 0.13956    
-## mu.treatmentT0.3  -0.8801     0.3313   -2.66 0.00789 ** 
-## mu.treatmentT1    -0.9032     0.3313   -2.73 0.00640 ** 
-## mu.treatmentT3    -1.2771     0.3313   -3.86 0.00012 ***
-## mu.treatmentT10   -1.1488     0.3756   -3.06 0.00222 ** 
-## s                  0.4337     0.0723    6.00   2e-09 ***
+## Multiple Comparisons of Means: Dunnett Contrasts
+## 
+## 
+## Fit: glm(formula = y ~ conc, family = binomial(link = "logit"), data = dfm, 
+##     weights = rep(10, nrow(dfm)))
+## 
+## Linear Hypotheses:
+##              Estimate Std. Error z value Pr(<z)    
+## 32 - 0 >= 0   -1.2098     0.8499  -1.423 0.2033    
+## 64 - 0 >= 0    0.7191     1.2458   0.577 0.9229    
+## 128 - 0 >= 0  -0.7472     0.8967  -0.833 0.4320    
+## 256 - 0 >= 0  -1.7077     0.8183  -2.087 0.0589 .  
+## 512 - 0 >= 0  -3.6753     0.8002  -4.593 <0.001 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## -2 log L: 21.01
-\end{verbatim}
-\begin{alltt}
-\hlstd{mod_normal.null} \hlkwb{<-} \hlkwd{update}\hlstd{(mod_normal,}
-                          \hlkwc{parameters} \hlstd{=} \hlkwd{list}\hlstd{(mu} \hlopt{~} \hlnum{1}\hlstd{, s} \hlopt{~} \hlnum{1}\hlstd{))}
-\hlkwd{anova}\hlstd{(mod_normal, mod_normal.null)}
-\end{alltt}
-\begin{verbatim}
-## Likelihood Ratio Tests
-## Model 1: mod_normal, nt~dnorm(mean=mu,sd=s): mu~treatment, s~1
-## Model 2: mod_normal.null, nt~dnorm(mean=mu,sd=s): mu~1, s~1
-##   Tot Df Deviance Chisq Df Pr(>Chisq)  
-## 1      7     21.0                      
-## 2      2     34.3  13.3  5      0.021 *
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## (Adjusted p values reported -- single-step method)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
-With base R you could do:
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{mod_normal_b} \hlkwb{<-} \hlkwd{lm}\hlstd{(nt} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm)}
-\hlkwd{summary}\hlstd{(mod_normal_b)}
-\hlkwd{drop1}\hlstd{(mod_normal_b,} \hlkwc{test} \hlstd{=} \hlstr{'Chisq'}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
 
 
-Next we analyse the raw counts assuming a poisson distribution with a log link:
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{mod_pois} \hlkwb{<-} \hlkwd{mle2}\hlstd{(n} \hlopt{~} \hlkwd{dpois}\hlstd{(}\hlkwc{lambda} \hlstd{=} \hlkwd{exp}\hlstd{(logmu)),}
-                   \hlkwc{parameters} \hlstd{=} \hlkwd{list}\hlstd{(logmu} \hlopt{~} \hlstd{treatment),}
-                   \hlkwc{data} \hlstd{= dfm,}
-                   \hlkwc{start} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{logmu} \hlstd{=} \hlkwd{mean}\hlstd{(dfm}\hlopt{$}\hlstd{nt)))}
-\hlkwd{summary}\hlstd{(mod_pois)}
-\end{alltt}
-\begin{verbatim}
-## Maximum likelihood estimation
-## 
-## Call:
-## mle2(minuslogl = n ~ dpois(lambda = exp(logmu)), start = list(logmu = mean(dfm$nt)), 
-##     data = dfm, parameters = list(logmu ~ treatment))
-## 
-## Coefficients:
-##                     Estimate Std. Error z value   Pr(z)    
-## logmu.(Intercept)     4.7812     0.0458  104.42 < 2e-16 ***
-## logmu.treatmentT0.1  -0.5093     0.0821   -6.20 5.7e-10 ***
-## logmu.treatmentT0.3  -0.9970     0.0983  -10.14 < 2e-16 ***
-## logmu.treatmentT1    -0.8560     0.0931   -9.19 < 2e-16 ***
-## logmu.treatmentT3    -1.6032     0.1264  -12.68 < 2e-16 ***
-## logmu.treatmentT10   -1.4313     0.1401  -10.21 < 2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## -2 log L: 375.6
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
 
-Or with base R
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{mod_pois} \hlkwb{<-} \hlkwd{glm}\hlstd{(n} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm,} \hlkwc{family} \hlstd{=} \hlkwd{poisson}\hlstd{(}\hlkwc{link} \hlstd{=} \hlstr{'log'}\hlstd{))}
-\hlkwd{summary}\hlstd{(mod_pois)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-But is a poisson distribution appropriate here? 
-A property of the poisson distribution is that its variance is equal to the mean. A simple diagnostic would be to plot group variances vs group means, other more formal statistics are also available.
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{require}\hlstd{(plyr)}
-\hlstd{musd} \hlkwb{<-} \hlkwd{ddply}\hlstd{(dfm,} \hlkwd{.}\hlstd{(treatment), summarise,}
-              \hlkwc{mu} \hlstd{=} \hlkwd{mean}\hlstd{(n),}
-              \hlkwc{var} \hlstd{=} \hlkwd{var}\hlstd{(n))}
-\hlstd{musd}
-\end{alltt}
-\begin{verbatim}
-##   treatment     mu    var
-## 1   Control 119.25 2857.6
-## 2      T0.1  71.67 1806.3
-## 3      T0.3  44.00  867.0
-## 4        T1  50.67 2370.3
-## 5        T3  24.00  103.0
-## 6       T10  28.50  144.5
-\end{verbatim}
-\begin{alltt}
-\hlkwd{plot}\hlstd{(var} \hlopt{~} \hlstd{mu,} \hlkwc{data} \hlstd{= musd,} \hlkwc{xlab} \hlstd{=} \hlstr{'mean'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'Variance'}\hlstd{)}
-\hlkwd{abline}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{b} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'darkblue'}\hlstd{,} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{)}
-\hlkwd{curve}\hlstd{(x} \hlopt{+} \hlstd{(x}\hlopt{^}\hlnum{2} \hlopt{/} \hlnum{3.91}\hlstd{),} \hlkwc{from} \hlstd{=} \hlnum{24}\hlstd{,} \hlkwc{to} \hlstd{=} \hlnum{119.25}\hlstd{,} \hlkwc{add} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'darkred'}\hlstd{,} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{)}
-\hlkwd{legend}\hlstd{(}\hlstr{'topleft'}\hlstd{,} \hlkwd{c}\hlstd{(}\hlstr{'NB(k = 3.91)'}\hlstd{,} \hlstr{'Poisson'}\hlstd{),}
-       \hlkwc{col} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{'darkred'}\hlstd{,} \hlstr{'darkblue'}\hlstd{),}
-       \hlkwc{lty} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{1}\hlstd{),}
-       \hlkwc{lwd} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{2}\hlstd{))}
-\end{alltt}
-\end{kframe}
-\includegraphics[width=0.5\textwidth]{figure/mod_count_meanvar} 
-
-\end{knitrout}
-
-We clearly see that the variance increases much more than would be expected under the poisson distribution (the data is overdispersed).
-One possibility to deal with overdispersion is using a negative binomial distribution:
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{mod_negbin} \hlkwb{<-} \hlkwd{mle2}\hlstd{(n} \hlopt{~} \hlkwd{dnbinom}\hlstd{(}\hlkwc{mu} \hlstd{=} \hlkwd{exp}\hlstd{(logmu),} \hlkwc{size} \hlstd{= k),}
-                   \hlkwc{parameters} \hlstd{=} \hlkwd{list}\hlstd{(logmu} \hlopt{~} \hlstd{treatment, k} \hlopt{~} \hlnum{1}\hlstd{),}
-                   \hlkwc{data} \hlstd{= dfm,}
-                   \hlkwc{start} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{logmu} \hlstd{=} \hlkwd{log}\hlstd{(}\hlkwd{mean}\hlstd{(dfm}\hlopt{$}\hlstd{n)),} \hlkwc{k} \hlstd{=} \hlnum{1}\hlstd{))}
-\hlkwd{summary}\hlstd{(mod_negbin)}
-\end{alltt}
-\begin{verbatim}
-## Maximum likelihood estimation
-## 
-## Call:
-## mle2(minuslogl = n ~ dnbinom(mu = exp(logmu), size = k), start = list(logmu = log(mean(dfm$n)), 
-##     k = 1), data = dfm, parameters = list(logmu ~ treatment, 
-##     k ~ 1))
-## 
-## Coefficients:
-##                     Estimate Std. Error z value   Pr(z)    
-## logmu.(Intercept)      4.781      0.257   18.60 < 2e-16 ***
-## logmu.treatmentT0.1   -0.509      0.395   -1.29  0.1974    
-## logmu.treatmentT0.3   -0.997      0.399   -2.50  0.0124 *  
-## logmu.treatmentT1     -0.856      0.398   -2.15  0.0313 *  
-## logmu.treatmentT3     -1.603      0.407   -3.94 8.1e-05 ***
-## logmu.treatmentT10    -1.431      0.460   -3.11  0.0019 ** 
-## k                      3.906      1.366    2.86  0.0042 ** 
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## -2 log L: 167.2
-\end{verbatim}
-\begin{alltt}
-\hlstd{mod_negbin.null} \hlkwb{<-} \hlkwd{update}\hlstd{(mod_negbin,}
-                          \hlkwc{parameters} \hlstd{=} \hlkwd{list}\hlstd{(logmu} \hlopt{~} \hlnum{1}\hlstd{))}
-\hlkwd{anova}\hlstd{(mod_negbin, mod_negbin.null)}
-\end{alltt}
-\begin{verbatim}
-## Likelihood Ratio Tests
-## Model 1: mod_negbin, n~dnbinom(mu=exp(logmu),size=k): logmu~treatment, k~1
-## Model 2: mod_negbin.null, n~dnbinom(mu=exp(logmu),size=k): logmu~1
-##   Tot Df Deviance Chisq Df Pr(>Chisq)  
-## 1      7      167                      
-## 2      2      181    14  5      0.016 *
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-Or using the MASS package \citep{venables_modern_2002}:
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{require}\hlstd{(MASS)}
-\hlstd{mod_negbin_m} \hlkwb{<-} \hlkwd{glm.nb}\hlstd{(n} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm)}
-\hlkwd{summary}\hlstd{(mod_negbin_m)}
-\end{alltt}
-\begin{verbatim}
-## 
-## Call:
-## glm.nb(formula = n ~ treatment, data = dfm, init.theta = 3.905898474, 
-##     link = log)
-## 
-## Deviance Residuals: 
-##    Min      1Q  Median      3Q     Max  
-## -2.255  -0.849  -0.302   0.595   1.590  
-## 
-## Coefficients:
-##               Estimate Std. Error z value Pr(>|z|)    
-## (Intercept)      4.781      0.257   18.60  < 2e-16 ***
-## treatmentT0.1   -0.509      0.395   -1.29   0.1975    
-## treatmentT0.3   -0.997      0.399   -2.50   0.0124 *  
-## treatmentT1     -0.856      0.398   -2.15   0.0313 *  
-## treatmentT3     -1.603      0.407   -3.94  8.1e-05 ***
-## treatmentT10    -1.431      0.460   -3.11   0.0019 ** 
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for Negative Binomial(3.906) family taken to be 1)
-## 
-##     Null deviance: 39.057  on 17  degrees of freedom
-## Residual deviance: 18.611  on 12  degrees of freedom
-## AIC: 181.2
-## 
-## Number of Fisher Scoring iterations: 1
-## 
-## 
-##               Theta:  3.91 
-##           Std. Err.:  1.37 
-## 
-##  2 x log-likelihood:  -167.24
-\end{verbatim}
-\begin{alltt}
-\hlkwd{lrtest}\hlstd{(mod_negbin_m)}
-\end{alltt}
-\begin{verbatim}
-## Likelihood ratio test
-## 
-## Model 1: n ~ treatment
-## Model 2: n ~ 1
-##   #Df LogLik Df Chisq Pr(>Chisq)  
-## 1   7  -83.6                      
-## 2   2  -90.6 -5    14      0.016 *
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-Note, that we cannot use drop1() with glm.nb()!
 
 
 
