@@ -60,6 +60,7 @@
 % \usepackage[helvet]{sfmath}% Helvet also in Math modes
 % \renewcommand\familydefault{\sfdefault}
 \usepackage{sansmath} % sans in math
+\usepackage{float}
 \usepackage{todonotes}
 \usepackage[
 	left=3cm,
@@ -111,5 +112,18 @@
 \begin{document}
 \maketitle
 \section{Supplement 1 - Additional Figures / Tables}
+
+\subsection{Count data simulations}
+\input{tab/conv.tex}
+\input{tab/pow_glob_c.tex}
+\input{tab/pow_loec_c.tex}
+\input{tab/t1_glob_c.tex}
+\input{tab/t1_loec_c.tex}
+
+\subsection{Binomial data simulations}
+\input{tab/pow_glob_p.tex}
+\input{tab/pow_loec_p.tex}
+\input{tab/t1_glob_p.tex}
+\input{tab/t1_loec_p.tex}
 
 \end{document} 

@@ -30,7 +30,7 @@ require(gridExtra)
 require(MASS)
 require(multcomp)
 require(exactRankTests)
-
+require(xtable)
 
 #####--------------------------------------------------------------------------
 ### Source defined functions
@@ -51,6 +51,6 @@ keep_obj <- c(ls(), 'keep_obj')
 # random
 # seed <- 1234
 # export plots to figure dir?
-exp_plot <- TRUE
+exp_plot <- FALSE
 # number of simulated datasets (may overwritten by simulation scripts)
 nsims <- 100
