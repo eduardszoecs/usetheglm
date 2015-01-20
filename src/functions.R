@@ -299,8 +299,8 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     # -------------
     # Transformations
     if(asin == 'ecotox'){
-      y_asin <- ifelse(y  == 0, asin(sqrt(1 / (4 * n_animals))),
-                     ifelse((y / n_animals) == 1, asin(1) - asin(sqrt(1 / (4 * n_animals))),
+      y_asin <- ifelse(y  == 0, asin(sqrt(1 / (length(x) / 6 * n_animals))),
+                     ifelse((y / n_animals) == 1, asin(1) - asin(sqrt(1 / (length(x) / 6 * n_animals))),
                             asin(sqrt(y / n_animals))))
     }
     if(asin == 'asin'){
