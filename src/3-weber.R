@@ -30,7 +30,7 @@ boxplot(y ~ conc, data = dfm,
 ### -------- Methods -----------------------------------------------------------
 ### -------- Normal + Transformation
 dfm$y_asin <- ifelse(dfm$y == 1, 
-                     asin(sqrt(dfm$y)) - asin(sqrt(1/40)), 
+                     asin(sqrt(dfm$y)) - asin(sqrt(1/10)), 
                      asin(sqrt(dfm$y)) 
 )
 
