@@ -84,6 +84,9 @@ plot_pow_glob_p <- ggplot(pow_glob_p) +
   ylim(c(0,1))
 plot_pow_glob_p
 
+df <- dcast(pow_glob_p, pE + N ~ variable)
+df$diff <- df$lm - df$glm
+df[which.max(abs(df$diff)), ]
 
 ### loec
 pow_loec_p <- ldply(res1_p, p_loec, type = 'power')
