@@ -111,6 +111,15 @@ A total of 18 mesocosm have been sampled from 6 treatments (Control (n = 4), 0.1
 We will use this data to demonstrate the differences between transformations, different GLMs and a non-parametric approach.
 A full exemplary analysis of this data using R \citep{r_core_team_r:_2014} can be found in Supplement 2.
 
+\begin{figure}
+  \centering
+  \includegraphics[width = 0.7\textwidth]{example.pdf}
+  \caption{Data from \citet{brock_minimum_2015} (boxplots + black points within boxes). 
+  Predicted values (triangles) and 95\% Wald Z or t Confidence intervals from the fitted models (vertical lines) are given besides the boxplots.
+  Horizontal bars above indicate treatments statistically significant different from the control group (Dunnett contrasts).}
+  \label{fig:example}
+\end{figure}
+
 
 \subsubsection{The linear model}
 To meet the assumptions of the standard linear model, we transform the counts following \citet{van_den_brink_impact_2000} (eqn. \ref{eqn:trans}):
@@ -192,14 +201,6 @@ Moreover, we applied a one-sided Dunnett test, as the toxic response in a mesoco
 \citet{brock_minimum_2015} used a one-sided Williams test, which is known to have larger power if the assumptions are met \citep{jaki_statistical_2013}.
 This example demonstrates that the choice of the statistical model and procedure has substantial impact on ecotoxicological inferences, especially when sample sizes are low.
 
-\begin{figure}
-  \centering
-  \includegraphics[width = 0.7\textwidth]{example.pdf}
-  \caption{Data from \citet{brock_minimum_2015} (boxplots + black points within boxes). 
-  Predicted values (triangles) and 95\% Wald Z or t Confidence intervals from the fitted models (vertical lines) are given besides the boxplots.
-  Horizontal bars above indicate treatments statistically significant different from the control group (Dunnett contrasts).}
-  \label{fig:example}
-\end{figure}
 
 
 \subsection{Binomial data}
