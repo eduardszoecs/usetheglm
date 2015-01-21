@@ -60,6 +60,7 @@
 \begin{document}
 \maketitle
 
+\setcounter{section}{1}
 \section{Supplement 2 - Motivating examples}
 \subsection{Count data example}
 \subsubsection{Introduction}
@@ -111,7 +112,7 @@ boxplot(abu_t ~ treatment, data = dfm,
 @
 
 
-\subsubsection{Assuming a normal distribtion of transformed abundances}
+\subsubsection{Assuming a normal distribution of transformed abundances}
 We start with analysing this data assuming a normal distribution of the transformed abundances with constant variance.
 This can be easily done using the \texttt{lm()} function:
 
@@ -138,7 +139,7 @@ require(multcomp)
 summary(glht(modlm, linfct = mcp(treatment = 'Dunnett'),  alternative = 'less'))
 @
 
-This indicates that only treatment 3 shows a statistically significant from control and is therefore the determined LOEC.
+This indicates that only treatment 3 shows a statistically significant from control and is the determined LOEC.
 
 
 
@@ -189,7 +190,7 @@ legend('topleft', c('NB(k = 3.91)', 'Poisson', 'Quasi-Poisson(t = 22.4)'),
        lwd = c(2,2, 2))
 @
 
-Here, I also added the assumed mean-variance relationships of the Poisson, quasi-Poisson and negative binomial models.
+I also added the assumed mean-variance relationships of the Poisson, quasi-Poisson and negative binomial models.
 We clearly see that the variance increases much more than would be expected under the poisson distribution (the data is overdispersed).
 Moreover, we could check overdispersion from the \texttt{summary}:
 If the ratio of residual deviance to degrees of freedom is \textgreater 1 the data is overdispersed.
@@ -236,7 +237,7 @@ summary(modnb)
 @
 , with $\kappa = 1 / 3.905898$ (glm.nb uses a slighty other parametrisation).
 
-For the LR-Test we need to first fit a reduced model:
+For an LR-Test we need to first fit a reduced model:
 <<>>=
 modnb.null <- glm.nb(abu ~ 1, data = dfm)
 @
@@ -274,7 +275,7 @@ df <- read.table(header = TRUE, text = 'conc A B C D
 df
 @
 
-The we do some house-keeping, reformat the data to the long format and convert concentration to a factor:
+The we do some house-keeping, reformat the data and convert concentration to a factor:
 
 <<bin_format, message=FALSE>>=
 require(reshape2)
@@ -299,9 +300,9 @@ This plot indicates a strong effect at the highest concentration.
 Next we arcsine transform the proportions:
 <<bin_trans>>=
 dfm$y_asin <- ifelse(dfm$y == 1, 
-                     asin(1) - asin(sqrt(1/10)),
+                     asin(1) - asin(sqrt(1/40)),
                      ifelse(dfm$y == 0, 
-                            asin(sqrt(1/10)), 
+                            asin(sqrt(1/40)), 
                             asin(sqrt(dfm$y))
                             )
                      )
@@ -342,7 +343,8 @@ The binomial model with a logit link between predictors and response can be fitt
 modglm <- glm(y ~ conc , data = dfm, family = binomial(link = 'logit'), 
               weights = rep(10, nrow(dfm)))
 @
-Here the weights arguments, indicates how many fish where exposed in each treatment (10).
+
+Here the weights arguments, indicates how many fish where exposed in each treatment (=10).
 
 The summary gives the estimated paramaters:
 <<>>=
