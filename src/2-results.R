@@ -19,9 +19,12 @@ source(file.path(srcdir, '1-simulation_counts.R'))
 plot_pow_glob_c
 plot_t1_glob_c
 leg <- g_legend(plot_pow_glob_c + 
-                  theme(legend.key = element_blank())
+                  theme(legend.key = element_blank(),
+                        legend.text = element_text(size = 16),
+                        legend.title = element_text(size = 18, face = "bold"),
+                        legend.key.size = unit(1.5, "cm"))
                 )
-# plot(leg)
+plot(leg)
 # combine plots and legend
 p_glob_c <- arrangeGrob(
   plot_pow_glob_c + theme(legend.position="none") + labs(x = NULL),
@@ -37,7 +40,10 @@ if(exp_plot)
 plot_pow_loec_c
 plot_t1_loec_c 
 leg <- g_legend(plot_pow_loec_c + 
-                  theme(legend.key = element_blank()))
+                  theme(legend.key = element_blank(),
+                        legend.text = element_text(size = 16),
+                        legend.title = element_text(size = 18, face = "bold"),
+                        legend.key.size = unit(1.5, "cm")))
 p_loec_c <- arrangeGrob(
   plot_pow_loec_c + theme(legend.position="none") + labs(x = NULL),
   plot_t1_loec_c + theme(legend.position="none"),
@@ -121,8 +127,10 @@ source(file.path(srcdir, '1-simulation_survival.R'))
 plot_pow_glob_p
 plot_t1_glob_p
 leg <- g_legend(plot_pow_glob_p + 
-                  theme(legend.key = element_blank()) +
-                  guides(fill = guide_legend(override.aes = list(size=5)))
+                  theme(legend.key = element_blank(),
+                        legend.text = element_text(size = 16),
+                        legend.title = element_text(size = 18, face = "bold"),
+                        legend.key.size = unit(1.5, "cm"))
 )
 p_glob_p <- arrangeGrob(
   plot_pow_glob_p + theme(legend.position="none") + labs(x = NULL),
@@ -137,8 +145,10 @@ if(exp_plot)
 
 # loec
 leg <- g_legend(plot_pow_loec_p + 
-                  theme(legend.key = element_blank()) +
-                  guides(fill = guide_legend(override.aes = list(size=5)))
+                  theme(legend.key = element_blank(),
+                        legend.text = element_text(size = 16),
+                        legend.title = element_text(size = 18, face = "bold"),
+                        legend.key.size = unit(1.5, "cm"))
 )
 p_loec_p <- arrangeGrob(
   plot_pow_loec_p + theme(legend.position="none") + labs(x = NULL),

@@ -65,7 +65,7 @@ ggplot(dfm, aes(x = x, y = value)) +
 #####------------------------------------
 # analyse simulations
 if(sim1){
-  res1_c <- llply(sims1_c, resfoo1, .progress = 'text', npb = 400)
+  res1_c <- llply(sims1_c, resfoo1, .progress = 'text', npb = 500)
   saveRDS(res1_c, file.path(cachedir, 'res1_c.rds'))
 } else {
   res1_c <- readRDS(file.path(cachedir, 'res1_c.rds'))

@@ -51,6 +51,6 @@ keep_obj <- c(ls(), 'keep_obj')
 # random
 # seed <- 1234
 # export plots to figure dir?
-exp_plot <- FALSE
+exp_plot <- TRUE
 # number of simulated datasets (may overwritten by simulation scripts)
 nsims <- 100
