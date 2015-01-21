@@ -64,6 +64,7 @@
 \begin{document}
 \maketitle
 
+%% --------------------------------
 \section*{Abstract}
 Ecotoxicologist are often confronted with non-normally distributed data.
 To achieve the assumptions of normality and heteroscedasticity is has been a standard procedure to either transform the data or use non-parametric methods if this fails.
@@ -79,10 +80,7 @@ GLMs should become a standard method in ecotoxicology to analyse inherently non-
 
 
 %% --------------------------------
-\newpage
 \section{Introduction}
-
-
 Ecotoxicologists perform various kinds of experiments yielding different types of data.
 Examples are: animal counts in mesocosm experiments (positive, integer valued, discrete data), proportions of surviving animals (discrete, bonded between 0 and 1) or biomass in growth experiments (strictly positive data).
 These properties make it unlikely that such data is normally distributed. 
@@ -112,13 +110,12 @@ Then we compare three types of statistical methods (transformation and normality
 
 
 %% --------------------------------
-\newpage
 \section{Motivating examples}
 \subsection{Count data}
 \citet{brock_minimum_2015} provides a typical example data from a mesocosm study of mayfly larvae counts on artificial substrate samplers at one sampling date (Figure \ref{fig:example}). 
-6 treatments (Control, n = 4; 0.1 mg/L, 0.3mg/L, 1mg/L, 3mg/L, n = 3; 10 mg/L, n = 2) within 18 mesocosms have been sampled. \todo{unübersichtlich}
+A total of 18 mesocosm have been sampled from 6 treatments (Control (n = 4); 0.1 mg/L, 0.3 mg/L, 1 mg/L, 3 mg/L (n = 3); 10 mg/L (n = 2)).
 We will use this data to demonstrate the differences between transformations, different GLMs and a non-parametric approach.
-A full exemplary analysis of this data using R \citep{r_core_team_r:_2014} can be found in the supplement.
+A full exemplary analysis of this data using R \citep{r_core_team_r:_2014} can be found in Supplement 2.
 
 
 \subsubsection{The linear model}
@@ -126,7 +123,7 @@ To meet the assumptions of the standard linear model, we transform the counts fo
 
 \begin{align}
   y^T_i & = log(Ay_i + 1) \label{eqn:trans} \\
-  A & = 2~/~min(y)~~~~~\text{, for}~ y > 0 \nonumber
+  A & = 2~/~min(y)~~~\text{, for}~ y > 0 \nonumber
 \end{align}
 
 , where $y_i$ is the measured abundance, $y_i^T$ the transformed abundance. The lowest non-zero abundance is 11 and  A = 2 / 11 = 0.182.
@@ -164,7 +161,7 @@ To overcome this problem a quasi-Poisson distribution could be used which introd
   var(y_i) &= \Theta \lambda_i  \nonumber
 \end{align}
 
-Another possibility to deal with overdispersion is to use a negative binomial distribution (eqn. \ref{eqn:negbin}).
+Another possibility to deal with overdispersion is to use a negative binomial distribution which also introduces an additional parameter (eqn. \ref{eqn:negbin}).
 
 \begin{align}
   y_i &\sim NB(\lambda, \kappa) \label{eqn:negbin}  \\
@@ -216,7 +213,7 @@ This example demonstrates that the choice of the statistical model and procedure
 
 \subsection{Binomial data}
 \citet{weber_short-term_1989} studied fathead minnow (\textit{Pimephales promelas}) larval survival data after sodium pentachlorophenol (NaPCP) exposure.
-This data set is provided the textbook of \citet{newman_quantitative_2012}.
+This data set is available in \citet{newman_quantitative_2012} and \citet{epa_methods_2002}.
 At six NaPCP concentrations (0, 32, 64, 128, 256, 512 \textmu g/L) with 4 replications ten fish were exposed and proportions of total number alive at the end were reported.
 
 \subsubsection{The linear model after transformation}
@@ -225,13 +222,13 @@ To accommodate the assumption for the standard linear model the EPA suggests a s
 \begin{align}
   y_i^T = 
   \begin{cases}  
-    arcsin(1) - arcsin(\sqrt{\frac{1}{4N}}) & \text{, if}\ y_i = 1 \\
-    arcsin(\sqrt{\frac{1}{4N}}) & \text{, if}\ y_i = 0  \\
+    arcsin(1) - arcsin(\sqrt{\frac{1}{4n}}) & \text{, if}\ y_i = 1 \\
+    arcsin(\sqrt{\frac{1}{4n}}) & \text{, if}\ y_i = 0  \\
     arcsin(\sqrt{y_i}) & \text{, otherwise}
   \end{cases} \label{eqn:arcsine}
 \end{align}
 
-, where $y_i^T$ are the transformed proportions and N is the number of exposed animals per treatment (= 4*10=40).
+, where $y_i^T$ are the transformed proportions and n is the number of exposed animals per treatment ($n = 4 \cdot 10=40$).
 The transformed proportions are then analysed using the standard linear model (eqn. \ref{eqn:normal}).
 Note, that the parameters are not directly interpretable due to transformation.
 

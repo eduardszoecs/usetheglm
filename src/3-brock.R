@@ -166,14 +166,14 @@ p <- ggplot() +
                 width = 0.1, lwd = 1) + 
   # loec_bars
   # normal
-  geom_path(aes(x = c(5-0.15, 5+0.55), y = c(220,220)), linetype = 'solid', size = 1) + 
+  geom_path(aes(x = c(5-0.15, 5+0.55), y = c(220,220)), linetype = 'solid', size = 2) + 
   # pois
-  geom_path(aes(x = c(2-0.15, 6+0.55), y = c(220-5,220-5)), linetype = '1111', size = 1) + 
+  geom_path(aes(x = c(2-0.15, 6+0.55), y = c(220-5,220-5)), linetype = '1111', size = 2) + 
   # qpois 
-  geom_path(aes(x = c(5-0.15, 5+0.55), y = c(220-2*5,220-2*5)), linetype = 'dashed', size = 1) +
+  geom_path(aes(x = c(5-0.15, 5+0.55), y = c(220-2*5,220-2*5)), linetype = 'dashed', size = 2) +
   # neg bin
-  geom_path(aes(x = c(3-0.15, 3+0.55), y = c(220-3*5,220-3*5)), linetype = 'dotdash', size = 1) + 
-  geom_path(aes(x = c(5-0.15, 6+0.55), y = c(220-3*5,220-3*5)), linetype = 'dotdash', size = 1) + 
+  geom_path(aes(x = c(3-0.15, 3+0.55), y = c(220-3*5,220-3*5)), linetype = 'dotdash', size = 2) + 
+  geom_path(aes(x = c(5-0.15, 6+0.55), y = c(220-3*5,220-3*5)), linetype = 'dotdash', size = 2) + 
   scale_linetype_manual(values=c('solid', '1111', 'dashed', 'dotdash')) + 
   mytheme +
   guides(linetype=guide_legend(title='Model')) +
