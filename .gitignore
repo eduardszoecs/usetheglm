@@ -26,3 +26,6 @@
 # sublime
 *.sublime-project
 *.sublime-workspace
+
+# other
+report/comments*
