@@ -75,31 +75,28 @@ GLMs should become a standard method in ecotoxicology to analyse inherently non-
 \section{Introduction}
 \label{sec:intro}
 Ecotoxicologists perform various kinds of experiments yielding different types of data.
-Examples are: animal counts in mesocosm experiments (positive, integer valued, discrete data), proportions of surviving animals (discrete, bonded between 0 and 1) or biomass in growth experiments (strictly positive data).
-These properties make it unlikely that such data is normally distributed. 
-Nevertheless, such data are usually analysed by using methods assuming a normal distribution \citep{wang_making_2011}. 
-In order to approximate the normality and variance homogeneity assumptions data is usually transformed.
-It is advised that survival data can be transformed using an arcsine square root transformation \citep{oecd_current_2006, newman_quantitative_2012}. 
-For count data from mesocosm experiments a log(Ay + C) transformation is usually applied, where the constants A and C are either chosen arbitrarily or following the recommendations of \citet{van_den_brink_impact_2000}: the term Ay to be 2 for the lowest abundance value (y) greater than zero and C = 1. 
-Moreover, other transformations like the square root or forth root are commonly applied in community ecology.
-Note, that there has been little evaluation and advice for the practitioners which transformations to use.
-If the transformed data does not meet the normality assumptions, usually non-parametric tests are applied \citep{wang_making_2011}.
-
-In environmental risk assessments statistical tests play an important role to evaluate the effects of pesticides. 
-Despite criticism (e.g. \citealp{landis_well_2011}), statistics like the No Observed Effect Concentration (NOEC) are still regularly used to report results of experiments \citep{jager_bad_2012}.
-However, a critical issue of reporting a NOEC is the statistical power in the underlying experiments, i.e. the ability to detect an effect.
+Examples are: animal counts in mesocosm experiments (positive, integer-valued data), proportions of surviving animals (data bonded between 0 and 1, continuous) or biomass in growth experiments (positive, continuous data).
+These data are typically not normally distributed. 
+Nevertheless, they are usually analysed using methods assuming a normal distribution and variance homogeneity \citep{wang_making_2011}. 
+To meet these assumptions, data are usually transformed.
+For example, ecotoxicological textbooks \citep{newman_quantitative_2012} and guidelines \citep{epa_methods_2002,oecd_current_2006} advise that survival data can be transformed using an arcsine square root transformation. 
+For count data from mesocosm experiments a log(Ay + C) transformation is usually applied, where the constants A and C are either chosen arbitrarily or following general recommendations. 
+For example, \citet{van_den_brink_impact_2000} suggest to set the term Ay to be 2 for the lowest abundance value (y) greater than zero and C to 1. 
+Moreover, other transformations like the square root or fourth root are commonly applied in community ecology.
+Note that there has been little evaluation and advice for practitioners, which transformations to use.
+If the transformed data still do not meet the assumptions (i. e. normality and variance homogeneity), non-parametric tests are usually applied \citep{wang_making_2011}.
 
 Generalized linear models (GLM) provide a method to analyse such non-normally distributed data \citep{nelder_generalized_1972}.
-GLMs can handle various types of data distributions, e.g. Poisson or negative binomial (for count data) or binomial (for discrete proportions); the normal distribution being a special case of GLMs.
-Despite that GLMs were available more than 40 years now, ecotoxicologists do not regularly make use of them.
+GLMs can handle various types of data distributions, e.g. Poisson or negative binomial (for count data) or binomial (for proportions); the normal distribution being a special case of GLMs.
+Despite GLMs being available more than 40 years, ecotoxicologists do not regularly make use of them.
 
-Recent studies concluded that data transformations should be avoided and GLMs be used as they have better statistical properties (\emph{Do not log-transform count data}, \citep{ohara_not_2010}; \emph{The arcsine is asinine}, \citep{warton_arcsine_2011}).
-Especially in the case of low sample sizes, which are common in ecotoxicological studies \citep{sanderson_pesticide_2002,szocs_analysing_2015}, differences between statistical methods may be apparent. 
+Recent studies concluded that data transformations should be avoided and GLMs be used as they have better statistical properties \citep{ohara_not_2010, warton_arcsine_2011}. 
+Low sample sizes are common in ecotoxicological studies \citep{sanderson_pesticide_2002, szocs_analysing_2015} and lead to low power in statistical hypothesis testing, on which many ecotoxiological approaches (e.g. risk assessment for pesticides) rely. 
+Differences between statistical methods may be apparent especially at such low sample sizes.
 
+We explore how GLMs may enhance inference in ecotoxicological studies. 
+We compared three types of statistical methods (transformation and normality assumption, GLM, non-parametric tests) using simulations and demonstrate on example data sets how conclusions can be influenced by the choice of statistical method.
 
-In this paper we explore how GLMs may enhance inference in ecotoxicological studies.
-We first give two examples showing that different methods may lead to different conclusions. 
-Then we compare three types of statistical methods (transformation and normality assumption, GLM, non-parametric tests) using simulations.
 
 
 %% --------------------------------
