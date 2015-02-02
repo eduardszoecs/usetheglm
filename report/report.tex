@@ -97,49 +97,39 @@ Differences between statistical methods may be apparent especially at such low s
 We explore how GLMs may enhance inference in ecotoxicological studies. 
 We compared three types of statistical methods (transformation and normality assumption, GLM, non-parametric tests) using simulations and demonstrate on example data sets how conclusions can be influenced by the choice of statistical method.
 
+\todo{LOEC rein}
+\todo{Interpretation rein}
 
 
 %% --------------------------------
-\section{Motivating examples}
-\label{sec:motiv}
-\subsection{Count data}
-\citet{brock_minimum_2015} provides a typical example data from a mesocosm study of mayfly larvae counts on artificial substrate samplers at one sampling date (Figure \ref{fig:example}). 
-A total of 18 mesocosm have been sampled from 6 treatments (Control (n = 4), 0.1, 0.3, 1, 3 mg/L (n = 3) and 10 mg/L (n = 2)).
-We will use this data to demonstrate the differences between transformations, different GLMs and a non-parametric approach.
-A full exemplary analysis of this data using R \citep{r_core_team_r:_2014} can be found in Supplement 2.
-
-\begin{figure}
-  \centering
-  \includegraphics[width = 0.7\textwidth]{example.pdf}
-  \caption{Data from \citet{brock_minimum_2015} (boxplots + black points within boxes). 
-  Predicted values (triangles) and 95\% Wald Z or t Confidence intervals from the fitted models (vertical lines) are given besides the boxplots.
-  Horizontal bars above indicate treatments statistically significant different from the control group (Dunnett contrasts).}
-  \label{fig:example}
-\end{figure}
-
-
-\subsubsection{The linear model}
-To meet the assumptions of the standard linear model, we transform the counts following \citet{van_den_brink_impact_2000} (eqn. \ref{eqn:trans}):
+\section{Methods}
+\label{sec:methods}
+\todo{Methods einleiten}
+\subsection{Models for count data}
+\subsubsection{Linear model for transformed data}
+To meet the assumptions of the standard linear model count data usually needs to be transformed. 
+We followed the recommendations of \citet{van_den_brink_impact_2000} and used a log(Ay + 1) transformation (eqn. \ref{eqn:trans}):
 
 \begin{align}
   y^T_i & = log(Ay_i + 1) \label{eqn:trans} \\
   A & = 2~/~min(y)~~~\text{, for}~ y > 0 \nonumber
 \end{align}
 
-, where $y_i$ is the measured abundance, $y_i^T$ the transformed abundance. The lowest non-zero abundance is 11 and  A = 2 / 11 = 0.182.
+, where $y_i$ is the measured abundance and $y_i^T$ the transformed abundance. 
 
-Then we fit the linear model to the transformed abundances:
+Then we fitted the linear model to the transformed abundances:
+
 \begin{align}
   y_i^T &\sim N(\mu_i, \sigma^2) \nonumber \\
   y_i^T &= \alpha + \beta x_i \label{eqn:normal} \\
   var(y_i^T) &= \sigma^2 \nonumber
 \end{align}
+
 This model assumes a normal distributed response with constant variance ($\sigma^2$).
 Note, that we parametrised the model as contrast ($\beta x_i$) to the control group ($\alpha$) so that parameters ($\beta$) are directly interpretable as changes from the control group (eqn. \ref{eqn:normal}).
 
 
 \subsubsection{Generalized Linear Models}
-GLMs are the extension of the normal model, by allowing other distributions of the response variable.
 Instead of transforming the response variable the counts could be directly modelled by a Poisson distribution:
 
 \begin{align}
@@ -149,9 +139,9 @@ Instead of transforming the response variable the counts could be directly model
   var(y_i) &= \lambda_i \nonumber
 \end{align}
 
-Again, this model is parametrised as contrast to the control group. 
-The response variable is linked via a log-function to the predictors to avoid negative fitted values (eqn. \ref{eqn:pois}). 
-The Poisson distribution assumes that mean and variance are equal - a assumption that is rarely met with ecological data which is typically characterized by greater variance (overdispersion).
+Again, this model was parametrised as contrast to the control group. 
+The response variable is linked to the predictors via a log-function to avoid negative fitted values (eqn. \ref{eqn:pois}). 
+The Poisson distribution assumes that mean and variance are equal - an assumption that is rarely met with ecological data which is typically characterized by greater variance (overdispersion).
 To overcome this problem a quasi-Poisson distribution could be used which introduces an additional overdispersion parameter ($\Theta$) (eqn. \ref{eqn:quasi}).
 
 \begin{align}
@@ -170,9 +160,109 @@ Another possibility to deal with overdispersion is to use a negative binomial di
   var(y_i) &= \lambda_i + \kappa \lambda_i^2 \nonumber
 \end{align}
 
-In both cases the parametrisation and link function is the same as in the Poisson GLM (eqn. \ref{eqn:pois}).
+In both cases the parametrisation and link function is equal to the Poisson GLM (eqn. \ref{eqn:pois}).
 Note, that the quasi-Poisson model assumes a linear mean-variance relationship (eqn. \ref{eqn:quasi}), whereas the negative binomial model assumes a quadratic relationship (eqn. \ref{eqn:negbin}).
-The above described models are most commonly used in ecology \citep{ver_hoef_quasi-poisson_2007}, although other distributions for count data are possible, like the negative binomial model with a linear mean variance relationship (also known as NB1) or the poisson inverse gaussian model \citep{hilbe_modeling_2014}.
+The above described models are most commonly used in ecology \citep{ver_hoef_quasi-poisson_2007}, although other distributions for count data are possible, like the negative binomial model with a linear mean-variance relationship (also known as NB1) or the poisson inverse gaussian model \citep{hilbe_modeling_2014}.
+
+
+\subsection{Models for binomial data}
+\subsubsection{Linear model for transformed data}
+To accommodate the assumption for the standard linear model a special arcsine square root transformation (eqn. \ref{eqn:arcsine}) is suggested for such  data \citep{epa_methods_2002,newman_quantitative_2012}:
+
+\begin{align}
+  y_i^T = 
+  \begin{cases}  
+    arcsin(1) - arcsin(\sqrt{\frac{1}{4n}}) & \text{, if}\ y_i = 1 \\
+    arcsin(\sqrt{\frac{1}{4n}}) & \text{, if}\ y_i = 0  \\
+    arcsin(\sqrt{y_i}) & \text{, otherwise}
+  \end{cases} \label{eqn:arcsine}
+\end{align}
+
+, where $y_i^T$ are the transformed proportions and n is the number of exposed animals per treatment ($n = 4 \cdot 10=40$).
+The transformed proportions are then analysed using the standard linear model (eqn. \ref{eqn:normal}).
+Note, that the parameters of the linear model are not directly interpretable due to transformation.
+
+
+\subsubsection{Generalized Linear Models}
+Data of type \emph{x out of N} can be modelled by a binomial distribution with parameters N and $\pi$:
+
+\begin{align}
+  y_i &\sim Bin(N, \pi_i) \nonumber \\
+  logit~(\pi_i) &= \alpha + \beta x_i \label{eqn:bin} \\
+  var(y_i) &=  \pi_i (1 - \pi_i) / N \nonumber
+\end{align}
+
+, where N = number of exposed animals and $\pi$ is the probability of survival.
+The variance of the binomial distribution is a quadratic function of the mean (eqn. \ref{eqn:bin}).
+The parameters $\beta$ of this model are directly interpretable as changes in log odds compared to the control group.
+
+
+\subsection{Inference on models}
+\todo{Überarbeiten}
+On this data set, we could test different hypotheses like (i) if there is any effect of the treatment or (ii) test single parameters (treatments) to determine the LOEC.
+Following general recommendations \citep{bolker_generalized_2009}, we used F-tests for the normal and quasi-Poisson models and Likelihood-Ratio (LR) tests for Poisson and negative binomial models to test if there is any treatment related effect.
+To assess the LOEC we used Dunnett contrasts with one-sided Wald t tests (normal and quasi-Poisson models) and one-sided Wald Z tests (Poisson and negative binomial models).
+
+
+\subsection{Case studies}
+A full exemplary analysis of this data using R \citep{r_core_team_r:_2014} can be found in Supplement 2. \todo{wohin damit?}
+
+\subsubsection{Count data}
+\citet{brock_minimum_2015} presents a typical example of data from mesocosm studies.
+The data are mayfly larvae counts on artificial substrate samplers were at one sampling date (Figure \ref{fig:example}). 
+A total of 18 mesocosm have been sampled from 6 treatments (Control (n = 4), 0.1, 0.3, 1, 3 mg/L (n = 3) and 10 mg/L (n = 2)).
+
+
+\subsubsection{Binomial data}
+\citet{weber_short-term_1989} studied fathead minnow (\textit{Pimephales promelas}) larval survival data after sodium pentachlorophenol (NaPCP) exposure.
+This data set is available in \citet{newman_quantitative_2012} and \citet{epa_methods_2002}.
+Four replicates of ten fish were exposed to each of six six NaPCP concentrations (0, 32, 64, 128, 256, 512 \textmu g/L) and the proportion of total number alive at the end were reported. 
+
+
+\subsection{Simulations}
+\subsubsection{Count data}
+We simulated count data that mimics count data encountered in mesocosm experiments with five treatments (T1 - T5) and one control group (C).
+Counts were drawn from a negative binomial distribution with slight over dispersion (dispersion parameter for all treatments: $\kappa = 0.25$).
+We simulated data sets with different number of replicates (N = \{3, 6, 9\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 64, 128\}). 
+For power estimation mean abundance in treatments T2 - T5 was reduced to half of control and T1 ($\mu_\text{\tiny T2}~=~...~=~\mu_\text{\tiny T5}~=~0.5~\mu_\text{\tiny C} = 0.5~\mu_\text{\tiny T1}$), resulting to a theoretical LOEC at T2.
+Mean abundance was kept equal between all groups in Type I error simulations.
+
+We generated 100 data sets for each combination of N and $\mu_\text{\tiny C}$. 
+We fitted a linear model after log (Ax + 1) transformation ($LM$), negative binomial GLM ($GLM_{nb}$) and quasi-Poisson GLM ($GLM_{qp}$) to these datasets. 
+We tested a general treatment effect using F tests ($LM$ and $GLM_{qp}$) and LR tests ($GLM_{nb}$). Additionally, we applied parametric bootstrap (500 bootstrap samples; \citet{faraway_extending_2006}) to assess the LR in the negative binomial model ($GLM_{pb}$) and used a Kruskal-Wallis test on untransformed data as a non-parametric method.
+To assess the performance in detecting the LOEC (T2 in our simulation design) we used a one-sided Dunnett test for all models and a one-sided pairwise Wilcoxon test as a non-parametric method.
+\todo{rerun!}
+
+
+\subsubsection{Binomial data}
+We simulated data from a design as described in the motivating example, with 5 treated (T1 - T5) and a control group (C). 
+Proportions were drawn from a Bin(10, $\pi$) distribution, with varying probability of survival ($\pi$ = \{0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95\}) and varying number of replicates (N = \{3, 6, 9\}).
+For Type I error estimation, $\pi$ was held constant between groups.
+For power estimation $\pi$ in C and T1 was fixed at 0.95 and was set to values between 0.6 and 0.95 for the treatments T2 - T5. 
+ 
+We simulated 250 data sets for each combination and analysed them using the linear model after arcsine transformation (LM), binomial GLM (GLM) and Kruskal-Wallis test.
+Moreover, we compared the methods' ability to determine the LOEC (T2 in our simulation design) by comparing inferences on model parameters and a pairwise Wilcoxon test. 
+
+
+
+
+
+
+
+%% --------------------------------
+\section{Rest}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width = 0.7\textwidth]{example.pdf}
+  \caption{Data from \citet{brock_minimum_2015} (boxplots + black points within boxes). 
+  Predicted values (triangles) and 95\% Wald Z or t confidence intervals from the fitted models (vertical lines) are given besides the boxplots.
+  Horizontal bars above indicate treatments statistically significant different from the control group (Dunnett contrasts).}
+  \label{fig:example}
+\end{figure}
+
+
 
 
 \subsubsection{Hypothesis testing}
@@ -201,40 +291,12 @@ This example demonstrates that the choice of the statistical model and procedure
 
 
 \subsection{Binomial data}
-\citet{weber_short-term_1989} studied fathead minnow (\textit{Pimephales promelas}) larval survival data after sodium pentachlorophenol (NaPCP) exposure.
-This data set is available in \citet{newman_quantitative_2012} and \citet{epa_methods_2002}.
-At six NaPCP concentrations (0, 32, 64, 128, 256, 512 \textmu g/L) with 4 replications ten fish were exposed and proportions of total number alive at the end were reported. 
-A full exemplary analysis of this data using R \citep{r_core_team_r:_2014} can be found in Supplement 2.
 
-\subsubsection{The linear model after transformation}
-To accommodate the assumption for the standard linear model the EPA suggests a special arcsine square root transformation (eqn. \ref{eqn:arcsine}) for such  data \citep{epa_methods_2002}:
 
-\begin{align}
-  y_i^T = 
-  \begin{cases}  
-    arcsin(1) - arcsin(\sqrt{\frac{1}{4n}}) & \text{, if}\ y_i = 1 \\
-    arcsin(\sqrt{\frac{1}{4n}}) & \text{, if}\ y_i = 0  \\
-    arcsin(\sqrt{y_i}) & \text{, otherwise}
-  \end{cases} \label{eqn:arcsine}
-\end{align}
 
-, where $y_i^T$ are the transformed proportions and n is the number of exposed animals per treatment ($n = 4 \cdot 10=40$).
-The transformed proportions are then analysed using the standard linear model (eqn. \ref{eqn:normal}).
-Note, that the parameters are not directly interpretable due to transformation.
 
 
 \subsubsection{Generalized Linear Models}
-Data of type \emph{x out of N} can be modelled by a binomial distribution with parameters N and $\pi$:
-
-\begin{align}
-  y_i &\sim Bin(N, \pi_i) \nonumber \\
-  logit~(\pi_i) &= \alpha + \beta x_i \label{eqn:bin} \\
-  var(y_i) &=  \pi_i (1 - \pi_i) / N \nonumber
-\end{align}
-
-, where N = number of exposed animals and $\pi$ is the probability of survival.
-The variance of the binomial distribution is a quadratic function of the mean (eqn. \ref{eqn:bin}).
-The parameters $\beta$ of this model are directly interpretable as changes in log odds compared to the control group.
 
 We used F-test for the normal and LR test for binomial GLM to determine a general treatment effect.
 LOEC was assessed using one-sided Dunnett contrasts.
@@ -282,18 +344,6 @@ All simulations were done in R (Version 3.1.2) \citep{r_core_team_r:_2014} on a 
 Source code for the simulations is available online at \url{https://github.com/EDiLD/usetheglm}.
 
 \subsection{Count data}
-\subsubsection{Methods}
-We simulated count data that mimics count data encountered in mesocosm experiments with five treatments (T1 - T5) and one control group (C).
-Counts were drawn from a negative binomial distribution with slight over dispersion (dispersion parameter for all treatments: $\kappa = 0.25$).
-We simulated data sets with different number of replicates (N = \{3, 6, 9\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 64, 128\}). 
-For power estimation mean abundance in treatments T2 - T5 was reduced to half of control and T1 ($\mu_\text{\tiny T2}~=~...~=~\mu_\text{\tiny T5}~=~0.5~\mu_\text{\tiny C} = 0.5~\mu_\text{\tiny T1}$), resulting to a theoretical LOEC at T2.
-Mean abundance was kept equal between all groups in Type I error simulations.
-
-We generated 100 data sets for each combination of N and $\mu_\text{\tiny C}$. 
-We fitted a linear model after log (Ax + 1) transformation ($LM$), negative binomial GLM ($GLM_{nb}$) and quasi-Poisson GLM ($GLM_{qp}$) to these datasets. 
-We tested a general treatment effect using F tests ($LM$ and $GLM_{qp}$) and LR tests ($GLM_{nb}$). Additionally, we applied parametric bootstrap (500 bootstrap samples; \citet{faraway_extending_2006}) to assess the LR in the negative binomial model ($GLM_{pb}$) and used a Kruskal-Wallis test on untransformed data as a non-parametric method.
-To assess the performance in detecting the LOEC (T2 in our simulation design) we used a one-sided Dunnett test for all models and a one-sided pairwise Wilcoxon test as a non-parametric method.
-\todo{rerun!}
  
 
 \subsubsection{Results}
@@ -330,14 +380,7 @@ $GLM_{qp}$ and $LM$ yielded comparable Type 1 errors, with $GLM_{qp}$ having up 
 
 
 \subsection{Binomial data}
-\subsubsection{Methods}
-We simulated data from a design as described in the motivating example, with 5 treated (T1 - T5) and a control group (C). 
-Proportions were drawn from a Bin(10, $\pi$) distribution, with varying probability of success ($\pi$ = \{0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95\}) and varying number of replicates (N = \{3, 6, 9\}).
-For Type I error estimation $\pi$ was held constant between groups.
-For power estimation $\pi$ in C and T1 was set to 0.95 and $\pi$ in T2 - T5 varied between 0.6 and 0.95). 
- 
-We simulated 250 data sets for each combination and analysed them using the linear model after arcsine transformation (LM), binomial GLM (GLM) and Kruskal-Wallis test.
-Moreover, we compared the methods' ability to determine the LOEC (T2 in our simulation design) by comparing inferences on model parameters and a pairwise Wilcoxon test. 
+
 
 
 \subsubsection{Results}
