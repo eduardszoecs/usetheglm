@@ -97,6 +97,7 @@ Differences between statistical methods may be apparent especially at such low s
 We explore how GLMs may enhance inference in ecotoxicological studies and compared three types of statistical methods (transformation and normality assumption, GLM, non-parametric tests).
 We first use a data set from a mesocosm study to illustrate differences between statistical methods.
 Then we further elaborate differences using simulations of two data types commonly encountered in ecotoxicology: counts and proportions.
+Methods were compared in terms of Type 1 error (maintain a significance level of 0.05 when there is no effect) and power (detect an effect when it is present).
 
 
 \todo{LOEC rein + oft genutzt, etc...}
@@ -337,17 +338,31 @@ $GLM_b$ was conservative at small effect sizes ($p_E > 0.8$) and WT was generall
 \section{Discussion}
 
 \subsection{Case study}
-This example demonstrates that the choice of the statistical model and procedure has substantial impact on ecotoxicological inferences, especially when sample sizes are low.
-
-\citet{brock_minimum_2015} assumed normality after data transformation and reported a LOEC of \mbox{0.3 mg/L} for this data.
-The reason for this difference may be twofold: \citep{brock_minimum_2015} used a $log(2~y + 1)$ transformation, whereas we used a $log(0.182~y + 1)$ transformation \citep{van_den_brink_impact_2000}.
+%% ---- Case study
+This case study demonstrates that the choice of the statistical model and procedure can have substantial impact on ecotoxicological inferences.
+This is further highlighted by the fact that \citet{brock_minimum_2015} reported a LOEC of \mbox{0.3 mg/L} for this data assuming normality of transformed data.
+The reasons can be manyfold: \citep{brock_minimum_2015} used a $log(2~y + 1)$ transformation, whereas we used a $log(A~y + 1)$ transformation, where A = 2 / 11 = 0.182 \citep{van_den_brink_impact_2000}.
 Moreover, we applied a one-sided Dunnett test, as the toxic response in a mesocosm experiment may be either decreasing or increasing (due to biological interactions).
 \citet{brock_minimum_2015} used a one-sided Williams test, which is known to have larger power if the assumptions are met \citep{jaki_statistical_2013}.
+
+%% ---- Guide GLMs
+Moreover, the case study illustrates the potential effects of overdispersion that is not accounted for: standard error will be underestimated and significance overestimated (Figure \ref{fig:example}).
+However, in factorial designs the mean-variance relationship can be easily checked by plotting mean vs. variance of the treatment groups.
+In the introduction we pointed out that there is little advice how to choose between the plenty of possible transformations.
+How do GLMs simplify this problem?
+The distribution modelled should be chosen to give a statistically sound model reflecting properties of the data (e.g. bonds, integer or continuous data etc.).
+Moreover, the model selection process can be guided by the data and diagnostic plots and therefore, it is much more sound than choosing between transformations.
+\todo{zu holperig}
+
 
 
 \subsection{Simulations}
 
 
+%% --- Multivariate + GLMM -------
+Although our simulations covered only simple experimental designs, these findings may also extend to more complex designs. 
+Nested or repeated designs with non-normal data could be analysed using Generalized Linear Mixed Models (GLMM) and may have advantages with respect to power \citep{stroup_rethinking_2014}.
+For community analyses \emph{GLM for multivariate data} have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \citep{warton_distance-based_2012,szocs_analysing_2015}.
 
 
 
@@ -359,23 +374,6 @@ Moreover, we applied a one-sided Dunnett test, as the toxic response in a mesoco
 %% --------------------------------
 %% --------------------------------
 \section{Rest}
-
-\subsubsection{Results}
-\citet{brock_minimum_2015} assumed normality after data transformation and reported a LOEC of \mbox{0.3 mg/L} for this data.
-The reason for this difference may be twofold: \citep{brock_minimum_2015} used a $log(2~y + 1)$ transformation, whereas we used a $log(0.182~y + 1)$ transformation \citep{van_den_brink_impact_2000}.
-Moreover, we applied a one-sided Dunnett test, as the toxic response in a mesocosm experiment may be either decreasing or increasing (due to biological interactions).
-\citet{brock_minimum_2015} used a one-sided Williams test, which is known to have larger power if the assumptions are met \citep{jaki_statistical_2013}.
-This example demonstrates that the choice of the statistical model and procedure has substantial impact on ecotoxicological inferences, especially when sample sizes are low.
-
-
-%% --------------------------------
-\section{Simulations}
-\label{sec:sim}
-We used simulations to compare the methods described above to analyse count and binomial data.
-Methods were compared in terms of Type I error (maintain a significance level of 0.05 when there is no effect) and power (detect an effect when it is present). 
-We fitted the models and tested hypotheses on the simulated data as described in the motivating examples.
-
-
 
 %% --------------------------------
 \section{Discussion}
@@ -424,22 +422,12 @@ The interpretation of binomial GLMs is much simpler than for the arcsine transfo
 Their power is is equal or even higher at sample sizes greater then three. 
 Therefore, we recommend to use binomial GLM instead of the arcsine transformation.
 
-%% ---- Guideline GLMs
-In the introduction we pointed out that there is little advice how to choose from the plenty of possible transformations.
-How do GLMs simplify this problem?
-First of all, the distribution modelled should be chosen to give a statistically sound model.
-Proportions are bounded between 0 and 1 and could be modelled using a binomial distribution.
-Counts are positive discrete values and should be modelled with a discrete distribution.
-In a factorial design the mean-variance relationship can be easily checked with diagnostic plots.
-Moreover, it should be checked for overdispersion. 
-Standard error will be underestimated and significance overestimated, if not accounted for (Figure \ref{fig:example}).
-The model selection process can be guided by the data and diagnostic plots. Therefore, it is much more sound than choosing between transformations.
 
 
-%% --- Multivariate + GLMM -------
-Although our simulations covered only simple experimental designs, these findings may also extend to more complex designs. 
-Nested or repeated designs with non-normal data could be analysed using Generalized Linear Mixed Models (GLMM) and may have advantages with respect to power \citep{stroup_rethinking_2014}.
-For community analyses \emph{GLM for multivariate data} have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \citep{warton_distance-based_2012,szocs_analysing_2015}.
+
+
+
+
 
 
 %% ----------------------------------------------------------------------------
