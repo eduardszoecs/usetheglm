@@ -138,7 +138,7 @@ merged$diff <- merged$powerloec - merged$powerglob
 plot(merged$diff)
 max(abs(merged$diff[!merged$variable %in% c('glm_nb', 'np')]))
 max(abs(merged$diff[merged$variable %in% c('lm')]))
-
+merged[merged$variable == 'lm', ]
 diffdf <- dcast(pow_loec_c, muc + N ~ variable, value.var = 'power')
 diffdf$diff_lm_qp <- diffdf$lm - diffdf$glm_qp
 diffdf

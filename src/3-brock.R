@@ -57,6 +57,7 @@ modpois <- glm(Abundance ~ Concentration, data = df, family = poisson)
 
 # residual deviance >> residual degrees of freedom
 modpois$deviance / modpois$df.residual
+sum(resid(modpois, type = 'pearson')^2) / modpois$df.residual
 # overdispersion!
 
 ## Inference, global test
@@ -120,6 +121,18 @@ modnb_lwr <- modnb$family$linkinv(modnb_p$fit - 1.96 * modnb_p$se.fit)
 modnb_upr <- modnb$family$linkinv(modnb_p$fit + 1.96 * modnb_p$se.fit)
 
 
+### -----------------------------
+### Negative binomial GLM with parametric bootstrap
+set.seed(1234)
+myPBmodcomp(modnb, modnb0, data = df, npb = 500)
+
+
+### -----------------------------
+### non-parametric
+kruskal.test(df$Abundance, df$Concentration)
+pairwise_wilcox(df$Abundance, df$Concentration)
+
+
 
 ### --------------- Summarize --------------------------------------------------
 ### -----------------------------
@@ -153,9 +166,9 @@ moddf$mod <- factor(moddf$mod, levels = c('Normal', 'Poisson', 'quasi-Poisson', 
 
 p <- ggplot() +
   # raw data
-  geom_boxplot(data = df, aes(x = Concentration, y = Abundance), 
-               width = 0.3, fill = 'grey85') +
-  geom_point(data = df, aes(x = Concentration, y = Abundance)) +
+#   geom_boxplot(data = df, aes(x = Concentration, y = Abundance), 
+#                width = 0.3, fill = 'grey85') +
+  geom_point(data = df, aes(x = Concentration, y = Abundance), size = 4) +
   # estimated means + CI
   geom_point(data = moddf, 
              aes(x = 0.1 + rep(1:6,4) + rep(c(0.1, 0.2, 0.3, 0.4), each = 6), 
