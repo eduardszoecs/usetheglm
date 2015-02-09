@@ -79,8 +79,8 @@ plot_pow_glob_p <- ggplot(pow_glob_p) +
        y = expression(paste('Power (global test , ', alpha, ' = 0.05)'))) +
   # appearance
   mytheme +
-  scale_shape_manual('Method', values=c(16,2,17)) +
-  scale_linetype_discrete('Method') +
+  scale_shape_manual('Method', values=c(16,2,17), labels = c('LM', expression(GLM[bin]), 'KW')) +
+  scale_linetype_discrete('Method', labels = c('LM', expression(GLM[bin]), 'KW')) +
   ylim(c(0,1))
 plot_pow_glob_p
 
@@ -103,8 +103,8 @@ plot_pow_loec_p <- ggplot(pow_loec_p) +
   labs(x = 'pE', 
        y = expression(paste('Power (LOEC , ', alpha, ' = 0.05)'))) + 
   mytheme +
-  scale_shape_manual('Method', values=c(16,2,17)) +
-  scale_linetype_discrete('Method') +
+  scale_shape_manual('Method', values=c(16,2,17), labels = c('LM', expression(GLM[bin]), 'WT')) +
+  scale_linetype_discrete('Method', labels = c('LM', expression(GLM[bin]), 'WT')) +
   ylim(c(0,1))
 plot_pow_loec_p
 

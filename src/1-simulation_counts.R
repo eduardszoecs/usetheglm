@@ -93,8 +93,11 @@ plot_pow_glob_c <- ggplot(pow_glob_c) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(16,2,4,0,17)) +
-  scale_linetype_discrete('Method') +
+  scale_shape_manual('Method', values=c(16,2,4,0,17), 
+                     labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
+                                expression(GLM[pb]), 'KW')) +
+  scale_linetype_discrete('Method', labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
+                                               expression(GLM[pb]), 'KW')) +
   ylim(c(0,1))
 plot_pow_glob_c
 
@@ -124,8 +127,11 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(16,2,4,17)) +
-  scale_linetype_discrete('Method') +
+  scale_shape_manual('Method', values=c(16,2,4,17), 
+                     labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
+                                                               'WT')) +
+  scale_linetype_discrete('Method',  labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
+                                                'WT')) +
   ylim(c(0,1))
 plot_pow_loec_c
 
