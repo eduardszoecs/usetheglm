@@ -60,15 +60,15 @@
 \section*{Abstract}
 Ecotoxicologist are often confronted with non-normally distributed data.
 To meet the assumptions of normality and heteroscedasticity, the standard procedure has been to either transform the data or use non-parametric methods if this fails.
-Here, we compare the statistical power of analyses using transformed data or non-parametric methods to analyses using appropriate models, namely Generalised Linear Models (GLM).
+Here, we compare the statistical power of analyses using transformed data or non-parametric methods to analyses using appropriate distributional assumptions, namely Generalised Linear Models (GLM).
 
 We simulated data mimicking ecotoxicological experiments of two common data types (counts and proportions). 
 We compare the performance of methods in terms of statistical power and type 1 error.
-In addition, we outlined differences and advantages of GLMs on a real world data set.
+In addition, we outlined differences and advantages of GLMs on a real world mesocosm data set.
 
-We found that GLMs provide a gain a gain in statistical power compared to analysis of transformed data or using non-parametric methods.
-GLMs should become a standard method in ecotoxicology and we recommend that non-normal data should be analysed by GLMs and not by transformations or non-parametric methods.
-
+We found that GLMs provide a gain in statistical power compared to analysis of transformed data or using non-parametric methods.
+GLMs should become a standard method in ecotoxicology. 
+We recommend that non-normal data should be analysed by GLMs and not by transformations or non-parametric methods.
 
 
 
@@ -86,9 +86,9 @@ For count data from mesocosm experiments a log(Ay + C) transformation is usually
 For example, \citet{van_den_brink_impact_2000} suggest to set the term Ay to be 2 for the lowest abundance value (y) greater than zero and C to 1. 
 Moreover, other transformations like the square root or fourth root are commonly applied in community ecology.
 Note that there has been little evaluation and advice for practitioners, which transformations to use.
-If the transformed data still do not meet the assumptions (i. e. normality and variance homogeneity), non-parametric tests are usually applied \citep{wang_making_2011}.
+If the transformed data still do not meet the assumptions (i.e. normality and variance homogeneity), non-parametric tests are usually applied \citep{wang_making_2011}.
 
-Generalized linear models (GLM) provide a method to analyse such non-normally distributed data \citep{nelder_generalized_1972}.
+Generalised linear models (GLM) provide a method to analyse such non-normally distributed data \citep{nelder_generalized_1972}.
 GLMs can handle various types of data distributions, e.g. Poisson or negative binomial (for count data) or binomial (for proportions); the normal distribution being a special case of GLMs.
 Despite GLMs being available more than 40 years, ecotoxicologists do not regularly make use of them.
 Recent studies concluded that data transformations should be avoided and GLMs be used as they have better statistical properties \citep{ohara_not_2010, warton_arcsine_2011}. 
@@ -135,7 +135,7 @@ This model assumes a normal distributed response with constant variance ($\sigma
 Note, that we parametrised the model as contrast ($\beta x_i$) to the control group ($\alpha$) so that parameters ($\beta$) are directly interpretable as changes from the control group (eqn. \ref{eqn:normal}).
 
 
-\subsubsection{Generalized Linear Models}
+\subsubsection{Generalised Linear Models}
 GLMs extend the normal model by modelling other distributions.
 Instead of transforming the response variable the counts could be directly modelled by a Poisson distribution ($GLM_p$):
 
@@ -189,7 +189,7 @@ The transformed proportions are then analysed using the standard linear model ($
 Note, that the parameters of the linear model are not directly interpretable due to transformation.
 
 
-\subsubsection{Generalized Linear Models}
+\subsubsection{Generalised Linear Models}
 Data of type \emph{x out of N} can be modelled by a binomial distribution with parameters N and $\pi$ ($GLM_{bin})$:
 
 \begin{align}
@@ -212,6 +212,7 @@ Ecotoxicologists are generally interested in two hypotheses: (i) is there any tr
 Following general recommendations \citep{bolker_generalized_2009,faraway_extending_2006}, we used F-tests ($LM$ and $GLM_{qp}$) and Likelihood-Ratio (LR) tests ($GLM_p$, $GLM_{nb}$ and $GLM_{bin}$) to test the first hypothesis.
 However, it is well known that LR test are unreliable with small sample sizes \citep{wilks_large-sample_1938}.
 Therefore, we additionally explored parametric bootstrap \citep{faraway_extending_2006} to assess the significance of the LR for the negative binomial models (denoted as $GLM_PB$, using 500 bootstrap samples).
+
 To assess the LOEC we used Dunnett contrasts with one-sided Wald t tests (normal and quasi-Poisson models) and one-sided Wald Z tests (Poisson, negative binomial and binomial models).
 Beside these parametric methods we also applied two non-parametric methods: The Kruskal-Wallis test  ($KW$) to test for a general treatment effect and a pairwise Wilcoxon test ($WT$) to determine the LOEC.
 
@@ -219,7 +220,7 @@ Beside these parametric methods we also applied two non-parametric methods: The 
 
 %% --------------------------------
 \subsection{Case study}
-\citet{brock_minimum_2015} presents a typical example of data from mesocosm studies.
+\citet{brock_minimum_2015} presents a typical example of data from mesocosm studies, which we use to demonstrate differences between methods.
 The data are mayfly larvae counts on artificial substrate samplers were at one sampling date. 
 A total of 18 mesocosm have been sampled from 6 treatments (Control (n = 4), 0.1, 0.3, 1, 3 mg/L (n = 3) and 10 mg/L (n = 2)) (Figure \ref{fig:example}).
 
@@ -238,6 +239,7 @@ A total of 18 mesocosm have been sampled from 6 treatments (Control (n = 4), 0.1
 %% --------------------------------
 \subsection{Simulations}
 \subsubsection{Count data}
+To further scrutinise the differences between methods we simulated data sets with known properties.
 We simulated count data that mimics of the case study with five treatments (T1 - T5) and one control group (C).
 Counts were drawn from a negative binomial distribution with slight over dispersion at all treatments ($\kappa = 0.25$, eqn. \ref{eqn:negbin}).
 We simulated data sets with different number of replicates (N = \{3, 6, 9\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 64, 128\}). 
@@ -245,7 +247,7 @@ For power estimation, mean abundance in treatments T2 - T5 was reduced to half o
 Mean abundance was kept equal between all groups in Type 1 error simulations.
 
 We generated 100 data sets for each combination of N and $\mu_\text{\tiny C}$ and analysed these using the models outlined previously.
-However, as we simulated overdispersed data we did not fit the Poisson model.
+We did not fit Poisson models because we simulated data with overdispersion.
 
 
 \subsubsection{Binomial data}
@@ -265,7 +267,7 @@ Source code for the simulations and analysis of the case study is available onli
 \label{sec:results}
 %% --------------------------------
 \subsection{Case study}
-The data set set show considerable overdispersion ($\Theta = 22.41$, eqn. \ref{eqn:quasi}).
+The data set showed considerable overdispersion ($\Theta = 22.41$, eqn. \ref{eqn:quasi}).
 Therefore, the Poisson model did not fit to this data and lead to underestimated standard errors and confidence intervals, as well as overestimated statistical significance (Figure \ref{fig:example}).
 In this case inferences on the Poisson model are not valid and we do not further discuss its results.
 The normal (F = 2.57, p = 0.084) and quasi-Poisson model (F = 2.90, p = 0.061), as well as the Kruskal test (p =  0.145) did not show a statistically significant treatment effects.
@@ -274,14 +276,14 @@ By contrast, the LR test and parametric bootstrap of the negative binomial model
 All methods predicted similar values, except the normal model predicting always lower abundances (Figure \ref{fig:example}). 
 95\% confidence intervals (CI) where most narrow for the negative binomial model and widest for the quasi-Poisson model - especially at lower estimated abundances.
 Consequently, the LOECs differed (Normal and quasi-Poisson: 3 mg/L, negative binomial: 0.3 mg/L).
-The pairwise Wilcoxon test did not find any treatment different from control.
+The pairwise Wilcoxon test did not detect any treatment different from control.
 
 
 %% --------------------------------
 \subsection{Simulations}
 \subsubsection{Count data}
 For our simulation design (reduction in abundance by 50\%) a sample size per treatment of n = 9 was needed to achieve a power greater than 80\%.
-For detecting a treatment effect $GLM_{nb}$, $GLM_{pb}$ and $GLM_{qp}$ exhibited higher power then $LM$ and $KW$, the latter having least power.
+For detecting a treatment effect $GLM_{nb}$, $GLM_{pb}$ and $GLM_{qp}$ exhibited higher power than $LM$ and $KW$, the latter having least power.
 Type 1 error rate was inflated for $GLM_{nb}$, but this could be fixed by using parametric bootstrap.
 KW was conservative at low sample sizes (Figure \ref{fig:p_glob_c}).
 At small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of the negative binomial models ($GLM_{nb}$ and $GLM_{pb}$) did not converge to a solution (convergence rate \textless 80\% of the simulations, Supplement 1). 
@@ -295,7 +297,7 @@ At low sample sizes $GLM_{nb}$ showed an increased Type 1 error and WT was sligh
   \centering
   \includegraphics[width = 0.8\textwidth]{p_glob_c.pdf}
   \caption{Count data simulations: Power (top) and Type 1 error (bottom) for the test of a treatment effect.
-  For n = 3 and $\mu_C$ = \{2, 4\} less then 80\% of $GLM_{nb}$ and $GLM_{pb}$ models did converge.
+  For n = 3 and $\mu_C$ = \{2, 4\} less than 80\% of $GLM_{nb}$ and $GLM_{pb}$ models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_glob_c}
@@ -305,7 +307,7 @@ At low sample sizes $GLM_{nb}$ showed an increased Type 1 error and WT was sligh
   \centering
   \includegraphics[width = 0.8\textwidth]{p_loec_c.pdf}
   \caption{Count data simulations: Power (top) and Type 1 error (bottom) for determination of LOEC.
-  For n = 3 and $\mu_C$ = \{2, 4\} less then 80\% of $GLM_{nb}$ and $GLM_{pb}$ models did converge.
+  For n = 3 and $\mu_C$ = \{2, 4\} less than 80\% of $GLM_{nb}$ and $GLM_{pb}$ models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_loec_c}
@@ -356,25 +358,25 @@ $GLM_{bin}$ was conservative at small effect sizes ($p_E > 0.8$) and WT was gene
 %% ---- Case study
 The outlined case study demonstrates that the choice of the statistical model and procedure can have substantial impact on ecotoxicological inferences.
 This is further highlighted by the fact that \citet{brock_minimum_2015} reported a LOEC of \mbox{0.3 mg/L} for this data assuming normality of transformed data.
-The reasons can be manyfold: \citep{brock_minimum_2015} used a $log(2~y + 1)$ transformation, whereas we used a $log(A~y + 1)$ transformation, where A = 2 / 11 = 0.182 \citep{van_den_brink_impact_2000}.
+The reasons can be manifold: \citep{brock_minimum_2015} used a $log(2~y + 1)$ transformation, whereas we used a $log(A~y + 1)$ transformation, where A = 2 / 11 = 0.182 \citep{van_den_brink_impact_2000}.
 Moreover, we applied a one-sided Dunnett test, as the toxic response in a mesocosm experiment may be either decreasing or increasing (due to biological interactions).
 \citet{brock_minimum_2015} used a one-sided Williams test, which is known to have larger power if the assumptions are met \citep{jaki_statistical_2013}.
 
 %% ---- Guide GLMs
 Moreover, the case study illustrates the potential effects of overdispersion that is not accounted for: standard error will be underestimated and significance overestimated (Figure \ref{fig:example}).
-However, in factorial designs the mean-variance relationship can be easily checked by plotting mean vs. variance of the treatment groups.
+However, in factorial designs the mean-variance relationship can be easily checked by plotting mean versus variance of the treatment groups (see supplemental material).
 In the introduction we pointed out that there is little advice how to choose between the plenty of possible transformations - how do GLMs simplify this problem?
 The distribution modelled can be chosen by the nature of the data giving a statistically sound model reflecting its properties (e.g. bonds, integer or continuous data etc.).
-Knowing what type of data is modelled (see Methods section), the model selection process can be completely guided by the data and diagnostic plots. Therefore, choosing a appropriate model is much more sound and straightforward than choosing between possible transformations.
+Knowing what type of data is modelled (see Methods section), the model selection process can be completely guided by the data and diagnostic plots. Therefore, choosing an appropriate model is much more sound and straightforward than choosing between possible transformations.
 
 
 \subsection{Simulations}
 %% --- general low power
-Our simulations show that GLMs have greater power than data transformations.
+Our simulations showed that GLMs have greater power than data transformations.
 However, the simulations also suggest that power in common mesocosm experiments is low.
 For common samples sizes and a reduction in abundance of 50\% we found a low power to detect any treatment-related effect (\textless 50\% for methods with appropriate Type 1 error, Figure \ref{fig:p_glob_c}).
 Additionally, \citet{ohara_not_2010} showed that using a log transformation gave unreliable and biased parameter estimates.
-Statistical power to detect the correct LOEC was even further reduced, with power less than 30\%.
+Statistical power to detect the correct LOEC was even lower (less than 30\%).
 This suggests that NOECs reported from mesocosm experiments should be interpreted with caution and underpins the criticism of NOEC.
 To counteract the problems with low power \citet{brock_minimum_2015} proposed to take the Minimum Detectable Difference (MDD), a method to assess statistical power \emph{a posteriori}, for inference into account.
 However, \emph{a priory} power analyses can be performed easily using simulations, even for complex experimental designs \citep{johnson_power_2014}, and might help to design, interpret and evaluate ecotoxicological studies.
@@ -389,10 +391,10 @@ In contrast, our results showed that the often applied Kruskal test and pairwise
 Moreover, GLMs always performed better than non-parametric tests. 
 Though more powerful non-parametric tests may be available \citep{konietschke_rank-based_2012}, these are focused on testing but not on estimation of effects.
 Additionally to testing, GLMs allow the estimation and interpretation of effects that might not be statistically significant, but ecologically relevant.
-Therefore, we advise to use GLMs instead of non-parametric tests for non-normal data.
+Therefore, we advise using GLMs instead of non-parametric tests for non-normal data.
 
 %% ---- Problems GLM
-At small sample sizes and low abundance a significant amount of negative binomial models did not converge.
+At small sample sizes and low abundances a significant amount of negative binomial models did not converge.
 We used an iterative algorithm to fit these models \citep{venables_modern_2002} and other methods assessing directly the likelihood may perform better.
 Moreover, the Likelihood-Ratio test gave increased Type-I error for these models.
 It is well known that the LR statistic is unreliable for small sample sizes \citep{bolker_generalized_2009,wilks_large-sample_1938} and we found that parametric bootstrap ($GLM_{pb}$) provides a valuable alternative in such situations (Figure \ref{fig:p_glob_c}).
@@ -407,8 +409,11 @@ Nevertheless, for deriving LOECs the transformation performed better at low samp
 
 %% --- Multivariate + GLMM -------
 Although our simulations covered only simple experimental designs, these findings may also extend to more complex designs. 
-Nested or repeated designs with non-normal data could be analysed using Generalized Linear Mixed Models (GLMM) and may have advantages with respect to power \citep{stroup_rethinking_2014}.
-For community analyses \emph{GLM for multivariate data} have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \citep{warton_distance-based_2012,szocs_analysing_2015}.
+Nested or repeated designs with non-normal data could be analysed using Generalised Linear Mixed Models (GLMM) and may have advantages with respect to power \citep{stroup_rethinking_2014}.
+For community analyses \emph{GLM for multivariate data} have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \citep{warton_distance-based_2012,szocs_analysing_2015}. 
+
+GLMs should become a standard method in ecotoxicology and respective guidelines need to be updated.
+We recommend that non-normal data should be analysed by GLMs and not by transformations or non-parametric methods.
 
 
 %% --------------------------------
