@@ -162,7 +162,7 @@ plot_t1_glob_p <- ggplot(t1_glob_p) +
                linetype = 'dashed') + 
   facet_grid( ~N, labeller = n_labeller) +  
   # axes
-  labs(x = 'p', 
+  labs(x = expression(pi), 
        y = expression(paste('Type 1 error (global test , ', alpha, ' = 0.05)'))) +
   # appearance
   mytheme + 
@@ -193,7 +193,7 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
                linetype = 'dashed') + 
   facet_grid( ~N, labeller = n_labeller) + 
   # axes
-  labs(x = 'p', 
+  labs(x = expression(pi), 
        y = expression(paste('Type 1 error (LOEC , ', alpha, ' = 0.05)'))) + 
   # appearance
   mytheme + 
