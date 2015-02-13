@@ -95,9 +95,9 @@ plot_pow_glob_c <- ggplot(pow_glob_c) +
   # legend title
   scale_shape_manual('Method', values=c(16,2,4,0,17), 
                      labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
-                                expression(GLM[pb]), 'KW')) +
+                                expression(GLM[npb]), 'KW')) +
   scale_linetype_discrete('Method', labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
-                                               expression(GLM[pb]), 'KW')) +
+                                               expression(GLM[npb]), 'KW')) +
   ylim(c(0,1))
 plot_pow_glob_c
 

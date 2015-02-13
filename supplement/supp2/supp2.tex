@@ -111,7 +111,7 @@
 \maketitle
 
 \setcounter{section}{1}
-\section{Supplement 2 - Motivating examples}
+\section{Supplement 2 - R examples}
 \subsection{Count data example}
 \subsubsection{Introduction}
 In this example we will analyse data from \citep{brock_minimum_2015}.
@@ -278,10 +278,10 @@ Here we perform a one-sided (\texttt{alternative='less'}) Dunnett (\texttt{mcp(t
 ## 
 ## Linear Hypotheses:
 ##                     Estimate Std. Error t value Pr(<t)  
-## T0.1 - Control >= 0  -0.5267     0.4536  -1.161 0.3839  
-## T0.3 - Control >= 0  -0.9558     0.4536  -2.107 0.1031  
-## T1 - Control >= 0    -1.0069     0.4536  -2.220 0.0859 .
-## T3 - Control >= 0    -1.4121     0.4536  -3.113 0.0183 *
+## T0.1 - Control >= 0  -0.5267     0.4536  -1.161 0.3841  
+## T0.3 - Control >= 0  -0.9558     0.4536  -2.107 0.1033  
+## T1 - Control >= 0    -1.0069     0.4536  -2.220 0.0860 .
+## T3 - Control >= 0    -1.4121     0.4536  -3.113 0.0184 *
 ## T10 - Control >= 0   -1.2575     0.5144  -2.445 0.0590 .
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -505,11 +505,11 @@ The LOEC can be determined with \texttt{multcomp}:
 ## 
 ## Linear Hypotheses:
 ##                     Estimate Std. Error z value Pr(<z)  
-## T0.1 - Control >= 0  -0.5092     0.3889  -1.309 0.3515  
-## T0.3 - Control >= 0  -0.9970     0.4656  -2.142 0.0738 .
-## T1 - Control >= 0    -0.8560     0.4409  -1.941 0.1154  
+## T0.1 - Control >= 0  -0.5092     0.3889  -1.309 0.3514  
+## T0.3 - Control >= 0  -0.9970     0.4656  -2.142 0.0737 .
+## T1 - Control >= 0    -0.8560     0.4409  -1.941 0.1153  
 ## T3 - Control >= 0    -1.6032     0.5985  -2.679 0.0179 *
-## T10 - Control >= 0   -1.4313     0.6634  -2.157 0.0711 .
+## T10 - Control >= 0   -1.4313     0.6634  -2.157 0.0710 .
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## (Adjusted p values reported -- single-step method)
@@ -624,11 +624,11 @@ Similar for LOEC:
 ## 
 ## Linear Hypotheses:
 ##                     Estimate Std. Error z value  Pr(<z)    
-## T0.1 - Control >= 0  -0.5092     0.3951  -1.289 0.31534    
-## T0.3 - Control >= 0  -0.9970     0.3988  -2.500 0.02747 *  
-## T1 - Control >= 0    -0.8560     0.3975  -2.153 0.06496 .  
+## T0.1 - Control >= 0  -0.5092     0.3951  -1.289 0.31522    
+## T0.3 - Control >= 0  -0.9970     0.3988  -2.500 0.02751 *  
+## T1 - Control >= 0    -0.8560     0.3975  -2.153 0.06499 .  
 ## T3 - Control >= 0    -1.6032     0.4066  -3.943 < 0.001 ***
-## T10 - Control >= 0   -1.4313     0.4601  -3.111 0.00441 ** 
+## T10 - Control >= 0   -1.4313     0.4601  -3.111 0.00445 ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## (Adjusted p values reported -- single-step method)
@@ -639,7 +639,7 @@ which suggests a LOEC at the 0.3 treatment.
 
 
 
-\subsection{Binomial data exaple}
+\subsection{Binomial data example}
 \subsubsection{Introduction}
 Here we will show how to analyse binomial data (\emph{x out of n}). 
 Data is provided in \citet{newman_quantitative_2012} (example 5.1, page 223) and \citet{epa_methods_2002}.
@@ -818,10 +818,10 @@ And the LOEC is at the highest concentration:
 ## 
 ## Linear Hypotheses:
 ##              Estimate Std. Error t value Pr(<t)    
-## 32 - 0 >= 0  -0.14717    0.10880  -1.353 0.2785    
+## 32 - 0 >= 0  -0.14717    0.10880  -1.353 0.2784    
 ## 64 - 0 >= 0   0.04074    0.10880   0.374 0.9202    
 ## 128 - 0 >= 0 -0.07622    0.10880  -0.701 0.5578    
-## 256 - 0 >= 0 -0.22113    0.10880  -2.032 0.0984 .  
+## 256 - 0 >= 0 -0.22113    0.10880  -2.032 0.0987 .  
 ## 512 - 0 >= 0 -0.72735    0.10880  -6.685 <0.001 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -920,10 +920,10 @@ Also with the binomial model the LOEC is at the highest concentration:
 ## 
 ## Linear Hypotheses:
 ##              Estimate Std. Error z value Pr(<z)    
-## 32 - 0 >= 0   -1.2098     0.8499  -1.423 0.2032    
-## 64 - 0 >= 0    0.7191     1.2458   0.577 0.9229    
-## 128 - 0 >= 0  -0.7472     0.8967  -0.833 0.4320    
-## 256 - 0 >= 0  -1.7077     0.8183  -2.087 0.0591 .  
+## 32 - 0 >= 0   -1.2098     0.8499  -1.423  0.203    
+## 64 - 0 >= 0    0.7191     1.2458   0.577  0.923    
+## 128 - 0 >= 0  -0.7472     0.8967  -0.833  0.432    
+## 256 - 0 >= 0  -1.7077     0.8183  -2.087  0.059 .  
 ## 512 - 0 >= 0  -3.6753     0.8002  -4.593 <0.001 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1

@@ -61,7 +61,7 @@
 \maketitle
 
 \setcounter{section}{1}
-\section{Supplement 2 - Motivating examples}
+\section{Supplement 2 - R examples}
 \subsection{Count data example}
 \subsubsection{Introduction}
 In this example we will analyse data from \citep{brock_minimum_2015}.
@@ -257,7 +257,7 @@ which suggests a LOEC at the 0.3 treatment.
 
 
 
-\subsection{Binomial data exaple}
+\subsection{Binomial data example}
 \subsubsection{Introduction}
 Here we will show how to analyse binomial data (\emph{x out of n}). 
 Data is provided in \citet{newman_quantitative_2012} (example 5.1, page 223) and \citet{epa_methods_2002}.
