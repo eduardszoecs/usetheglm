@@ -182,7 +182,7 @@ We add these transformed abundances as column to our table.
 \end{knitrout}
 
 
-It looks like the transformation does a good job in eqaulizing the variances:
+It looks like the transformation does a good job in equalizing the variances:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -279,9 +279,9 @@ Here we perform a one-sided (\texttt{alternative='less'}) Dunnett (\texttt{mcp(t
 ## Linear Hypotheses:
 ##                     Estimate Std. Error t value Pr(<t)  
 ## T0.1 - Control >= 0  -0.5267     0.4536  -1.161 0.3841  
-## T0.3 - Control >= 0  -0.9558     0.4536  -2.107 0.1033  
+## T0.3 - Control >= 0  -0.9558     0.4536  -2.107 0.1030  
 ## T1 - Control >= 0    -1.0069     0.4536  -2.220 0.0860 .
-## T3 - Control >= 0    -1.4121     0.4536  -3.113 0.0184 *
+## T3 - Control >= 0    -1.4121     0.4536  -3.113 0.0183 *
 ## T10 - Control >= 0   -1.2575     0.5144  -2.445 0.0590 .
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -295,9 +295,9 @@ This indicates that only treatment 3 shows a statistically significant from cont
 
 
 
-\subsubsection{Assuming a Poisson distribtion of abundances}
+\subsubsection{Assuming a Poisson distribution of abundances}
 
-Instead transforming the data, we could assume a Poisson distribuion and fit a GLM to this data.
+Instead transforming the data, we could assume a Poisson distribution and fit a GLM to this data.
 This can be done using the \texttt{glm()} function:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -416,7 +416,7 @@ Moreover, we could check overdispersion from the \texttt{summary}:
 If the ratio of residual deviance to degrees of freedom is \textgreater 1 the data is overdispersed.
 
 
-\subsubsection{Assuming a quasi-Poisson distribtion of abundances}
+\subsubsection{Assuming a quasi-Poisson distribution of abundances}
 The plot suggests that the variance may increasing stronger then the mean and quasi-Poisson or negative binomial models might be more appropriate for this data.
 Fitting a quasi-Poisson GLM is straight forward:
 \begin{knitrout}
@@ -465,7 +465,7 @@ The summary gives the estimated parameters:
 \end{knitrout}
 
 with the dispersion parameter $\Theta = 22.41055$. 
-Note, that the parameter estimates are the same as from the Poisson model, onle the standard errors are scaled/wider.
+Note, that the parameter estimates are the same as from the Poisson model, only the standard errors are scaled/wider.
 
 An F-test can be performed using \texttt{drop1()}:
 \begin{knitrout}
@@ -507,7 +507,7 @@ The LOEC can be determined with \texttt{multcomp}:
 ##                     Estimate Std. Error z value Pr(<z)  
 ## T0.1 - Control >= 0  -0.5092     0.3889  -1.309 0.3514  
 ## T0.3 - Control >= 0  -0.9970     0.4656  -2.142 0.0737 .
-## T1 - Control >= 0    -0.8560     0.4409  -1.941 0.1153  
+## T1 - Control >= 0    -0.8560     0.4409  -1.941 0.1154  
 ## T3 - Control >= 0    -1.6032     0.5985  -2.679 0.0179 *
 ## T10 - Control >= 0   -1.4313     0.6634  -2.157 0.0710 .
 ## ---
@@ -519,7 +519,7 @@ The LOEC can be determined with \texttt{multcomp}:
 
 
 
-\subsubsection{Assuming a negative binomial distribtion of abundances}
+\subsubsection{Assuming a negative binomial distribution of abundances}
 To fit a negative binomial GLM we could use \texttt{glm.nb()} from the MASS package \citep{venables_modern_2002}:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -573,7 +573,7 @@ The estimated parameters:
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-, with $\kappa = 1 / 3.905898$ (glm.nb uses a slighty other parametrisation).
+, with $\kappa = 1 / 3.905898$ (glm.nb uses a slightly other parametrisation).
 
 For an LR-Test we need to first fit a reduced model:
 \begin{knitrout}
@@ -584,7 +584,7 @@ For an LR-Test we need to first fit a reduced model:
 \end{kframe}
 \end{knitrout}
 
-, so that the dispersion parameter $\kappa$ is reestimated for the reduced model.
+, so that the dispersion parameter $\kappa$ is re-estimated for the reduced model.
 Then we can compare these two models with a LR-Test:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -624,11 +624,11 @@ Similar for LOEC:
 ## 
 ## Linear Hypotheses:
 ##                     Estimate Std. Error z value  Pr(<z)    
-## T0.1 - Control >= 0  -0.5092     0.3951  -1.289 0.31522    
-## T0.3 - Control >= 0  -0.9970     0.3988  -2.500 0.02751 *  
+## T0.1 - Control >= 0  -0.5092     0.3951  -1.289 0.31527    
+## T0.3 - Control >= 0  -0.9970     0.3988  -2.500 0.02740 *  
 ## T1 - Control >= 0    -0.8560     0.3975  -2.153 0.06499 .  
 ## T3 - Control >= 0    -1.6032     0.4066  -3.943 < 0.001 ***
-## T10 - Control >= 0   -1.4313     0.4601  -3.111 0.00445 ** 
+## T10 - Control >= 0   -1.4313     0.4601  -3.111 0.00446 ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## (Adjusted p values reported -- single-step method)
@@ -738,7 +738,7 @@ Next we arcsine transform the proportions:
 
 \end{knitrout}
 
-\subsubsection{Assuming a normal distribtion of transformed proportions}
+\subsubsection{Assuming a normal distribution of transformed proportions}
 Like in the count data example we fit the model using \texttt{lm()}:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -748,7 +748,7 @@ Like in the count data example we fit the model using \texttt{lm()}:
 \end{kframe}
 \end{knitrout}
 
-The summary gives the estimated paramaters:
+The summary gives the estimated parameters:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -821,7 +821,7 @@ And the LOEC is at the highest concentration:
 ## 32 - 0 >= 0  -0.14717    0.10880  -1.353 0.2784    
 ## 64 - 0 >= 0   0.04074    0.10880   0.374 0.9202    
 ## 128 - 0 >= 0 -0.07622    0.10880  -0.701 0.5578    
-## 256 - 0 >= 0 -0.22113    0.10880  -2.032 0.0987 .  
+## 256 - 0 >= 0 -0.22113    0.10880  -2.032 0.0986 .  
 ## 512 - 0 >= 0 -0.72735    0.10880  -6.685 <0.001 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -831,7 +831,7 @@ And the LOEC is at the highest concentration:
 \end{knitrout}
 
 
-\subsubsection{Assuming a binomial distribtion}
+\subsubsection{Assuming a binomial distribution}
 The binomial model with a logit link between predictors and response can be fitted using the \texttt{glm()} function:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -844,7 +844,7 @@ The binomial model with a logit link between predictors and response can be fitt
 
 Here the weights arguments, indicates how many fish where exposed in each treatment (=10).
 
-The summary gives the estimated paramaters:
+The summary gives the estimated parameters:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}

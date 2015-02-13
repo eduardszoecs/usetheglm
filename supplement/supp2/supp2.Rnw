@@ -104,7 +104,7 @@ dfm$abu_t <- log(A * dfm$abu + 1)
 @
 
 
-It looks like the transformation does a good job in eqaulizing the variances:
+It looks like the transformation does a good job in equalizing the variances:
 <<plot_count_trans, out.width='0.5\\textwidth'>>=
 boxplot(abu_t ~ treatment, data = dfm, 
         xlab = 'Treatment', ylab = 'Transf. Counts', 
@@ -144,9 +144,9 @@ This indicates that only treatment 3 shows a statistically significant from cont
 
 
 
-\subsubsection{Assuming a Poisson distribtion of abundances}
+\subsubsection{Assuming a Poisson distribution of abundances}
 
-Instead transforming the data, we could assume a Poisson distribuion and fit a GLM to this data.
+Instead transforming the data, we could assume a Poisson distribution and fit a GLM to this data.
 This can be done using the \texttt{glm()} function:
 <<>>=
 modpois <- glm(abu ~ treatment, data = dfm, family = poisson(link = 'log'))
@@ -196,7 +196,7 @@ Moreover, we could check overdispersion from the \texttt{summary}:
 If the ratio of residual deviance to degrees of freedom is \textgreater 1 the data is overdispersed.
 
 
-\subsubsection{Assuming a quasi-Poisson distribtion of abundances}
+\subsubsection{Assuming a quasi-Poisson distribution of abundances}
 The plot suggests that the variance may increasing stronger then the mean and quasi-Poisson or negative binomial models might be more appropriate for this data.
 Fitting a quasi-Poisson GLM is straight forward:
 <<>>=
@@ -209,7 +209,7 @@ summary(modqpois)
 @
 
 with the dispersion parameter $\Theta = 22.41055$. 
-Note, that the parameter estimates are the same as from the Poisson model, onle the standard errors are scaled/wider.
+Note, that the parameter estimates are the same as from the Poisson model, only the standard errors are scaled/wider.
 
 An F-test can be performed using \texttt{drop1()}:
 <<>>=
@@ -224,7 +224,7 @@ summary(glht(modqpois, linfct = mcp(treatment = 'Dunnett'),  alternative = 'less
 
 
 
-\subsubsection{Assuming a negative binomial distribtion of abundances}
+\subsubsection{Assuming a negative binomial distribution of abundances}
 To fit a negative binomial GLM we could use \texttt{glm.nb()} from the MASS package \citep{venables_modern_2002}:
 <<mod_count_mass, message=FALSE>>=
 require(MASS)
@@ -235,14 +235,14 @@ The estimated parameters:
 <<>>=
 summary(modnb)
 @
-, with $\kappa = 1 / 3.905898$ (glm.nb uses a slighty other parametrisation).
+, with $\kappa = 1 / 3.905898$ (glm.nb uses a slightly other parametrisation).
 
 For an LR-Test we need to first fit a reduced model:
 <<>>=
 modnb.null <- glm.nb(abu ~ 1, data = dfm)
 @
 
-, so that the dispersion parameter $\kappa$ is reestimated for the reduced model.
+, so that the dispersion parameter $\kappa$ is re-estimated for the reduced model.
 Then we can compare these two models with a LR-Test:
 <<>>=
 anova(modnb, modnb.null, test = 'Chisq')
@@ -315,13 +315,13 @@ boxplot(y_asin ~ conc, data = dfm,
         main = 'Transformed data', col = 'grey75')
 @
 
-\subsubsection{Assuming a normal distribtion of transformed proportions}
+\subsubsection{Assuming a normal distribution of transformed proportions}
 Like in the count data example we fit the model using \texttt{lm()}:
 <<>>=
 modlm <- lm(y_asin ~ conc, data = dfm)
 @
 
-The summary gives the estimated paramaters:
+The summary gives the estimated parameters:
 <<>>=
 summary(modlm)
 @
@@ -337,7 +337,7 @@ summary(glht(modlm, linfct = mcp(conc = 'Dunnett'), alternative = 'less'))
 @
 
 
-\subsubsection{Assuming a binomial distribtion}
+\subsubsection{Assuming a binomial distribution}
 The binomial model with a logit link between predictors and response can be fitted using the \texttt{glm()} function:
 <<>>=
 modglm <- glm(y ~ conc , data = dfm, family = binomial(link = 'logit'), 
@@ -346,7 +346,7 @@ modglm <- glm(y ~ conc , data = dfm, family = binomial(link = 'logit'),
 
 Here the weights arguments, indicates how many fish where exposed in each treatment (=10).
 
-The summary gives the estimated paramaters:
+The summary gives the estimated parameters:
 <<>>=
 summary(modglm)
 @
