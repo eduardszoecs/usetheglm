@@ -101,6 +101,7 @@ modqpois_upr <- modqpois$family$linkinv(modqpois_p$fit + 1.96 * modqpois_p$se.fi
 ### -----------------------------
 ### Negative binomial GLM
 modnb <- glm.nb(Abundance ~ Concentration, data = df)
+summary(modnb)
 
 ## Inference, global test
 # LR test

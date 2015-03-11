@@ -12,13 +12,15 @@
 \usepackage{url}
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage[utf8]{inputenc}
+\usepackage[onehalfspacing]{setspace}
 
 \usepackage{anysize}
 \marginsize{2.5cm}{2.5cm}{1.5cm}{2.5cm}
 
 % macros
-\newcommand{\comment}[0]{\vspace{1em} \noindent \hangindent=0em \textbf{\textcolor{Maroon}{\uline{Comment}:~}}}
-\newcommand{\response}[0]{\\\vspace{0.1em} \hangindent=2.3em \textbf{\textcolor{NavyBlue}{\uline{Response}:~}}}
+\newcommand{\comment}[1]{\vspace{1em} \noindent \hangindent=0em \textbf{\textcolor{Maroon}{\uline{Comment}:~}}\emph{"#1"} }
+
+\newcommand{\response}[1]{\\[0.3em] \hangindent=2.3em \textbf{\textcolor{NavyBlue}{\uline{Response}:~}}\textbf{#1}}
 
 \usepackage[normalem]{ulem}
 \definecolor{darkred}{rgb}{1,.6,.6}
@@ -50,137 +52,137 @@ In the remainder of this document, we describe the changes that we have made to 
 % ======================================================= %
 \section{Response to Reviewer 1}
 
-\comment The purpose of the manuscript is highly commendable. Unfortunately, the
+\comment{The purpose of the manuscript is highly commendable. Unfortunately, the
 present manuscript has some major shortcomings: The simulation results,
 which constitute the key contribution, are far from being as unequivocal as
 the title may lead one to think. Also, it is disturbing to see a fairly technical
 (and for ESPR non-standard) formulation of statistical models and yet the
-authors seem to lack some understanding of the models in some cases.
-\response
+authors seem to lack some understanding of the models in some cases.}
+\response{aaaa}
 
-\comment About the title: Please consider a more informative title such as ”Com-
+\comment{About the title: Please consider a more informative title such as ”Com-
 parison of statistical approaches for analysis of non-normally distributed
 response in ecotoxicology”. Also in view of the fact that the results are
-not very clearly favouring the generalized linear models (GLMs).
-\response
+not very clearly favouring the generalized linear models (GLMs).}
+\response{}
 
-\comment p. 2, left column, lines 2–12: The issue of LOEC/NOEC versus regres-
+\comment{ p. 2, left column, lines 2–12: The issue of LOEC/NOEC versus regres-
 sion is interesting but not really relevant to the aim of the manuscript.
 Consider skipping this part. However, you’re right that for small sam-
 ple sizes it is extremely important to choose the most efficient statistical
-analysis and the better the model describes the data the more efficient.
-\response
+analysis and the better the model describes the data the more efficient.}
+\response{}
 
-\comment p. 2, left column, lines 56–59: You aren’t mentioning the issue with
+\comment{ p. 2, left column, lines 56–59: You aren’t mentioning the issue with
 back-transformation So, in particular, $\beta x$ is not additive changes from
 control on the original scale. To many ecotoxicologists such estimates
 on a transformed scale aren’t directly interpretable as claimed by the
 authors. A more detailed explanation or at least discussion on how
 to back-transform is warranted (this is an issue regardless of whether
-GLMs or models for transformed responses are used!).
-\response
+GLMs or models for transformed responses are used!).}
+\response{}
 
-\comment p. 2, right column, line 1: The real advantage of using a generalized
+\comment{ p. 2, right column, line 1: The real advantage of using a generalized
 linear model for count data shows up in case of many small counts and
 in the presence of ties. For large counts (e.g., corresponding to a large
 $\mu_C$ ) there is practically no difference. However, this difference may not
-show up in simulations when the sample size is kept between 3 and 9.
-\response
+show up in simulations when the sample size is kept between 3 and 9.}
+\response{}
 
-\comment p. 2, right column, lines 19–21: It is not the response variable that is
+\comment{ p. 2, right column, lines 19–21: It is not the response variable that is
 linked to the linear predictors, it is the mean of the response variable
 (McCullagh \& Nelder, 1989). This is a basic fact of generalized linear
 models as you also show in Eqn. (3). Please explain Eqn. (3) in more
-detail (explain the parameters).
-\response
+detail (explain the parameters).}
+\response{}
 
-\comment p. 2, right column, lines 25–27: There exists no quasi-Poisson distri-
+\comment{ p. 2, right column, lines 25–27: There exists no quasi-Poisson distri-
 bution!!! You use R terminology, but this is not in this case statistical
 terminology. Please consult McCullagh \& Nelder (1989) to understand
 that over-dispersion is dealt with by means of an ad hoc scaling of the
 standard errors that takes place after having fitted the ordinary Poisson
-GLM. So Eqn. (4) doesn’t make sense.
-\response
+GLM. So Eqn. (4) doesn’t make sense.}
+\response{}
 
-\comment p. 2, right column, Eqn. (5): Have you explained the parameters in
-the text?
-\response
+\comment{ p. 2, right column, Eqn. (5): Have you explained the parameters in
+the text?}
+\response{}
 
-\comment p. 3, left column, lines 26–42: What about over-dispersion for binomial
+\comment{ p. 3, left column, lines 26–42: What about over-dispersion for binomial
 data? Shouldn’t that also be mentioned now that you consider models
-for over-dispersion for count data.
-\response
+for over-dispersion for count data.}
+\response{}
 
-\comment p. 3, left column, line 33: Why not specify the mean next to the
+\comment{ p. 3, left column, line 33: Why not specify the mean next to the
 variance in all equations? Or skip the variance where not needed (as
-in this case).
-\response
+in this case).}
+\response{}
 
-\comment p. 3, right column, Fig. 1: Please be precise in the figure text: By using
+\comment{ p. 3, right column, Fig. 1: Please be precise in the figure text: By using
 the Poisson model the width of confidence intervals is underestimated
-in the presence of overdispersion.
-\response
+in the presence of overdispersion.}
+\response{We agree and stated more precisely that the width of confidence intervals is underestimated.}
 
-\comment p. 3, right column, line 28: How is multiple testing taken care of? This
-may also affect the simulation results.
-\response
+\comment{ p. 3, right column, line 28: How is multiple testing taken care of? This
+may also affect the simulation results.}
+\response{}
 
-\comment p. 4, left column, line 2: The simulations will not be very informative
+\comment{ p. 4, left column, line 2: The simulations will not be very informative
 for such small sample sizes (3–9) as all methods will have low power.
 Suggestion: Do also consider larger sample sizes: 12, 25, 50, 100. Not
 completely unrealistic any more as experiments tend to get larger. And
-then instead keep the $\mu_C$ small: 2, 4, 8, 16 to get more ties.
-\response
+then instead keep the $\mu_C$ small: 2, 4, 8, 16 to get more ties.}
+\response{}
 
-\comment p. 4, left column, lines 10 and 28: In simulation studies it is quite
+\comment{ p. 4, left column, lines 10 and 28: In simulation studies it is quite
 common to use 1000 simulated datasets for each scenario (it would
-also reduce the sampling variability in the results).
-\response
+also reduce the sampling variability in the results).}
+\response{}
 
-\comment p. 4, left column, line 36: Please do define the type I error properly.
-\response
+\comment{ p. 4, left column, line 36: Please do define the type I error properly.}
+\response{}
 
-\comment p. 4, right column, lines 26–29: The lack of convergence is not sur-
+\comment{ p. 4, right column, lines 26–29: The lack of convergence is not sur-
 prising as the simulated datasets are simply too small to fit complex
 models. Please re-consider the entire concept of the simulation (in
-particular which scenarios to consider).
-\response
+particular which scenarios to consider).}
+\response{}
 
-\comment p. 4, right column, lines 31–33: One explanation for the reduced power
+\comment{ p. 4, right column, lines 31–33: One explanation for the reduced power
 is certainly the multiple testing issue. Perhaps this point could be
-addressed?
-\response
+addressed?}
+\response{}
 
-\comment p. 4, right column, lines 57–58: Did LM really maintain the nominal
+\comment{ p. 4, right column, lines 57–58: Did LM really maintain the nominal
 significance level in all cases? This seems to be a subjective assessment
-(as the level is above in some cases for N = 3).
-\response
+(as the level is above in some cases for N = 3).}
+\response{}
 
-\comment p. 6, right column, lines 43–46: Why didn’t you also use the transfor-
+\comment{ p. 6, right column, lines 43–46: Why didn’t you also use the transfor-
 mation suggested by Brock et al. (2015)? Would be useful to see the
-comparison.
-\response
+comparison.}
+\response{}
 
-\comment p. 6, right column, line 49: Dunnett test is R terminology (yes, it
+\comment{ p. 6, right column, line 49: Dunnett test is R terminology (yes, it
 may be found in other recent publications, but it doesn’t make it more
-correct). Please use a term like ”comparisons to the control”.
-\response
+correct). Please use a term like ”comparisons to the control”.}
+\response{}
 
-\comment p. 7, right column, lines 7–10: A nice result that is not found in
+\comment{ p. 7, right column, lines 7–10: A nice result that is not found in
 many publication: non-parametric approaches lack power (due to less
 assumptions being made). However, your results for the parametric
 models are all quite similar and as it stands the paper does not present
 a strong case for the use of GLMs; and a more balanced abstract would
-be appropriate.
-\response
+be appropriate.}
+\response{}
 
-\comment p. 7, Simulations: A suggestion: remove all diverging discussion of
+\comment{ p. 7, Simulations: A suggestion: remove all diverging discussion of
 LOEC/NOEC, GLMs for multivariate data, GLMMs, sample size cal-
 culation and concentrate on discussing the simulation results. Or, alter-
 natively, discuss in much more detail that GLMMs may actually offer a
 difference approach for handling over-dispersion in binomial and count
-data (instead of considering completely different designs).
-\response
+data (instead of considering completely different designs).}
+\response{}
 
 
 
@@ -188,147 +190,148 @@ data (instead of considering completely different designs).
 % ======================================================= %	
 \section{Response to Reviewer 2}
 
-\comment One point to consider in a resubmission is that GLMs aren't for use for all non-normal data - some qualifications are needed of when to use GLMs.  Distributionally, GLMs replace the assumption of normality with the assumption that data come from the exponential family, which does not cover all situations.  More critically, GLMs replace the assumption of equal variance with an assumption that the mean-variance relationship follows a pre-specified pattern, and violation of this assumption has similar impacts to violations of the equal-variance assumption in a linear model would have.  Particular situations where GLMs are useful are binary data (known to be a quadratic mean-variance), count data (especially count data with lots of low counts, which typically cannot be transformed to normality effectively), and proportions constructed from counts.  These are the examples highlighted in the text, and are of clear relevance in ecotoxicology, but the argument does not extend much
-more broadly than these examples - it is not a case of "your data aren't normal so you should use GLMs".  It is more accurate to say "if you have binary, counts or proportions from counts you should use GLMs".  I think this requires a modest adjustment to the phrasing of the abstract and introduction to better qualify the situations where GLMs are appropriate.  e.g. where O'Hara and Kotze and Warton \& Hui are mentioned, this should be qualified to refer to counts and proportions (of counts) respectively.  I  don't think the title needs changing, sufficient qualification elsewhere of the type of non-normality if interest should do the trick.
-\response
+\comment{ One point to consider in a resubmission is that GLMs aren't for use for all non-normal data - some qualifications are needed of when to use GLMs.  Distributionally, GLMs replace the assumption of normality with the assumption that data come from the exponential family, which does not cover all situations.  More critically, GLMs replace the assumption of equal variance with an assumption that the mean-variance relationship follows a pre-specified pattern, and violation of this assumption has similar impacts to violations of the equal-variance assumption in a linear model would have.  Particular situations where GLMs are useful are binary data (known to be a quadratic mean-variance), count data (especially count data with lots of low counts, which typically cannot be transformed to normality effectively), and proportions constructed from counts.  These are the examples highlighted in the text, and are of clear relevance in ecotoxicology, but the argument does not extend much
+more broadly than these examples - it is not a case of "your data aren't normal so you should use GLMs".  It is more accurate to say "if you have binary, counts or proportions from counts you should use GLMs".  I think this requires a modest adjustment to the phrasing of the abstract and introduction to better qualify the situations where GLMs are appropriate.  e.g. where O'Hara and Kotze and Warton \& Hui are mentioned, this should be qualified to refer to counts and proportions (of counts) respectively.  I  don't think the title needs changing, sufficient qualification elsewhere of the type of non-normality if interest should do the trick.}
+\response{}
 
-\comment In the first paragraph, "positive" is used where "non-negative" is needed (i.e. zero is a possible value), also change bonded to bounded
-\response 
+%done
+\comment{ In the first paragraph, "positive" is used where "non-negative" is needed (i.e. zero is a possible value), also change bonded to bounded
+\response{} We fully agree and changed accordingly.}
 
-\comment Page 2, second column - the parameterisation isn't equal to the Poisson model - the mean model is the same, I think that is what was meant.
-\response 
+\comment{ Page 2, second column - the parameterisation isn't equal to the Poisson model - the mean model is the same, I think that is what was meant.}
+\response{} 
 
-\comment Page 2, second column - also, strictly speaking, not all the methods mentioned here are GLMs.  Negative binomial regression ("NB2") is a GLM if the overdispersion parameter is fixed, otherwise it is a generalisation of GLM.  Similarly, quasi-Poisson isn't really a GLM, but a related method.
-\response
+\comment{ Page 2, second column - also, strictly speaking, not all the methods mentioned here are GLMs.  Negative binomial regression ("NB2") is a GLM if the overdispersion parameter is fixed, otherwise it is a generalisation of GLM.  Similarly, quasi-Poisson isn't really a GLM, but a related method.}
+\response{}
 
-\comment Section 2.2 - a description of what is meant by binomial data would be helpful at the start of this section.  Perhaps for completeness a description of what is meant by counts would help at the start of section 2.1
-\response
+\comment{ Section 2.2 - a description of what is meant by binomial data would be helpful at the start of this section.  Perhaps for completeness a description of what is meant by counts would help at the start of section 2.1}
+\response{}
 
-\comment Section 2.2.2 - it would be useful to also mention GLMMs with a random intercept term.  Often with this sort of data there are extra sources of variation from one sample to the next that are not explained by the binomial assumption, and this is the most natural way to account for it.
-\response
+\comment{ Section 2.2.2 - it would be useful to also mention GLMMs with a random intercept term.  Often with this sort of data there are extra sources of variation from one sample to the next that are not explained by the binomial assumption, and this is the most natural way to account for it.}
+\response{}
 
-\comment Sections 2.1, 2.2: references to relevant articles or texts would be useful for GLMs, where the reader can find more details at a level appropriate for readership (e.g. a Zuur text?  Quinn \& Keough?).  Also point readers to supp 2 for code and a worked example.
-\response
+\comment{ Sections 2.1, 2.2: references to relevant articles or texts would be useful for GLMs, where the reader can find more details at a level appropriate for readership (e.g. a Zuur text?  Quinn \& Keough?).  Also point readers to supp 2 for code and a worked example.}
+\response{}
 
-\comment page 3, line 58, the parametric bootstrap
-\response
+%done
+\comment{ page 3, line 58, the parametric bootstrap}
+\response{} Changed accordingly.
 
-\comment Page 3, second column, line 30: Wald tests should be used with caution, when a mean estimate is zero (or close to it) they can have strange behaviour (related to the issue of separable data - parameter estimates and ses diverging, test statistics going to zero).
-\response
+\comment{ Page 3, second column, line 30: Wald tests should be used with caution, when a mean estimate is zero (or close to it) they can have strange behaviour (related to the issue of separable data - parameter estimates and ses diverging, test statistics going to zero).}
+\response{}
 
-\comment Page 4, second column, lower means: it is noted that the means are lower when data are transformed.  This is known as transformation bias, and occurs because the transform linear model is actually estimating something different - it is no longer trying to estimate mean response.  It would be helpful to say this and maybe include a useful reference.  This also gets at the issue of interpretability - a disadvantage of the transform approach is a loss of interpretability, because we are no longer modelling mean response.
-\response
+\comment{ Page 4, second column, lower means: it is noted that the means are lower when data are transformed.  This is known as transformation bias, and occurs because the transform linear model is actually estimating something different - it is no longer trying to estimate mean response.  It would be helpful to say this and maybe include a useful reference.  This also gets at the issue of interpretability - a disadvantage of the transform approach is a loss of interpretability, because we are no longer modelling mean response.}
+\response{}
 
-\comment page 7 first column, line 7: bounds not bonds
-\response
+% done
+\comment{ page 7 first column, line 7: bounds not bonds}
+\response{} Thanks for pointing to this typo.
 
-\comment Section 4.1 the case study discussion was a little confusing.  So is the point that you can get different results by linear models according to transformation, but that GLMs can resolve the problem of choice of transformation?  (by replacing it with a decision about mean-variance relationship?)  I think a stronger point is that the GLM is usually a better fit to count data, no transformation can make data Gaussian when it has lots of zeros and small counts, but GLM is designed for such data.  If diagnostic tools support this argument for your case study they could be included.
-\response
+\comment{ Section 4.1 the case study discussion was a little confusing.  So is the point that you can get different results by linear models according to transformation, but that GLMs can resolve the problem of choice of transformation?  (by replacing it with a decision about mean-variance relationship?)  I think a stronger point is that the GLM is usually a better fit to count data, no transformation can make data Gaussian when it has lots of zeros and small counts, but GLM is designed for such data.  If diagnostic tools support this argument for your case study they could be included.}
+\response{}
 
-\comment page 7 column 1 line 27: it is not so much unreliable and biased - they are estimating a different parameter (in an unbiased fashion) - they estimate the mean of log(Ax+1) data, and a problem is that this has no natural interpretation in terms of the original data.  It is fair to make the point that it is biased as an estimate of the mean response, but it would be helpful to explain why and how the estimators have problematic interpretations.
-\response
+\comment{ page 7 column 1 line 27: it is not so much unreliable and biased - they are estimating a different parameter (in an unbiased fashion) - they estimate the mean of log(Ax+1) data, and a problem is that this has no natural interpretation in terms of the original data.  It is fair to make the point that it is biased as an estimate of the mean response, but it would be helpful to explain why and how the estimators have problematic interpretations.}
+\response{}
 
-\comment page 7 column 1 line 50: a priori not a priory
+\comment{ page 7 column 1 line 50: a priori not a priory\\
+page 7 column 2 line 37: data are (data being the plural of datum)\\
+page 7 column 2 line 42: GLMs have (or GLM has)}
+\response{We are thankful for pointing to this errors and changed accordingly.}
 
-page 7 column 2 line 37: data are (data being the plural of datum)
+\comment{ page 7 column 2 line 44: the higher power in Fig 5 seemed to be through the GLMs being more conservative, rather than due to greater efficiency.  This issue could likely be fixed using a parametric bootstrap, as was done previously in figure 2.
+A related point is that the linear model had the advantage that it seemed to be better at maintaining nominal significance levels at small sample sizes, which should be mentioned.  As the authors say however it did not have as good power (and also loses something in interpretability and biased estimation of means).  Hence while the GLM has a number of advantages, combining it with param bootstrap at small sample sizes might be worth considering to address the Type I error issue.}
+\response{}
 
-page 7 column 2 line 42: GLMs have (or GLM has)
-\response
-
-\comment page 7 column 2 line 44: the higher power in Fig 5 seemed to be through the GLMs being more conservative, rather than due to greater efficiency.  This issue could likely be fixed using a parametric bootstrap, as was done previously in figure 2.
-A related point is that the linear model had the advantage that it seemed to be better at maintaining nominal significance levels at small sample sizes, which should be mentioned.  As the authors say however it did not have as good power (and also loses something in interpretability and biased estimation of means).  Hence while the GLM has a number of advantages, combining it with param bootstrap at small sample sizes might be worth considering to address the Type I error issue.
-\response
-
-\comment Supplement 2 is a useful addition, and it might be worth giving it a little more emphasis in the text to ensure ecotoxicologists wanting to try out new analyses give it a look.  A couple of suggestions though:
+\comment{ Supplement 2 is a useful addition, and it might be worth giving it a little more emphasis in the text to ensure ecotoxicologists wanting to try out new analyses give it a look.  A couple of suggestions though:
 - there is no parametric bootstrap code there at the moment.  This would be easy enough to do by using the mvabund package, calling manyglm (even on a univariate response) then anova(..., resamp="monte.carlo")  will do a parametric bootstrap.
-- you can construct residual plots for GLMs on this package, using the plot function on a fitted manyglm object.
-\response
+- you can construct residual plots for GLMs on this package, using the plot function on a fitted manyglm object.}
+\response{}
 
 
 % ======================================================= %	
 \section{Response to Reviewer 3}
 
-\comment With its simulations in an ecotox. context, the paper is a fine contribution to make researchers aware of the possibilities and advantages of a generalized linear models (GLM). What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion. The paper and abstract can still be made more useful by given not just the recommendation for GLM but also to give advice and warnings of proper usage. For example, (almost) never use loglinear/Poisson regression without adjustment for overdispersion, be aware that a nicer looking model like the negative binomial may give inflated type I error, a case that is overcome in this paper by bootstrapping. The same applies to binomial/logit regression unless the experiment really consist of independent observations for each 0/1 result (and is not just a count with a predetermined maximum). In this light it is strange that the logistic/binomial case is treated differently from
+\comment{ With its simulations in an ecotox. context, the paper is a fine contribution to make researchers aware of the possibilities and advantages of a generalized linear models (GLM). What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion. The paper and abstract can still be made more useful by given not just the recommendation for GLM but also to give advice and warnings of proper usage. For example, (almost) never use loglinear/Poisson regression without adjustment for overdispersion, be aware that a nicer looking model like the negative binomial may give inflated type I error, a case that is overcome in this paper by bootstrapping. The same applies to binomial/logit regression unless the experiment really consist of independent observations for each 0/1 result (and is not just a count with a predetermined maximum). In this light it is strange that the logistic/binomial case is treated differently from
 the loglinear/Poisson case! Should this not be repaired or at least given more warning. 
 (1) Also, if the authors stick to the binomial/logistic without overdispersion, the normal model could be made powerful in the simulations by treating the error variance as known, because it is a known constant for the arcsine transformation. 
 (2) Also, the simulation now use slight overdispersion whereas the example /typical data has large overdispersion. Add simulations with large overdispersion. The current ones can go to supplementary.
-(3) Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone.  See the example. Discuss this ambiguity. You can perhaps use a bootstrap test based on (GLM?) monotonic regression or similar. I know some cues/leads in this direction.
-\response
+(3) Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone.  See the example. Discuss this ambiguity. You can perhaps use a bootstrap test based on (GLM?) monotonic regression or similar. I know some cues/leads in this direction.}
+\response{}
 
-\comment Page 1 Line 22 right column: a continuous proportion is fine for area cover and so on, but not for proportion of surviving animals where is just "k out of n" turn into a proportion. Discrete therefore. 
-\response
+\comment{ Page 1 Line 22 right column: a continuous proportion is fine for area cover and so on, but not for proportion of surviving animals where is just "k out of n" turn into a proportion. Discrete therefore. }
+\response{ Of course we meant discrete proportions. Thank you for pointing to this error.}
 
-\comment Line 58 right add ref to (Warton 2005). 
-\response
+\comment{ Line 58 right add ref to (Warton 2005). }
+\response{}
 
-\comment Page 2 Line 40 : , for y>0 should for y>= 0 and  be on the next line without an indent after formula (if it is not new paragraph).
-\response
+\comment{ Page 2 Line 40 : , for y>0 should for y>= 0 and  be on the next line without an indent after formula (if it is not new paragraph).}
+\response{}
 
-\comment Line 51 x\_i is undefined. The model appear to specify a simple linear regression or a control-one\_treatment model. Neither is used in the paper!!! Modify the notation therefore..
-\response
+\comment{ Line 51 x\_i is undefined. The model appear to specify a simple linear regression or a control-one\_treatment model. Neither is used in the paper!!! Modify the notation therefore..}
+\response{}
 
-\comment Line 59 Mention backtransformation here, which works fine for the confidence intervals, and not the backtransformed is the median on the original scale. If you want to backtransform to the original mean, use exp(mean+ 0.5*sigma2). (Aitchison \& Brown 1969) page 8 (Jongman et al. 1995)page 19. 
-\response
+\comment{ Line 59 Mention backtransformation here, which works fine for the confidence intervals, and not the backtransformed is the median on the original scale. If you want to backtransform to the original mean, use exp(mean+ 0.5*sigma2). (Aitchison \& Brown 1969) page 8 (Jongman et al. 1995)page 19. }
+\response{}
 
-\comment Page 3 line 17 n= 4.10 = 40 what does the mean here/ what is the purpose?
+\comment{ Page 3 line 17 n= 4.10 = 40 what does the mean here/ what is the purpose?
 Line 41 : give more attention to the condition for the binomial: independent observations of each of the successes (k) out of the number of experiments (n).
 And: thus give attention to overdispersion in this case as well, particularly as you found nasty things for the LR of  NB.
-Line 28 right. Ref for Dunnett contrasts.
-\response
+Line 28 right. Ref for Dunnett contrasts.}
+\response{}
 
-\comment Line 59 right. Only slight overdispersion, whereas the example data have large  overdispersion. Add large overdispersion.
-\response
+\comment{ Line 59 right. Only slight overdispersion, whereas the example data have large  overdispersion. Add large overdispersion.}
+\response{We now specify the overdisperion in terms of $\kappa$ in both, the case study and the simulation design. This clarifies that we simulated data mimicking the case study.}
 
-\comment Page 4 
+\comment{ Page 4 
 L 19 ( missing.
-Line 56 left to 2 right. Four p-values: what to believe? Your simulations (although with small overdispersion) show it. The LR of NB cannot be trusted. So the 0.016 is out. The remaining tests all show about the same p-value if you interpret statistics properly. Please note that the distinction between significant and non-signicant (here p = 0.061 and 0.042) in itself is statistically insignificant. (Gelman \& Stern 2006).
-\response
+Line 56 left to 2 right. Four p-values: what to believe? Your simulations (although with small overdispersion) show it. The LR of NB cannot be trusted. So the 0.016 is out. The remaining tests all show about the same p-value if you interpret statistics properly. Please note that the distinction between significant and non-signicant (here p = 0.061 and 0.042) in itself is statistically insignificant. (Gelman \& Stern 2006).}
+\response{}
 
-\comment Line 4 right : the backtransformed mean gives a median on the original scale, a value that is more interesting than the mean (generally for skew data),  and for skew right always smaller than the mean.
-\response
+\comment{ Line 4 right : the backtransformed mean gives a median on the original scale, a value that is more interesting than the mean (generally for skew data),  and for skew right always smaller than the mean.}
+\response{}
 
-\comment Section 3.2
-Always start with the Type I error results because the power results are without meaning if the Type I error is inflated. This also applies the order of the figs: interchange the two rows of subfigs. 
-\response
+\comment{ Section 3.2
+Always start with the Type I error results because the power results are without meaning if the Type I error is inflated. This also applies the order of the figs: interchange the two rows of subfigs. }
+\response{}
 
-\comment 21 right: remove GLM\_nb in this sentence as GLM\_nb must be discarded due to inflated Type I error.
-\response
+\comment{ 21 right: remove GLM\_nb in this sentence as GLM\_nb must be discarded due to inflated Type I error.}
+\response{}
 
-\comment L32 right. ", but this." Although you should reorder the results, I mention that the "but this" should at least be "This could fortunately be …"[and we could not have known for sure (apart from the general warnings about LR) without the simulations] This inflated error for GLM\_nb must receive more attention. It is an interesting result of this study: you must to bootstrap when using NB.
-\response
+\comment{ L32 right. ", but this." Although you should reorder the results, I mention that the "but this" should at least be "This could fortunately be …"[and we could not have known for sure (apart from the general warnings about LR) without the simulations] This inflated error for GLM\_nb must receive more attention. It is an interesting result of this study: you must to bootstrap when using NB.}
+\response{}
 
-\comment Page 5
-Fig. 2 legend. Add that n =100 simulations. Add the interpretation that  GLM\_nb has inflated type I error, and that its line for power is just added for completeness and should not be interpreted as an estimate of the true power.
-\response
+\comment{ Page 5
+Fig. 2 legend. Add that n =100 simulations. Add the interpretation that  GLM\_nb has inflated type I error, and that its line for power is just added for completeness and should not be interpreted as an estimate of the true power.}
+\response{}
 
-\comment Page 6
-Fig.5 LM for 0.8 has a high Type I error. Does it deviate significantly from 0.05? [same question for the high Type I for GLM\_nb in fig 2]. Use confidence interval for binomial p = 0.05 n = 100.
-\response
+\comment{ Page 6
+Fig.5 LM for 0.8 has a high Type I error. Does it deviate significantly from 0.05? [same question for the high Type I for GLM\_nb in fig 2]. Use confidence interval for binomial p = 0.05 n = 100.}
+\response{}
 
-\comment Case study : 
-You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.182 already causes the difference. (it probably does not). The important difference is the use of the Willems test! Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone! See the report of the Williams test below.
-\response
+\comment{ Case study : 
+You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.182 already causes the difference. (it probably does not). The important difference is the use of the Willems test! Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone! See the report of the Williams test below.}
+\response{}
 
-\comment 
+\comment{ 
 Page 7
 L35 Move ref to Warton to after data.
-L45 Add a reference to (ter Braak \& Šmilauer 2014) who advocate the use of the transformation approach in a multivariate (dimension reduction) context.
-\response
+L45 Add a reference to (ter Braak \& Šmilauer 2014) who advocate the use of the transformation approach in a multivariate (dimension reduction) context.}
+\response{}
 
-\comment Line 1 right (like GLMs) -> (like GLMs and the Williams test)
-\response
+\comment{ Line 1 right (like GLMs) -> (like GLMs and the Williams test)}
+\response{}
 
-\comment Line 10-40 Again: discuss Type I error first. Then no mention of GLM\_nb in power.
-\response
+\comment{ Line 10-40 Again: discuss Type I error first. Then no mention of GLM\_nb in power.}
+\response{}
 
-\comment Line 18 right. Add after "non-normal data' the point the importance of proper accounting for under and overdispersion when using GLM. What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion.
-\response
+\comment{ Line 18 right. Add after "non-normal data' the point the importance of proper accounting for under and overdispersion when using GLM. What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion.}
+\response{}
 
-\comment Line 41 right size of 9 -\textgreater size of 6-9 (?)
-\response
+\comment{ Line 41 right size of 9 -\textgreater size of 6-9 (?)}
+\response{}
 
-\comment Line 44 right the transformation -\textgreater the LM
-\response
+\comment{ Line 44 right the transformation -\textgreater the LM}
+\response{}
 
 
 
