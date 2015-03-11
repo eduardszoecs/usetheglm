@@ -19,21 +19,21 @@
 
 #### Structure of `~/src/`
 
-R code has been written hierarchically, so script must be run in a specific order.
+R code has been written hierarchically, that is scripts must be run in a specific order.
 
-* `~/0-load.R`   				: Defines the project structure, loads packages, sources functions and sets some switches. This scrip has to be run first!
-* `~/1-simulation_counts.R`    	: Code to run count data simulations
-* `~/1-simulation_survival.R`	: Code to run binomial data simulations
-* `~/2-results.R`				: grabs the results from previous code and makes the graphics
-* `~/3-brock.R`					: Code for motivating example (counts)
-* `~/3-weber.R`					: Code for motivating example (binomial)
+* `~/0-load.R`   				: Defines the project structure, loads packages, sources functions and sets some switches. This script has to be run first!
+* `~/1-simulation_counts.R`    	: Run count data simulations
+* `~/1-simulation_survival.R`	: Run to run binomial data simulations
+* `~/2-results.R`				: Grabs the results from previous scripts and create the graphics
+* `~/3-brock.R`					: Script for motivating example (counts)
+* `~/3-weber.R`					: Script for motivating example (binomial)
 * `functions.R`					: Custom functions needed for the simulations
 
 
 ### How to reproduce the results
 
-* Download and extract this repository as ZIP.
-* Extract the repository
+* Download ('Download ZIP') this repository.
+* Extract the zip file.
 * Please uncomment and point the path in `~/0-load.R`, Lines 8-11 to the extracted folder.
 * run `~/0-load.R`
 * if necessary install missing packages
