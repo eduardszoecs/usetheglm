@@ -28,7 +28,6 @@
 *.sublime-workspace
 
 # other
-report/comments*
-submission
-revision
-report
+report_old
+*.zip
+
