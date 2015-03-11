@@ -3,6 +3,7 @@
 % Author: Andrea Ballatore
 % Date: Jan 7, 2013
 % Source: https://raw.githubusercontent.com/ucd-spatial/Datasets/master/tex_response_to_reviewers_template/responses_to_reviewers.tex
+% Modified by Eduard Szöcs, 10.03.2015
 % ======================================================= %
 \documentclass[12pt]{article}
 
@@ -33,7 +34,7 @@
 
 \maketitle
 % ======================================================= %
-\noindent Dear Dr. Schulz  and reviewers,\\
+\noindent Dear editor Dr. Schulz  and reviewers,\\
 
 We are thankful for reviewing our manuscript and the comments that helped to improve the paper. 
 We revised the manuscript according to comments of the three reviewers and are re-submitting the manuscript for consideration for publication in Environmental Science and Pollution Research. 
@@ -48,6 +49,140 @@ In the remainder of this document, we describe the changes that we have made to 
 \newpage
 % ======================================================= %
 \section{Response to Reviewer 1}
+
+\comment The purpose of the manuscript is highly commendable. Unfortunately, the
+present manuscript has some major shortcomings: The simulation results,
+which constitute the key contribution, are far from being as unequivocal as
+the title may lead one to think. Also, it is disturbing to see a fairly technical
+(and for ESPR non-standard) formulation of statistical models and yet the
+authors seem to lack some understanding of the models in some cases.
+\response
+
+\comment About the title: Please consider a more informative title such as ”Com-
+parison of statistical approaches for analysis of non-normally distributed
+response in ecotoxicology”. Also in view of the fact that the results are
+not very clearly favouring the generalized linear models (GLMs).
+\response
+
+\comment p. 2, left column, lines 2–12: The issue of LOEC/NOEC versus regres-
+sion is interesting but not really relevant to the aim of the manuscript.
+Consider skipping this part. However, you’re right that for small sam-
+ple sizes it is extremely important to choose the most efficient statistical
+analysis and the better the model describes the data the more efficient.
+\response
+
+\comment p. 2, left column, lines 56–59: You aren’t mentioning the issue with
+back-transformation So, in particular, $\beta x$ is not additive changes from
+control on the original scale. To many ecotoxicologists such estimates
+on a transformed scale aren’t directly interpretable as claimed by the
+authors. A more detailed explanation or at least discussion on how
+to back-transform is warranted (this is an issue regardless of whether
+GLMs or models for transformed responses are used!).
+\response
+
+\comment p. 2, right column, line 1: The real advantage of using a generalized
+linear model for count data shows up in case of many small counts and
+in the presence of ties. For large counts (e.g., corresponding to a large
+$\mu_C$ ) there is practically no difference. However, this difference may not
+show up in simulations when the sample size is kept between 3 and 9.
+\response
+
+\comment p. 2, right column, lines 19–21: It is not the response variable that is
+linked to the linear predictors, it is the mean of the response variable
+(McCullagh \& Nelder, 1989). This is a basic fact of generalized linear
+models as you also show in Eqn. (3). Please explain Eqn. (3) in more
+detail (explain the parameters).
+\response
+
+\comment p. 2, right column, lines 25–27: There exists no quasi-Poisson distri-
+bution!!! You use R terminology, but this is not in this case statistical
+terminology. Please consult McCullagh \& Nelder (1989) to understand
+that over-dispersion is dealt with by means of an ad hoc scaling of the
+standard errors that takes place after having fitted the ordinary Poisson
+GLM. So Eqn. (4) doesn’t make sense.
+\response
+
+\comment p. 2, right column, Eqn. (5): Have you explained the parameters in
+the text?
+\response
+
+\comment p. 3, left column, lines 26–42: What about over-dispersion for binomial
+data? Shouldn’t that also be mentioned now that you consider models
+for over-dispersion for count data.
+\response
+
+\comment p. 3, left column, line 33: Why not specify the mean next to the
+variance in all equations? Or skip the variance where not needed (as
+in this case).
+\response
+
+\comment p. 3, right column, Fig. 1: Please be precise in the figure text: By using
+the Poisson model the width of confidence intervals is underestimated
+in the presence of overdispersion.
+\response
+
+\comment p. 3, right column, line 28: How is multiple testing taken care of? This
+may also affect the simulation results.
+\response
+
+\comment p. 4, left column, line 2: The simulations will not be very informative
+for such small sample sizes (3–9) as all methods will have low power.
+Suggestion: Do also consider larger sample sizes: 12, 25, 50, 100. Not
+completely unrealistic any more as experiments tend to get larger. And
+then instead keep the $\mu_C$ small: 2, 4, 8, 16 to get more ties.
+\response
+
+\comment p. 4, left column, lines 10 and 28: In simulation studies it is quite
+common to use 1000 simulated datasets for each scenario (it would
+also reduce the sampling variability in the results).
+\response
+
+\comment p. 4, left column, line 36: Please do define the type I error properly.
+\response
+
+\comment p. 4, right column, lines 26–29: The lack of convergence is not sur-
+prising as the simulated datasets are simply too small to fit complex
+models. Please re-consider the entire concept of the simulation (in
+particular which scenarios to consider).
+\response
+
+\comment p. 4, right column, lines 31–33: One explanation for the reduced power
+is certainly the multiple testing issue. Perhaps this point could be
+addressed?
+\response
+
+\comment p. 4, right column, lines 57–58: Did LM really maintain the nominal
+significance level in all cases? This seems to be a subjective assessment
+(as the level is above in some cases for N = 3).
+\response
+
+\comment p. 6, right column, lines 43–46: Why didn’t you also use the transfor-
+mation suggested by Brock et al. (2015)? Would be useful to see the
+comparison.
+\response
+
+\comment p. 6, right column, line 49: Dunnett test is R terminology (yes, it
+may be found in other recent publications, but it doesn’t make it more
+correct). Please use a term like ”comparisons to the control”.
+\response
+
+\comment p. 7, right column, lines 7–10: A nice result that is not found in
+many publication: non-parametric approaches lack power (due to less
+assumptions being made). However, your results for the parametric
+models are all quite similar and as it stands the paper does not present
+a strong case for the use of GLMs; and a more balanced abstract would
+be appropriate.
+\response
+
+\comment p. 7, Simulations: A suggestion: remove all diverging discussion of
+LOEC/NOEC, GLMs for multivariate data, GLMMs, sample size cal-
+culation and concentrate on discussing the simulation results. Or, alter-
+natively, discuss in much more detail that GLMMs may actually offer a
+difference approach for handling over-dispersion in binomial and count
+data (instead of considering completely different designs).
+\response
+
+
 
 
 % ======================================================= %	
