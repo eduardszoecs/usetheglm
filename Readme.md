@@ -11,6 +11,7 @@
 ### Structure of this repository
 
 * `~/cache/`	: cached files (simulation results)
+* `~/cache/`  : manuscript files (LaTeX)
 * `~/src/`    	: Source code (R)
 * `~/supplement/`: Supplemental files (LaTeX)
 
