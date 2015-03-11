@@ -1,0 +1,160 @@
+CC: p.garrigues@ism.u-bordeaux1.fr, edito@ism.u-bordeaux1.fr, mschulz@uni-osnabrueck.de
+
+Ref.:  Ms. No. ESPR-D-15-00741
+Ecotoxicology is not normal - How the use of proper statistical models can increase statistical power in ecotoxicological experiments
+Environmental Science and Pollution Research
+
+Dear Eduard Szöcs,
+
+Reviewers have now commented on your paper. While their overall decision was positive, you will see that there are a number of issues that need to be addressed before the paper can be accepted for publication by ESPR.  
+
+We ask that you give the comments raised by the referees your careful consideration and that you submit a revised version of your manuscript as well as an itemized reply to each of the reviewers' comments. Please make sure to submit your editable source files (i. e. Word, TeX)
+
+Your revision is due by 09 Apr 2015.
+
+To submit a revision, go to http://espr.edmgr.com/ and log in as an Author. You will see a menu item called 'Submissions Needing Revision'. You will find your submission record there. 
+
+I am looking forward to receiving you revised manuscript!
+
+Yours sincerely,
+
+
+Dr. Marcus Schulz 
+Editor
+Environmental Science and Pollution Research
+
+Reviewers' comments:
+
+Reviewer #1: See attachment.
+
+
+Reviewer #2: This paper advocates wider use of GLMs in ecotoxicology, demonstrating their potential by example and by simulation.  A useful point that is emphasised is that ecotoxicological studies often have small sample sizes hence using a method with high power is an important issue.  The paper is well-written, makes a timely point of relevance to ecotoxicologists.
+
+One point to consider in a resubmission is that GLMs aren't for use for all non-normal data - some qualifications are needed of when to use GLMs.  Distributionally, GLMs replace the assumption of normality with the assumption that data come from the exponential family, which does not cover all situations.  More critically, GLMs replace the assumption of equal variance with an assumption that the mean-variance relationship follows a pre-specified pattern, and violation of this assumption has similar impacts to violations of the equal-variance assumption in a linear model would have.  Particular situations where GLMs are useful are binary data (known to be a quadratic mean-variance), count data (especially count data with lots of low counts, which typically cannot be transformed to normality effectively), and proportions constructed from counts.  These are the examples highlighted in the text, and are of clear relevance in ecotoxicology, but the argument does not extend much
+more broadly than these examples - it is not a case of "your data aren't normal so you should use GLMs".  It is more accurate to say "if you have binary, counts or proportions from counts you should use GLMs".  I think this requires a modest adjustment to the phrasing of the abstract and introduction to better qualify the situations where GLMs are appropriate.  e.g. where O'Hara and Kotze and Warton & Hui are mentioned, this should be qualified to refer to counts and proportions (of counts) respectively.  I  don't think the title needs changing, sufficient qualification elsewhere of the type of non-normality if interest should do the trick.
+
+In the first paragraph, "positive" is used where "non-negative" is needed (i.e. zero is a possible value), also change bonded to bounded
+
+Page 2, second column - the parameterisation isn't equal to the Poisson model - the mean model is the same, I think that is what was meant.
+
+Page 2, second column - also, strictly speaking, not all the methods mentioned here are GLMs.  Negative binomial regression ("NB2") is a GLM if the overdispersion parameter is fixed, otherwise it is a generalisation of GLM.  Similarly, quasi-Poisson isn't really a GLM, but a related method.
+
+Section 2.2 - a description of what is meant by binomial data would be helpful at the start of this section.  Perhaps for completeness a description of what is meant by counts would help at the start of section 2.1
+
+Section 2.2.2 - it would be useful to also mention GLMMs with a random intercept term.  Often with this sort of data there are extra sources of variation from one sample to the next that are not explained by the binomial assumption, and this is the most natural way to account for it.
+
+Sections 2.1, 2.2: references to relevant articles or texts would be useful for GLMs, where the reader can find more details at a level appropriate for readership (e.g. a Zuur text?  Quinn & Keough?).  Also point readers to supp 2 for code and a worked example.
+
+page 3, line 58, the parametric bootstrap
+
+Page 3, second column, line 30: Wald tests should be used with caution, when a mean estimate is zero (or close to it) they can have strange behaviour (related to the issue of separable data - parameter estimates and ses diverging, test statistics going to zero).
+
+Page 4, second column, lower means: it is noted that the means are lower when data are transformed.  This is known as transformation bias, and occurs because the transform linear model is actually estimating something different - it is no longer trying to estimate mean response.  It would be helpful to say this and maybe include a useful reference.  This also gets at the issue of interpretability - a disadvantage of the transform approach is a loss of interpretability, because we are no longer modelling mean response.
+
+page 7 first column, line 7: bounds not bonds
+
+Section 4.1 the case study discussion was a little confusing.  So is the point that you can get different results by linear models according to transformation, but that GLMs can resolve the problem of choice of transformation?  (by replacing it with a decision about mean-variance relationship?)  I think a stronger point is that the GLM is usually a better fit to count data, no transformation can make data Gaussian when it has lots of zeros and small counts, but GLM is designed for such data.  If diagnostic tools support this argument for your case study they could be included.
+
+page 7 column 1 line 27: it is not so much unreliable and biased - they are estimating a different parameter (in an unbiased fashion) - they estimate the mean of log(Ax+1) data, and a problem is that this has no natural interpretation in terms of the original data.  It is fair to make the point that it is biased as an estimate of the mean response, but it would be helpful to explain why and how the estimators have problematic interpretations.
+
+page 7 column 1 line 50: a priori not a priory
+
+page 7 column 2 line 37: data are (data being the plural of datum)
+
+page 7 column 2 line 42: GLMs have (or GLM has)
+
+page 7 column 2 line 44: the higher power in Fig 5 seemed to be through the GLMs being more conservative, rather than due to greater efficiency.  This issue could likely be fixed using a parametric bootstrap, as was done previously in figure 2.
+A related point is that the linear model had the advantage that it seemed to be better at maintaining nominal significance levels at small sample sizes, which should be mentioned.  As the authors say however it did not have as good power (and also loses something in interpretability and biased estimation of means).  Hence while the GLM has a number of advantages, combining it with param bootstrap at small sample sizes might be worth considering to address the Type I error issue.
+
+Supplement 2 is a useful addition, and it might be worth giving it a little more emphasis in the text to ensure ecotoxicologists wanting to try out new analyses give it a look.  A couple of suggestions though:
+- there is no parametric bootstrap code there at the moment.  This would be easy enough to do by using the mvabund package, calling manyglm (even on a univariate response) then anova(..., resamp="monte.carlo")  will do a parametric bootstrap.
+- you can construct residual plots for GLMs on this package, using the plot function on a fitted manyglm object.
+
+
+
+Reviewer #3: Review of ..not normal..
+
+
+General: With its simulations in an ecotox. context, the paper is a fine contribution to make researchers aware of the possibilities and advantages of a generalized linear models (GLM). What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion. The paper and abstract can still be made more useful by given not just the recommendation for GLM but also to give advice and warnings of proper usage. For example, (almost) never use loglinear/Poisson regression without adjustment for overdispersion, be aware that a nicer looking model like the negative binomial may give inflated type I error, a case that is overcome in this paper by bootstrapping. The same applies to binomial/logit regression unless the experiment really consist of independent observations for each 0/1 result (and is not just a count with a predetermined maximum). In this light it is strange that the logistic/binomial case is treated differently from
+the loglinear/Poisson case! Should this not be repaired or at least given more warning. 
+(1) Also, if the authors stick to the binomial/logistic without overdispersion, the normal model could be made powerful in the simulations by treating the error variance as known, because it is a known constant for the arcsine transformation. 
+(2) Also, the simulation now use slight overdispersion whereas the example /typical data has large overdispersion. Add simulations with large overdispersion. The current ones can go to supplementary.
+(3) Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone.  See the example. Discuss this ambiguity. You can perhaps use a bootstrap test based on (GLM?) monotonic regression or similar. I know some cues/leads in this direction.
+
+The long comment should be taken as a compliment.
+
+Details:
+Page 1
+Line 22 right column: a continuous proportion is fine for area cover and so on, but not for proportion of surviving animals where is just "k out of n" turn into a proportion. Discrete therefore. 
+
+Line 58 right add ref to (Warton 2005). 
+
+Page 2
+
+Line 40 : , for y>0 should for y>= 0 and  be on the next line without an indent after formula (if it is not new paragraph).
+
+Line 51 x_i is undefined. The model appear to specify a simple linear regression or a control-one_treatment model. Neither is used in the paper!!! Modify the notation therefore..
+
+Line 59 Mention backtransformation here, which works fine for the confidence intervals, and not the backtransformed is the median on the original scale. If you want to backtransform to the original mean, use exp(mean+ 0.5*sigma2). (Aitchison & Brown 1969) page 8 (Jongman et al. 1995)page 19. 
+
+Page 3
+
+line 17 n= 4.10 = 40 what does the mean here/ what is the purpose?
+Line 41 : give more attention to the condition for the binomial: independent observations of each of the successes (k) out of the number of experiments (n).
+And: thus give attention to overdispersion in this case as well, particularly as you found nasty things for the LR of  NB.
+Line 28 right. Ref for Dunnett contrasts.
+
+Line 59 right. Only slight overdispersion, whereas the example data have large  overdispersion. Add large overdispersion.
+
+Page 4 
+L 19 ( missing.
+Line 56 left to 2 right. Four p-values: what to believe? Your simulations (although with small overdispersion) show it. The LR of NB cannot be trusted. So the 0.016 is out. The remaining tests all show about the same p-value if you interpret statistics properly. Please note that the distinction between significant and non-signicant (here p = 0.061 and 0.042) in itself is statistically insignificant. (Gelman & Stern 2006).
+
+Line 4 right : the backtransformed mean gives a median on the original scale, a value that is more interesting than the mean (generally for skew data),  and for skew right always smaller than the mean.
+
+Section 3.2
+Always start with the Type I error results because the power results are without meaning if the Type I error is inflated. This also applies the order of the figs: interchange the two rows of subfigs. 
+
+L21 right: remove GLM_nb in this sentence as GLM_nb must be discarded due to inflated Type I error.
+
+L32 right. ", but this." Although you should reorder the results, I mention that the "but this" should at least be "This could fortunately be …"[and we could not have known for sure (apart from the general warnings about LR) without the simulations] This inflated error for GLM_nb must receive more attention. It is an interesting result of this study: you must to bootstrap when using NB.
+
+Page 5
+Fig. 2 legend. Add that n =100 simulations. Add the interpretation that  GLM_nb has inflated type I error, and that its line for power is just added for completeness and should not be interpreted as an estimate of the true power.
+
+Page 6
+Fig.5 LM for 0.8 has a high Type I error. Does it deviate significantly from 0.05? [same question for the high Type I for GLM_nb in fig 2]. Use confidence interval for binomial p = 0.05 n = 100.
+
+Case study : 
+You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.182 already causes the difference. (it probably does not). The important difference is the use of the Willems test! Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone! See the report of the Williams test below.
+
+Page 7
+L35 Move ref to Warton to after data.
+L45 Add a reference to (ter Braak & Šmilauer 2014) who advocate the use of the transformation approach in a multivariate (dimension reduction) context.
+
+Line 1 right (like GLMs) -> (like GLMs and the Williams test)
+
+Line 10-40 Again: discuss Type I error first. Then no mention of GLM_nb in power.
+Line 18 right. Add after "non-normal data' the point the importance of proper accounting for under and overdispersion when using GLM. What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion.
+
+Line 41 right size of 9 -> size of 6-9 (?)
+Line 44 right the transformation -> the LM
+
+
+Report on Williams test.
+https://www.stat.fi/isi99/proceedings/arkisto/varasto/brow0281.pdf
+
+
+
+
+Aitchison J, and Brown JAC. 1969. The lognormal distribution. Cambridge: Cambridge University Press.
+Gelman A, and Stern H. 2006. The Difference Between "Significant" and "Not Significant" is not Itself Statistically Significant. The American Statistician 60:328-331.
+Jongman RHG, ter Braak CJF, and van Tongeren OFR. 1995. Data analysis in community and landscape ecology. Cambridge: Cambridge University Press.
+ter Braak CJF, and Šmilauer P. 2014. Topics in constrained and unconstrained ordination. Plant Ecology:1-14.
+Warton DI. 2005. Many zeros does not mean zero inflation: comparing the goodness-of-fit of parametric models to multivariate abundance data. Environmetrics 16:275-289.
+
+__
+
+There is additional documentation related to this decision letter. To access the file(s), please click the link below. You may also login to the system and click the 'View Attachments' link in the Action column.
+
+http://espr.edmgr.com/l.asp?i=181551&l=XYKKO686
