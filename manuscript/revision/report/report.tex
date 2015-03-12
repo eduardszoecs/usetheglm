@@ -12,7 +12,11 @@
 \newcommand{\envelope}{(\raisebox{-.5pt}{\scalebox{1.45}{\Letter}}\kern-.1pt) }
 
 % to compare to old
-% latexdiff submission/report/report.tex revision/report/report.tex > revision/diff/diff.tex
+% % first compare bibliography
+% latexdiff submission/report/report.bbl revision/report/report.bbl > revision/diff/diff.bbl
+% % then document
+% latexdiff --disable-citation-markup --math-markup=0 submission/report/report.tex revision/report/report.tex > revision/diff/diff.tex
+
 
 %% ----------------------------------------------------------------------------
 \title{Ecotoxicology is not normal.}
@@ -72,7 +76,7 @@ If the transformed data still do not meet the assumptions (i.e. normality and va
 Generalised linear models (GLM) provide a method to analyse such non-normally distributed data \citep{nelder_generalized_1972}.
 GLMs can handle various types of data distributions, e.g. Poisson or negative binomial (for count data) or binomial (for proportions); the normal distribution being a special case of GLMs.
 Despite GLMs being available more than 40 years, ecotoxicologists do not regularly make use of them.
-Recent studies concluded that data transformations should be avoided and GLMs be used as they have better statistical properties \citep{ohara_not_2010, warton_arcsine_2011}. 
+Recent studies concluded that data transformations should be avoided and GLMs be used as they have better statistical properties \citep{ohara_not_2010, warton_arcsine_2011,warton_many_2005}. 
 
 Ecotoxicological experiments often involve small sample sizes due to practical constraints. 
 For example, extremely low samples sizes (n \textless 5) are common in many mesocosm studies \citep{sanderson_pesticide_2002,szocs_analysing_2015}.
@@ -98,11 +102,11 @@ To meet the assumptions of the standard linear model, count data usually needs t
 We followed the recommendations of \citet{van_den_brink_impact_2000} and used a log(Ay + 1) transformation (eqn. \ref{eqn:trans}):
 
 \begin{align}
-  y^T_i & = log(Ay_i + 1) \label{eqn:trans} \\
-  A & = 2~/~min(y)~~~\text{, for}~ y > 0 \nonumber
+  y^T_i & = log(Ay_i + 1) \label{eqn:trans}
 \end{align}
 
-, where $y_i$ is the measured abundance and $y_i^T$ the transformed abundance. 
+, where $y_i$ is the measured and $y_i^T$ the transformed abundance. 
+The factor $A$ was chosen in such way that $Ay$ equals 2 for the lowest non-zero abundance value (y).
 
 Then we fitted the linear model to the transformed abundances (hereafter $LM$):
 
@@ -165,7 +169,7 @@ To accommodate the assumptions for the standard linear model, a special arcsine 
   \end{cases} \label{eqn:arcsine}
 \end{align}
 
-, where $y_i^T$ are the transformed proportions and n is the number of exposed animals per treatment ($n = 4 \cdot 10=40$).
+, where $y_i^T$ are the transformed proportions and n is the total number of exposed animals per treatment.
 The transformed proportions are then analysed using the standard linear model ($LM$, eqn. \ref{eqn:normal}).
 Note, that the parameters of the linear model are not directly interpretable due to transformation.
 
@@ -195,7 +199,7 @@ However, it is well known that LR test are unreliable with small sample sizes \c
 Therefore, we additionally explored the parametric bootstrap \citep{faraway_extending_2006} to assess the significance of the LR.
 Bootstrapping is computationally very intensive and for this reason we applied it only for the negative binomial models (using 500 bootstrap samples, denoted as $GLM_{npb}$).
 
-To assess the LOEC we used Dunnett contrasts with one-sided Wald t tests (normal and quasi-Poisson models) and one-sided Wald Z tests (Poisson, negative binomial and binomial models).
+To assess the LOEC we used Dunnett contrasts \citep{dunnett_multiple_1955} with one-sided Wald t tests (normal and quasi-Poisson models) and one-sided Wald Z tests (Poisson, negative binomial and binomial models).
 Beside these parametric methods we also applied two, in ecotoxicology commonly used, non-parametric methods: The Kruskal-Wallis test  ($KW$) to test for a general treatment effect and a pairwise Wilcoxon test ($WT$) to determine the LOEC.
 
 
@@ -233,7 +237,7 @@ We did not fit Poisson models because we simulated data with overdispersion.
 
 
 \subsubsection{Binomial data}
-We simulated data from a commonly used design as in \citep{weber_short-term_1989}, with 5 treated (T1 - T5) and a control group (C). 
+We simulated data from a commonly used design as described in \citet{weber_short-term_1989}, with 5 treated (T1 - T5) and a control group (C). 
 Proportions were drawn from a Bin(10, $\pi$) distribution, with varying probability of survival ($\pi$ = \{0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95\}) and varying number of replicates (N = \{3, 6, 9\}).
 For Type 1 error estimation, $\pi$ was held constant between groups.
 For power estimation $\pi$ in C and T1 was fixed at 0.95 and was set to values between 0.6 and 0.95 for the treatments T2 - T5. 

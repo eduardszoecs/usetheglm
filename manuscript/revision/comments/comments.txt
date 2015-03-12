@@ -130,6 +130,7 @@ You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.
 
 Page 7
 L35 Move ref to Warton to after data.
+
 L45 Add a reference to (ter Braak & Šmilauer 2014) who advocate the use of the transformation approach in a multivariate (dimension reduction) context.
 
 Line 1 right (like GLMs) -> (like GLMs and the Williams test)

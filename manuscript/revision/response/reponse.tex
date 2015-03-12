@@ -13,14 +13,15 @@
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage[utf8]{inputenc}
 \usepackage[onehalfspacing]{setspace}
+\usepackage{todonotes}
 
 \usepackage{anysize}
 \marginsize{2.5cm}{2.5cm}{1.5cm}{2.5cm}
 
 % macros
-\newcommand{\comment}[1]{\vspace{1em} \noindent \hangindent=0em \textbf{\textcolor{Maroon}{\uline{Comment}:~}}\emph{"#1"} }
+\newcommand{\comment}[1]{\vspace{1.5em} \noindent \hangindent=0em \textbf{\textcolor{Maroon}{\uline{Comment}:~}}\emph{"#1"} }
 
-\newcommand{\response}[1]{\\[0.3em] \hangindent=2.3em \textbf{\textcolor{NavyBlue}{\uline{Response}:~}}\textbf{#1}}
+\newcommand{\response}[1]{\\[0.2em] \hangindent=2.3em \textbf{\textcolor{NavyBlue}{\uline{Response}:~}}#1}
 
 \usepackage[normalem]{ulem}
 \definecolor{darkred}{rgb}{1,.6,.6}
@@ -41,7 +42,7 @@
 We are thankful for reviewing our manuscript and the comments that helped to improve the paper. 
 We revised the manuscript according to comments of the three reviewers and are re-submitting the manuscript for consideration for publication in Environmental Science and Pollution Research. 
 
-In the remainder of this document, we describe the changes that we have made to the paper for resubmission. To assist the assessment of our changes we have submitted two versions of the revised manuscript: one with highlighted changes and another without any highlighting.
+In the remainder of this document, we describe the changes that we have made to the paper for resubmission. To assist the assessment of our changes we have submitted two versions of the revised manuscript: one with highlighted changes and another without any highlighting. Note, that changes in equations and citations were not highlighted.
 
 \vspace{2em}
 \hfill Kind regards,
@@ -195,8 +196,8 @@ more broadly than these examples - it is not a case of "your data aren't normal 
 \response{}
 
 %done
-\comment{ In the first paragraph, "positive" is used where "non-negative" is needed (i.e. zero is a possible value), also change bonded to bounded
-\response{} We fully agree and changed accordingly.}
+\comment{ In the first paragraph, "positive" is used where "non-negative" is needed (i.e. zero is a possible value), also change bonded to bounded}
+\response{We fully agree and changed accordingly.}
 
 \comment{ Page 2, second column - the parameterisation isn't equal to the Poisson model - the mean model is the same, I think that is what was meant.}
 \response{} 
@@ -258,14 +259,19 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 (3) Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone.  See the example. Discuss this ambiguity. You can perhaps use a bootstrap test based on (GLM?) monotonic regression or similar. I know some cues/leads in this direction.}
 \response{}
 
-\comment{ Page 1 Line 22 right column: a continuous proportion is fine for area cover and so on, but not for proportion of surviving animals where is just "k out of n" turn into a proportion. Discrete therefore. }
-\response{ Of course we meant discrete proportions. Thank you for pointing to this error.}
+%done
+\comment{Page 1 Line 22 right column: a continuous proportion is fine for area cover and so on, but not for proportion of surviving animals where is just "k out of n" turn into a proportion. Discrete therefore. }
+\response{Thank you for pointing to this error. Of course, we meant discrete proportions.}
 
-\comment{ Line 58 right add ref to (Warton 2005). }
-\response{}
+%done
+\comment{Line 58 right add ref to (Warton 2005).}
+\response{This reference fits very well to our paper - added.}
+\todo{Take this paper also into discussion.}
 
+%done
 \comment{ Page 2 Line 40 : , for y>0 should for y>= 0 and  be on the next line without an indent after formula (if it is not new paragraph).}
-\response{}
+\response{We clarified this equation and moved this part of eqn. 1 to the text: \\
+\emph{"The factor $A$ was chosen in such way that $Ay$ equals 2 for the lowest non-zero abundance value (y)."}}
 
 \comment{ Line 51 x\_i is undefined. The model appear to specify a simple linear regression or a control-one\_treatment model. Neither is used in the paper!!! Modify the notation therefore..}
 \response{}
@@ -273,18 +279,26 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 \comment{ Line 59 Mention backtransformation here, which works fine for the confidence intervals, and not the backtransformed is the median on the original scale. If you want to backtransform to the original mean, use exp(mean+ 0.5*sigma2). (Aitchison \& Brown 1969) page 8 (Jongman et al. 1995)page 19. }
 \response{}
 
-\comment{ Page 3 line 17 n= 4.10 = 40 what does the mean here/ what is the purpose?
-Line 41 : give more attention to the condition for the binomial: independent observations of each of the successes (k) out of the number of experiments (n).
-And: thus give attention to overdispersion in this case as well, particularly as you found nasty things for the LR of  NB.
-Line 28 right. Ref for Dunnett contrasts.}
-\response{}
+%done
+\comment{Page 3 line 17 n= 4.10 = 40 what does the mean here/ what is the purpose?}
+\response{We are sorry for this error. It was a remnant of a early version of the manuscript - removed.}
 
-\comment{ Line 59 right. Only slight overdispersion, whereas the example data have large  overdispersion. Add large overdispersion.}
+\comment{Line 41 : give more attention to the condition for the binomial: independent observations of each of the successes (k) out of the number of experiments (n).
+And: thus give attention to overdispersion in this case as well, particularly as you found nasty things for the LR of  NB.}
+
+%done
+\comment{Line 28 right. Ref for Dunnett contrasts.}
+\response{We agree and added reference to the original description of Dunnett (1955).}
+
+%done
+\comment{Line 59 right. Only slight overdispersion, whereas the example data have large  overdispersion. Add large overdispersion.}
 \response{We now specify the overdisperion in terms of $\kappa$ in both, the case study and the simulation design. This clarifies that we simulated data mimicking the case study.}
 
-\comment{ Page 4 
-L 19 ( missing.
-Line 56 left to 2 right. Four p-values: what to believe? Your simulations (although with small overdispersion) show it. The LR of NB cannot be trusted. So the 0.016 is out. The remaining tests all show about the same p-value if you interpret statistics properly. Please note that the distinction between significant and non-signicant (here p = 0.061 and 0.042) in itself is statistically insignificant. (Gelman \& Stern 2006).}
+\comment{Page 4  L 19 ( missing.}
+\response{We fixed the wrong citation type.}
+
+
+\comment{Line 56 left to 2 right. Four p-values: what to believe? Your simulations (although with small overdispersion) show it. The LR of NB cannot be trusted. So the 0.016 is out. The remaining tests all show about the same p-value if you interpret statistics properly. Please note that the distinction between significant and non-signicant (here p = 0.061 and 0.042) in itself is statistically insignificant. (Gelman \& Stern 2006).}
 \response{}
 
 \comment{ Line 4 right : the backtransformed mean gives a median on the original scale, a value that is more interesting than the mean (generally for skew data),  and for skew right always smaller than the mean.}
@@ -312,10 +326,10 @@ Fig.5 LM for 0.8 has a high Type I error. Does it deviate significantly from 0.0
 You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.182 already causes the difference. (it probably does not). The important difference is the use of the Willems test! Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone! See the report of the Williams test below.}
 \response{}
 
-\comment{ 
-Page 7
-L35 Move ref to Warton to after data.
-L45 Add a reference to (ter Braak \& Šmilauer 2014) who advocate the use of the transformation approach in a multivariate (dimension reduction) context.}
+\comment{Page 7 L35 Move ref to Warton to after data.}
+\response{}
+
+\comment{L45 Add a reference to (ter Braak \& Šmilauer 2014) who advocate the use of the transformation approach in a multivariate (dimension reduction) context.}
 \response{}
 
 \comment{ Line 1 right (like GLMs) -> (like GLMs and the Williams test)}
