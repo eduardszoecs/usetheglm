@@ -18,8 +18,7 @@ if(!exists("prj")){
 srcdir <- file.path(prj, "src")     # source code
 datadir <- file.path(prj, "data")   # data
 cachedir <- file.path(prj, "cache")
-figdir <- file.path(prj, "report") # figures for latex
-markdir <- file.path(prj, "report_markdown", "fig")
+figdir <- file.path(prj, "manuscript/revision/report") # figures for latex
 
 #####--------------------------------------------------------------------------
 ### install missing if needed!

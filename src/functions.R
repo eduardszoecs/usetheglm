@@ -133,7 +133,10 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
     # quasipoisson (to tackle down convergence problems)
     modqglm <- glm(y ~ x, data = df, family = 'quasipoisson')
     modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
-        
+#     # poisson
+#     modpglm <- glm(y ~ x, data = df, family = 'poisson')
+#     modpglm.null <-  glm(y ~ 1, data = df, family = 'poisson')
+    
     # ------------- 
     # Test of effects
     # check convergence

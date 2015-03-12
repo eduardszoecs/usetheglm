@@ -27,8 +27,8 @@ leg <- g_legend(plot_pow_glob_c +
 plot(leg)
 # combine plots and legend
 p_glob_c <- arrangeGrob(
-  plot_pow_glob_c + theme(legend.position="none") + labs(x = NULL),
-  plot_t1_glob_c + theme(legend.position="none"),
+  plot_t1_glob_c + theme(legend.position="none") + labs(x = NULL),
+  plot_pow_glob_c + theme(legend.position="none"),
   leg,
   nrow = 3,
   heights = c(10, 10, 2))
@@ -45,8 +45,8 @@ leg <- g_legend(plot_pow_loec_c +
                         legend.title = element_text(size = 18, face = "bold"),
                         legend.key.size = unit(1.5, "cm")))
 p_loec_c <- arrangeGrob(
-  plot_pow_loec_c + theme(legend.position="none") + labs(x = NULL),
-  plot_t1_loec_c + theme(legend.position="none"),
+  plot_t1_loec_c + theme(legend.position="none") + labs(x = NULL),
+  plot_pow_loec_c + theme(legend.position="none"),
   leg,
   nrow = 3,
   heights = c(10, 10, 2))
@@ -133,8 +133,8 @@ leg <- g_legend(plot_pow_glob_p +
                         legend.key.size = unit(1.5, "cm"))
 )
 p_glob_p <- arrangeGrob(
-  plot_pow_glob_p + theme(legend.position="none") + labs(x = NULL),
-  plot_t1_glob_p + theme(legend.position="none"),
+  plot_t1_glob_p + theme(legend.position="none") + labs(x = NULL),
+  plot_pow_glob_p + theme(legend.position="none"),
   leg,
   nrow = 3,
   heights = c(10, 10, 2))
@@ -151,8 +151,8 @@ leg <- g_legend(plot_pow_loec_p +
                         legend.key.size = unit(1.5, "cm"))
 )
 p_loec_p <- arrangeGrob(
-  plot_pow_loec_p + theme(legend.position="none") + labs(x = NULL),
-  plot_t1_loec_p + theme(legend.position="none"),
+  plot_t1_loec_p + theme(legend.position="none") + labs(x = NULL),
+  plot_pow_loec_p + theme(legend.position="none"),
   leg,
   nrow = 3,
   heights = c(10, 10, 2))
