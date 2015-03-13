@@ -9,31 +9,23 @@ if(!exists("prj")){
 ### Simulation 1 -  Count data
 ### Written by Eduard Szöcs
 ### ----------------------------------------------------------------------------
-
-### ------------------------
-### Power simulations
-
 # Settings
-# no of simulated datasets
-nsims <- 100
 # sample sizes
 N <- c(3, 6 ,9)
 ctrl <- 2^(c(1:7))
-# for testing
-# nsims <- 20
-# N <- 3
-# ctrl <- 2^(c(1:3))
 # both as grid
-todo1_c <- expand.grid(N = N, ctrl = ctrl)
+todo_c <- expand.grid(N = N, ctrl = ctrl)
 # fixed theta
 theta  <- rep(4, 6)  
 
+### ------------------------
+### Power simulations
 # create datasets
 sims1_c <- NULL
 # set.seed(seed)
-for(i in seq_len(nrow(todo1_c))){
-  N <- todo1_c[i, 'N']
-  takectrl <- todo1_c[i, 'ctrl']
+for(i in seq_len(nrow(todo_c))){
+  N <- todo_c[i, 'N']
+  takectrl <- todo_c[i, 'ctrl']
   # reduce t2-t5 to 50%
   taketrt <- takectrl * 0.5
   mu <- c(rep(takectrl, each = 2), rep(taketrt, each = 4))
@@ -67,25 +59,12 @@ if(sim1){
 
 ### ------------------------
 # Type1 Error simulations
-
-# settings
-nsims <- 100
-# sample sizes
-N <- c(3, 6, 9)
-ctrl <- 2^(c(1:7))
-# nsims <- 20
-# N <- 3
-# ctrl <- 2^(c(1, 3, 5, 7, 9))
-# both as grid
-todo2_c <- expand.grid(N = N, ctrl = ctrl)
-theta  <- rep(3.91, 6)  
-
 # create simulate data
 sims2_c <- NULL
 # set.seed(seed)
-for(i in seq_len(nrow(todo2_c))){
-  N <- todo2_c[i, 'N']
-  takectrl <- todo2_c[i, 'ctrl']
+for(i in seq_len(nrow(todo_c))){
+  N <- todo_c[i, 'N']
+  takectrl <- todo_c[i, 'ctrl']
   # all treatments with same mean
   taketrt <- takectrl * 1
   mu <- c(rep(takectrl, each = 2), rep(taketrt, each = 4))
@@ -109,22 +88,20 @@ if(sim1){
 ### Power Simulations
 
 # Settings
-# no of simulated datasets
-nsims <- 250
 # sample sizes
 N <- c(3, 6 ,9)
 n_animals <- 10
 # proportions in effect groups
 pEs <- seq(0.6, 0.95, 0.05)
 # both as grid
-todo1_p <- expand.grid(N = N, pE = pEs)
+todo_p <- expand.grid(N = N, pE = pEs)
 
 # create simulate data
 sims1_p <- NULL
 set.seed(1234)
-for(i in seq_len(nrow(todo1_p))){
-  sims1_p[[i]] <- dosim2(N = todo1_p[i, 'N'], 
-                         pC = 0.95, pE = todo1_p[i, 'pE'], 
+for(i in seq_len(nrow(todo_p))){
+  sims1_p[[i]] <- dosim2(N = todo_p[i, 'N'], 
+                         pC = 0.95, pE = todo_p[i, 'pE'], 
                          nsim = nsims, n_animals = n_animals)
 }
 
@@ -150,20 +127,11 @@ if(sim2){
 ### ------------------------
 # Type1 Error simulations
 
-# Settings
-# sample sizes
-N <- c(3, 6 ,9)
-n_animals <- 10
-# proportions 
-ps <- seq(0.6, 0.95, 0.05)
-# both as grid
-todo2_p <- expand.grid(N = N, ps = ps)
-
 # create simulate data
 sims2_p <- NULL
-for(i in seq_len(nrow(todo2_p))){
-  sims2_p[[i]] <- dosim2(N = todo2_p[i, 'N'], 
-                         pC = todo2_p[i, 'ps'], pE = todo2_p[i, 'ps'],    # pC = CE
+for(i in seq_len(nrow(todo_p))){
+  sims2_p[[i]] <- dosim2(N = todo_p[i, 'N'], 
+                         pC = todo_p[i, 'pE'], pE = todo_p[i, 'pE'],    # pC = CE
                          nsim = nsims, n_animals = n_animals)
 }
 

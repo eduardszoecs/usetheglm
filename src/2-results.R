@@ -23,8 +23,8 @@ res2_c <- readRDS(file.path(cachedir, 'res2_c.rds'))
 ### ------------------------
 # Plot Power
 pow_glob_c <- ldply(res1_c, p_glob1)
-pow_glob_c$muc <- rep(todo1_c$ctrl, each  = 5)
-pow_glob_c$N <- rep(todo1_c$N, each = 5)
+pow_glob_c$muc <- rep(todo_c$ctrl, each  = 5)
+pow_glob_c$N <- rep(todo_c$N, each = 5)
 pow_glob_c$variable <-  factor(pow_glob_c$variable, unique(pow_glob_c$variable)[1:5], 
                                labels = c('lm', 'glm_nb', 'glm_qp', 'glm_pb', 'np'))
 
@@ -35,8 +35,8 @@ plot_pow_glob_c <- ggplot(pow_glob_c) +
   # axes
   labs(x = expression(mu[C]), 
        y = expression(paste('Power (global test , ', alpha, ' = 0.05)'))) +
-  scale_x_continuous(breaks = log2(round(unique(todo1_c$ctrl), 0)), 
-                     labels = round(unique(todo1_c$ctrl), 0)) +
+  scale_x_continuous(breaks = log2(round(unique(todo_c$ctrl), 0)), 
+                     labels = round(unique(todo_c$ctrl), 0)) +
   # appearance
   mytheme + 
   # legend title
@@ -67,8 +67,8 @@ print(xtable(ldf,
 ### ------------------------
 ## Plot T1-error
 t1_glob_c <- ldply(res2_c, p_glob1)
-t1_glob_c$muc <- rep(todo2_c$ctrl, each  = 5)
-t1_glob_c$N <- rep(todo2_c$N, each = 5)
+t1_glob_c$muc <- rep(todo_c$ctrl, each  = 5)
+t1_glob_c$N <- rep(todo_c$N, each = 5)
 t1_glob_c$variable  <-  factor(t1_glob_c$variable, unique(t1_glob_c$variable)[c(1, 2, 3, 4, 5)], 
                                labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'np'))
 
@@ -80,8 +80,8 @@ plot_t1_glob_c  <- ggplot(t1_glob_c) +
   # axes
   labs(x = expression(mu[C]), 
        y = expression(paste('Type 1 error (global test , ', alpha, ' = 0.05)'))) +
-  scale_x_continuous(breaks = log2(round(unique(todo2_c$ctrl), 0)), 
-                     labels = round(unique(todo2_c$ctrl), 0)) +
+  scale_x_continuous(breaks = log2(round(unique(todo_c$ctrl), 0)), 
+                     labels = round(unique(todo_c$ctrl), 0)) +
   # appearance
   mytheme + 
   # legend title
@@ -139,8 +139,8 @@ diffdf
 ### ------------------------
 ## Plot Power
 pow_loec_c <- ldply(res1_c, p_loec1, type = 'power')
-pow_loec_c$muc <- todo1_c$ctrl
-pow_loec_c$N <- todo1_c$N
+pow_loec_c$muc <- todo_c$ctrl
+pow_loec_c$N <- todo_c$N
 pow_loec_c  <- melt(pow_loec_c, id.vars = c('muc', 'N'), value.name = 'power')
 pow_loec_c$variable  <-  factor(pow_loec_c$variable, unique(pow_loec_c$variable)[1:4], 
                                 labels = c('lm', 'glm_nb', 'glm_qp', 'np'))
@@ -152,8 +152,8 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
   # axes
   labs(x = expression(mu[C]), 
        y = expression(paste('Power (LOEC , ', alpha, ' = 0.05)'))) + 
-  scale_x_continuous(breaks = log2(round(unique(todo1_c$ctrl), 0)), 
-                     labels = round(unique(todo1_c$ctrl), 0)) +
+  scale_x_continuous(breaks = log2(round(unique(todo_c$ctrl), 0)), 
+                     labels = round(unique(todo_c$ctrl), 0)) +
   # appearance
   mytheme + 
   # legend title
@@ -182,8 +182,8 @@ print(xtable(ldf,
 ### ------------------------
 ## Plot T1-error
 t1_loec_c <- ldply(res2_c, p_loec1, type = 't1')
-t1_loec_c$muc <- todo2_c$ctrl
-t1_loec_c$N <- todo2_c$N
+t1_loec_c$muc <- todo_c$ctrl
+t1_loec_c$N <- todo_c$N
 t1_loec_c <- melt(t1_loec_c, id.vars = c('muc', 'N'), value.name = 't1')
 t1_loec_c$variable  <-  factor(t1_loec_c$variable, unique(t1_loec_c$variable)[c(1, 2, 3, 4)], 
                                labels = c('lm', 'glm_nb', 'glm_qp', 'np'))
@@ -197,8 +197,8 @@ plot_t1_loec_c <- ggplot(t1_loec_c) +
   # axes
   labs(x = expression(mu[C]), 
        y = expression(paste('Type 1 error (LOEC , ', alpha, ' = 0.05)'))) + 
-  scale_x_continuous(breaks = log2(round(unique(todo2_c$ctrl), 0)), 
-                     labels = round(unique(todo2_c$ctrl), 0)) +
+  scale_x_continuous(breaks = log2(round(unique(todo_c$ctrl), 0)), 
+                     labels = round(unique(todo_c$ctrl), 0)) +
   # appearance
   mytheme + 
   # legend title
@@ -350,8 +350,8 @@ res2_p <- readRDS(file.path(cachedir, 'res2_p.rds'))
 ### ------------------------
 # Plot Power
 pow_glob_p <- ldply(res1_p, p_glob)
-pow_glob_p$pE <- todo1_p$pE
-pow_glob_p$N <- todo1_p$N
+pow_glob_p$pE <- todo_p$pE
+pow_glob_p$N <- todo_p$N
 pow_glob_p <- melt(pow_glob_p, id.vars = c('pE', 'N'))
 levels(pow_glob_p$variable) <- c('lm', 'glm', 'np')
 
@@ -386,8 +386,8 @@ print(xtable(ldf,
 ### ------------------------
 ## Plot T1-error
 t1_glob_p <- ldply(res2_p, p_glob)
-t1_glob_p$ps <- todo2_p$ps
-t1_glob_p$N <- todo2_p$N
+t1_glob_p$ps <- todo_p$ps
+t1_glob_p$N <- todo_p$N
 t1_glob_p <- melt(t1_glob_p, id.vars = c('ps', 'N'))
 levels(t1_glob_p$variable) <- c('lm', 'glm', 'np')
 
@@ -445,8 +445,8 @@ if(exp_plot)
 ### ------------------------
 ## Plot Power
 pow_loec_p <- ldply(res1_p, p_loec, type = 'power')
-pow_loec_p$pE <- todo1_p$pE
-pow_loec_p$N <- todo1_p$N
+pow_loec_p$pE <- todo_p$pE
+pow_loec_p$N <- todo_p$N
 pow_loec_p  <- melt(pow_loec_p, id.vars = c('pE', 'N'))
 levels(pow_loec_p$variable) <- c('lm', 'glm', 'np')
 
@@ -478,8 +478,8 @@ print(xtable(ldf,
 ### ------------------------
 ## Plot T1-error
 t1_loec_p <- ldply(res2_p, p_loec, type = 't1')
-t1_loec_p$ps <- todo2_p$ps
-t1_loec_p$N <- todo2_p$N
+t1_loec_p$ps <- todo_p$pE
+t1_loec_p$N <- todo_p$N
 t1_loec_p <- melt(t1_loec_p, id.vars = c('ps', 'N'))
 levels(t1_loec_p$variable) <- c('lm', 'glm', 'np')
 

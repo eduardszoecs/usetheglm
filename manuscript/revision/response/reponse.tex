@@ -62,6 +62,7 @@ In the remainder of this document, we describe the changes that we have made to 
 \begin{enumerate}
 	\item modify simulations: use 1000 simulations, also run poisson models, run on aws EC2 instance.
 	\item restructure R scripts: 1-simulate.R (only simulations for both type) 2-results (the results from 1 and calc everything.)
+	\item check tabular output supplement!
 \end{enumerate}
 % ======================================================= %
 \section{Response to Reviewer 1}
@@ -148,13 +149,15 @@ completely unrealistic any more as experiments tend to get larger. And
 then instead keep the $\mu_C$ small: 2, 4, 8, 16 to get more ties.}
 \response{}
 
+%todo
 \comment{p. 4, left column, lines 10 and 28: In simulation studies it is quite
 common to use 1000 simulated datasets for each scenario (it would
 also reduce the sampling variability in the results).}
-\response{}
+\response{We agree and rerun our simulations generating 1000 datasets for all scenarios.\todo{add computation time here}}
 
+%done
 \comment{p. 4, left column, line 36: Please do define the type I error properly.}
-\response{}
+\response{We agree and rephrased to: \\ \emph{"[...] Type 1 error (detection of an effect when there is none) [...]"}}
 
 \comment{p. 4, right column, lines 26–29: The lack of convergence is not sur-
 prising as the simulated datasets are simply too small to fit complex
@@ -298,6 +301,7 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 
 \comment{Line 41 : give more attention to the condition for the binomial: independent observations of each of the successes (k) out of the number of experiments (n).
 And: thus give attention to overdispersion in this case as well, particularly as you found nasty things for the LR of  NB.}
+\response{}
 
 %done
 \comment{Line 28 right. Ref for Dunnett contrasts.}
