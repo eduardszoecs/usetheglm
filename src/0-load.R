@@ -41,8 +41,6 @@ source(file.path(srcdir, "0-functions.R"))
 ### Other switches
 # check if load.R already run
 ld <- TRUE
-# no of simulated datasets
-nsims <- 1000
 # Run simulations? 
 # if TRUE the simulation will run (takes some time...), 
 # if FALSE simulation results from cache
@@ -54,5 +52,5 @@ keep_obj <- c(ls(), 'keep_obj')
 # seed <- 1234
 # export plots to figure dir?
 exp_plot <- TRUE
-# number of simulated datasets (may overwritten by simulation scripts)
-nsims <- 100
+# number of simulated datasets 
+nsims <- 1000

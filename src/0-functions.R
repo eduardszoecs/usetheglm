@@ -130,8 +130,8 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     modlm <- lm(yt ~ x, data = df)
     modlm.null <- lm(yt ~ 1, data = df)
     # negative binomial 
-    modglm <- glm.nb(y ~ x, data = df)
-    modglm.null <- glm.nb(y ~ 1, data = df)
+    modglm <- try(glm.nb(y ~ x, data = df))
+    modglm.null <- try(glm.nb(y ~ 1, data = df))
     # quasipoisson (to tackle down convergence problems)
     modqglm <- glm(y ~ x, data = df, family = 'quasipoisson')
     modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
@@ -142,7 +142,8 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     # ------------- 
     # Test of effects
     # check convergence
-    if(!is.null(modglm[['th.warn']]) | !is.null(modglm.null[['th.warn']])){
+    if(!is.null(modglm[['th.warn']]) | !is.null(modglm.null[['th.warn']]) | 
+       inherits(modglm, "try-error") | inherits(modglm.null, "try-error")){
       p_glm_lr <- 'convergence error'
       p_glm_lrpb <- 'convergence error'
     } else {
@@ -168,7 +169,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
       loeclm <- min(which(mc_lm < 0.05))
       )
     # negbin
-    if(!is.null(modglm[['th.warn']])){
+    if(!is.null(modglm[['th.warn']]) | inherits(modglm, "try-error")){
       loecglm <- 'convergence error'
     } else {
       mc_glm <- summary(glht(modglm, linfct = mcp(x = 'Dunnett'),  
