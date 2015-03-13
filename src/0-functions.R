@@ -164,7 +164,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     # LOEC
     # lm
     mc_lm <- summary(glht(modlm, linfct = mcp(x = 'Dunnett'),  
-                          alternative = 'less'))$test$pvalues
+                          alternative = 'less'), test = adjusted('holm'))$test$pvalues
     suppressWarnings( # intended warnings about no min -> no LOEC
       loeclm <- min(which(mc_lm < 0.05))
       )
@@ -173,20 +173,20 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
       loecglm <- 'convergence error'
     } else {
       mc_glm <- summary(glht(modglm, linfct = mcp(x = 'Dunnett'),  
-                             alternative = 'less'))$test$pvalues
+                             alternative = 'less'), test = adjusted('holm'))$test$pvalues
       suppressWarnings(
         loecglm <- min(which(mc_glm  < 0.05))
       )
     }
     # quasi
     mc_qglm <- summary(glht(modqglm, linfct = mcp(x = 'Dunnett'),  
-                          alternative = 'less'))$test$pvalues
+                          alternative = 'less'), test = adjusted('holm'))$test$pvalues
     suppressWarnings( # intended warnings about no min -> no LOEC
       loecqglm <- min(which(mc_qglm < 0.05))
     ) 
     # pois
     mc_pglm <- summary(glht(modpglm, linfct = mcp(x = 'Dunnett'),  
-                            alternative = 'less'))$test$pvalues
+                            alternative = 'less'), test = adjusted('holm'))$test$pvalues
     suppressWarnings( # intended warnings about no min -> no LOEC
       loecpglm <- min(which(mc_pglm < 0.05))
     ) 
@@ -349,12 +349,12 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     # LOECs
     # multiple comparisons using one-sided Dunnett-contrasts
     mc_lm <- summary(glht(modlm, linfct = mcp(x = 'Dunnett'),  
-                          alternative = 'less'))$test$pvalues
+                          alternative = 'less'), test = adjusted('holm'))$test$pvalues
     suppressWarnings( # intended warnings about no min -> no LOEC
       loeclm <- min(which(mc_lm < 0.05))
     )
     mc_glm <- summary(glht(modglm, linfct = mcp(x = 'Dunnett'),  
-                           alternative = 'less'))$test$pvalues
+                           alternative = 'less'), test = adjusted('holm'))$test$pvalues
     suppressWarnings(
       loecglm <- min(which(mc_glm  < 0.05))
     )

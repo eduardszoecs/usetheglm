@@ -74,6 +74,7 @@ for(i in seq_len(nrow(todo_c))){
 
 # run methods
 if(sim1){
+  # res2_c <- llply(sims2_c[ which(todo_c$N == 3)], resfoo1, .progress = 'text', npb = 1, .parallel = parallel)
   res2_c <- llply(sims2_c, resfoo1, .progress = 'text', npb = 500, .parallel = parallel)
   saveRDS(res2_c, file.path(cachedir, 'res2_c.rds'))
 } 
