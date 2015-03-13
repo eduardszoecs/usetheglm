@@ -18,6 +18,7 @@ if(!exists("prj")){
 srcdir <- file.path(prj, "src")     # source code
 datadir <- file.path(prj, "data")   # data
 cachedir <- file.path(prj, "cache")
+suppdir <- file.path(prj, "supplement")
 figdir <- file.path(prj, "manuscript/revision/report") # figures for latex
 
 #####--------------------------------------------------------------------------
@@ -34,7 +35,7 @@ require(xtable)
 #####--------------------------------------------------------------------------
 ### Source defined functions
 # source(file.path(srcdir, "themes.R"))
-source(file.path(srcdir, "functions.R"))
+source(file.path(srcdir, "0-functions.R"))
 
 #####--------------------------------------------------------------------------
 ### Other switches

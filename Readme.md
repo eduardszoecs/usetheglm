@@ -22,12 +22,11 @@
 R code has been written hierarchically, that is scripts must be run in a specific order.
 
 * `~/0-load.R`   				: Defines the project structure, loads packages, sources functions and sets some switches. This script has to be run first!
-* `~/1-simulation_counts.R`    	: Run count data simulations
-* `~/1-simulation_survival.R`	: Run to run binomial data simulations
-* `~/2-results.R`				: Grabs the results from previous scripts and create the graphics
+* `~/1-simulations.R`   : Run simulations
+* `~/2-results.R`				: Compile results
 * `~/3-brock.R`					: Script for motivating example (counts)
 * `~/3-weber.R`					: Script for motivating example (binomial)
-* `functions.R`					: Custom functions needed for the simulations
+* `~/0-functions.R`					: Custom functions needed for the simulations
 
 
 ### How to reproduce the results

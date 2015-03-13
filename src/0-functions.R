@@ -100,6 +100,8 @@ dosim1 <- function(N, mu, theta, nsims = 100){
 #' @param z a list as returned by dosim1
 #' @param verbose logical; print output during run?
 #' @param npb number of boostrap samples
+#' @param nmax maximum number of simulations to analyes 
+#' (should be always NULL = all simulations)
 #' @return list of 9, with p-values and loecs from:
 #' 1) F test for lm on ln(Ax+1) transformed variables [p_lm_f]
 #' 2) LR test for neg.bin. glm [p_glm_lr]
@@ -110,7 +112,7 @@ dosim1 <- function(N, mu, theta, nsims = 100){
 #' 7) LOEC from neg.bin. glm using one-sided Dunnett test [loecglm]
 #' 8) LOEC from quasi-poisson glm using one-sided Dunnett test [loecqglm]
 #' 9) LOEC from one-sided pairwise Wilcoxon with Holm-correction
-resfoo1 <- function(z, verbose = TRUE, npb = 400){
+resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
   if(verbose){
     message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
   }
@@ -198,7 +200,11 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400){
            )
   }
   # run on each simulated data
-  res <- apply(z$y, 2, ana, x = z$x, npb = npb)
+  if(!is.null(nmax)){
+    res <- apply(z$y[ ,seq_len(nmax)], 2, ana, x = z$x, npb = npb)
+  } else {
+    res <- apply(z$y, 2, ana, x = z$x, npb = npb)
+  }
   return(res)
 }
 
