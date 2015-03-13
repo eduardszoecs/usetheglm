@@ -54,3 +54,11 @@ keep_obj <- c(ls(), 'keep_obj')
 exp_plot <- TRUE
 # number of simulated datasets 
 nsims <- 1000
+# run sims parallel?
+parallel = FALSE
+ncores = NULL
+if(parallel){
+  library(doMC)
+  if(!is.null(ncores))
+    doMC::registerDoMC(cores=ncores)
+}
