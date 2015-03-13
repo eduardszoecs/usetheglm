@@ -135,9 +135,9 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     # quasipoisson (to tackle down convergence problems)
     modqglm <- glm(y ~ x, data = df, family = 'quasipoisson')
     modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
-#     # poisson
-#     modpglm <- glm(y ~ x, data = df, family = 'poisson')
-#     modpglm.null <-  glm(y ~ 1, data = df, family = 'poisson')
+    # poisson
+    modpglm <- glm(y ~ x, data = df, family = 'poisson')
+    modpglm.null <-  glm(y ~ 1, data = df, family = 'poisson')
     
     # ------------- 
     # Test of effects
@@ -154,6 +154,8 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     # F Tests
     p_lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
     p_qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
+    # LR Tests
+    p_pglm_lr <- anova(modpglm, modpglm.null, test = 'Chisq')[2, 'Pr(>Chi)']
     # non-parametric test
     p_k <- kruskal.test(y ~ x, data = df)$p.value
     
@@ -181,7 +183,12 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     suppressWarnings( # intended warnings about no min -> no LOEC
       loecqglm <- min(which(mc_qglm < 0.05))
     ) 
-    
+    # pois
+    mc_pglm <- summary(glht(modpglm, linfct = mcp(x = 'Dunnett'),  
+                            alternative = 'less'))$test$pvalues
+    suppressWarnings( # intended warnings about no min -> no LOEC
+      loecpglm <- min(which(mc_pglm < 0.05))
+    ) 
     # pairwise wilcox
     suppressWarnings( # ties
       pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
@@ -193,9 +200,9 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     # ---------
     # return object
     return(list(p_lm_f = p_lm_f, p_glm_lr = p_glm_lr, p_qglm_f = p_qglm_f,
-                p_glm_lrpb = p_glm_lrpb, p_k = p_k, 
+                p_glm_lrpb = p_glm_lrpb, p_pglm_lr = p_pglm_lr, p_k = p_k, 
                 loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, 
-                loecpw = loecpw
+                loecpglm = loecpglm, loecpw = loecpw
                 )
            )
   }
@@ -215,7 +222,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
 #' @return a data.frame with power and convergence values
 p_glob1 <- function(z){ 
   # extract p-values
-  take <- c('p_lm_f', 'p_glm_lr','p_qglm_f', 'p_glm_lrpb', 'p_k')
+  take <- c('p_lm_f', 'p_glm_lr','p_qglm_f', 'p_glm_lrpb', 'p_pglm_lr', 'p_k')
   ps <- ldply(z, function(w) as.numeric(unlist(w[take])))
   names(ps) <- take
   ps <- melt(ps)
@@ -235,7 +242,7 @@ p_glob1 <- function(z){
 #' for power estimation loec should be at concentration 2
 p_loec1 <- function(z, type = NULL){
   # extract p-values
-  take <- c("loeclm", "loecglm", "loecqglm", "loecpw")
+  take <- c("loeclm", "loecglm", "loecqglm", "loecpglm", "loecpw")
   loecs <- ldply(z, function(w) as.numeric(unlist(w[take])))
   if(type == 't1'){
     # x should be Inf

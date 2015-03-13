@@ -23,10 +23,10 @@ res2_c <- readRDS(file.path(cachedir, 'res2_c.rds'))
 ### ------------------------
 # Plot Power
 pow_glob_c <- ldply(res1_c, p_glob1)
-pow_glob_c$muc <- rep(todo_c$ctrl, each  = 5)
-pow_glob_c$N <- rep(todo_c$N, each = 5)
-pow_glob_c$variable <-  factor(pow_glob_c$variable, unique(pow_glob_c$variable)[1:5], 
-                               labels = c('lm', 'glm_nb', 'glm_qp', 'glm_pb', 'np'))
+pow_glob_c$muc <- rep(todo_c$ctrl, each  = 6)
+pow_glob_c$N <- rep(todo_c$N, each = 6)
+pow_glob_c$variable <-  factor(pow_glob_c$variable, unique(pow_glob_c$variable)[1:6], 
+                               labels = c('lm', 'glm_nb', 'glm_qp', 'glm_pb', 'glm_p', 'np'))
 
 plot_pow_glob_c <- ggplot(pow_glob_c) +
   geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable)) +
@@ -40,37 +40,38 @@ plot_pow_glob_c <- ggplot(pow_glob_c) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(16,2,4,0,17), 
+  scale_shape_manual('Method', values=c(16,2,4,0, 1, 17), 
                      labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
-                                expression(GLM[npb]), 'KW')) +
+                                expression(GLM[npb]), expression(GLM[p]), 'KW')) +
   scale_linetype_discrete('Method', labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
-                                               expression(GLM[npb]), 'KW')) +
+                                               expression(GLM[npb]), expression(GLM[p]), 'KW')) +
   ylim(c(0,1))
 plot_pow_glob_c
 
 
 ### ------------------------
 ### Tabular output
-ldf <- dcast(pow_glob_c, N + muc ~ variable, value.var = "conv")
-ldf <- ldf[ , -c(6, 7)]
-colnames(ldf) <- c('N', '$\\mu_C$', 'LM', '$GLM_{nb}$', '$GLM_{qp}$')
+ldf <- dcast(pow_glob_c, N + muc ~ variable, value.var = "power")
+colnames(ldf) <- c('N', '$\\mu_C$', 'LM', '$GLM_{nb}$', '$GLM_{qp}$', '$GLM_{p}$', 'np')
 print(xtable(ldf, 
-             caption = 'Count data simulations - Proportion of models converged. N = sample sizes, 
+             caption = 'Count data simulations - Power to detect a treatment effect. N = sample sizes, 
              $\\mu_C$ = mean abundance in control, LM = Linear model after transformation, 
-             $GLM_{nb}$ = negative binomial model, $GLM_{qp}$ = quasi-Poisson model.', label = 'tab:conv'),
-      file = file.path(suppdir, "supp1", "tab", "pow_loec_c.tex"), 
+             $GLM_{nb}$ = negative binomial model, $GLM_{qp}$ = quasi-Poisson model, $GLM_{qp}$ = Poisson model,
+            np = pairwise Wilcoxon test.', label = 'tab:pow_loec_c'),
+      file = file.path(suppdir, "supp1", "tab", "pow_glob_c.tex"), 
       table.placement = 'H', caption.placement = 'top', size = 'footnotesize',
       include.rownames = FALSE, sanitize.text.function=function(x){x})
+
 
 
 
 ### ------------------------
 ## Plot T1-error
 t1_glob_c <- ldply(res2_c, p_glob1)
-t1_glob_c$muc <- rep(todo_c$ctrl, each  = 5)
-t1_glob_c$N <- rep(todo_c$N, each = 5)
-t1_glob_c$variable  <-  factor(t1_glob_c$variable, unique(t1_glob_c$variable)[c(1, 2, 3, 4, 5)], 
-                               labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'np'))
+t1_glob_c$muc <- rep(todo_c$ctrl, each  = 6)
+t1_glob_c$N <- rep(todo_c$N, each = 6)
+t1_glob_c$variable  <-  factor(t1_glob_c$variable, unique(t1_glob_c$variable)[c(1, 2, 3, 4, 5, 6)], 
+                               labels = c('lm', 'glm_nb', 'glm_pb', 'glm_qp', 'glm_p', 'np'))
 
 plot_t1_glob_c  <- ggplot(t1_glob_c) +
   geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable)) +
@@ -85,7 +86,7 @@ plot_t1_glob_c  <- ggplot(t1_glob_c) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(16,2,4,0,17)) +
+  scale_shape_manual('Method', values=c(16,2,4,0,1,17)) +
   scale_linetype_discrete('Method')
 plot_t1_glob_c
 
@@ -93,13 +94,15 @@ plot_t1_glob_c
 ### ------------------------
 ### Tabular output
 ldf <- dcast(t1_glob_c, N + muc ~ variable, value.var = "power")
-ldf <- ldf[ , c(1,2,3,4,6,5,7)]
-colnames(ldf) <- c('N', '$\\mu_C$', 'LM', '$GLM_{nb}$', '$GLM_{qp}$', '$GLM_{pb}$', 'np')
+ldf <- ldf[ , c(1,2,3,4,6,5,7, 8)]
+colnames(ldf) <- c('N', '$\\mu_C$', 'LM', '$GLM_{nb}$', '$GLM_{qp}$', '$GLM_{pb}$', '$GLM_{p}$', 'np')
 print(xtable(ldf, 
              caption = 'Count data simulations - Type 1 error to detect a global treatment effect. N = sample sizes, 
              $\\mu_C$ = mean abundance in control, LM = Linear model after transformation, 
              $GLM_{nb}$ = negative binomial model, $GLM_{qp}$ = quasi-Poisson model, 
-             $GLM_{pb}$ = negative binomial model with parametric boostrap, np = Kruskal-Wallis test.', label = 'tab:t1_glob_c'),
+             $GLM_{pb}$ = negative binomial model with parametric boostrap, 
+             $GLM_{p}$ = Poisson model, np = Kruskal-Wallis test.', 
+             label = 'tab:t1_glob_c'),
       file = file.path(suppdir, "supp1", "tab", "t1_glob_c.tex"), 
       table.placement = 'H', caption.placement = 'top', size = 'footnotesize',
       include.rownames = FALSE, sanitize.text.function=function(x){x})
@@ -142,8 +145,8 @@ pow_loec_c <- ldply(res1_c, p_loec1, type = 'power')
 pow_loec_c$muc <- todo_c$ctrl
 pow_loec_c$N <- todo_c$N
 pow_loec_c  <- melt(pow_loec_c, id.vars = c('muc', 'N'), value.name = 'power')
-pow_loec_c$variable  <-  factor(pow_loec_c$variable, unique(pow_loec_c$variable)[1:4], 
-                                labels = c('lm', 'glm_nb', 'glm_qp', 'np'))
+pow_loec_c$variable  <-  factor(pow_loec_c$variable, unique(pow_loec_c$variable)[1:5], 
+                                labels = c('lm', 'glm_nb', 'glm_qp', 'glm_p', 'np'))
 
 plot_pow_loec_c <- ggplot(pow_loec_c) +
   geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable)) +
@@ -157,23 +160,24 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(16,2,4,17), 
+  scale_shape_manual('Method', values=c(16,2,4,1,17), 
                      labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
-                                'WT')) +
-  scale_linetype_discrete('Method',  labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
-                                                'WT')) +
+                                expression(GLM[p]), 'WT')) +
+  scale_linetype_discrete('Method',  labels = c('LM', expression(GLM[nb]), 
+                                                expression(GLM[qp]), expression(GLM[p]), 'WT')) +
   ylim(c(0,1))
 plot_pow_loec_c
 
 ### ------------------------
 ### Tabular output
 ldf <- dcast(pow_loec_c, N + muc ~ variable, value.var = "power")
-colnames(ldf) <- c('N', '$\\mu_C$', 'LM', '$GLM_{nb}$', '$GLM_{qp}$', 'np')
+colnames(ldf) <- c('N', '$\\mu_C$', 'LM', '$GLM_{nb}$', '$GLM_{qp}$', '$GLM_{p}$', 'np')
 print(xtable(ldf, 
              caption = 'Count data simulations - Power to detect LOEC. N = sample sizes, 
              $\\mu_C$ = mean abundance in control, LM = Linear model after transformation, 
              $GLM_{nb}$ = negative binomial model, $GLM_{qp}$ = quasi-Poisson model, 
-            np = pairwise Wilcoxon test.', label = 'tab:pow_loec_c'),
+            $GLM_{p}$ = Poisson model, np = pairwise Wilcoxon test.', 
+             label = 'tab:pow_loec_c'),
       file = file.path(suppdir, "supp1", "tab", "pow_loec_c.tex"), 
       table.placement = 'H', caption.placement = 'top', size = 'footnotesize',
       include.rownames = FALSE, sanitize.text.function=function(x){x})
@@ -185,8 +189,8 @@ t1_loec_c <- ldply(res2_c, p_loec1, type = 't1')
 t1_loec_c$muc <- todo_c$ctrl
 t1_loec_c$N <- todo_c$N
 t1_loec_c <- melt(t1_loec_c, id.vars = c('muc', 'N'), value.name = 't1')
-t1_loec_c$variable  <-  factor(t1_loec_c$variable, unique(t1_loec_c$variable)[c(1, 2, 3, 4)], 
-                               labels = c('lm', 'glm_nb', 'glm_qp', 'np'))
+t1_loec_c$variable  <-  factor(t1_loec_c$variable, unique(t1_loec_c$variable)[c(1, 2, 3, 4, 5)], 
+                               labels = c('lm', 'glm_nb', 'glm_qp', 'glm_p', 'np'))
 
 plot_t1_loec_c <- ggplot(t1_loec_c) +
   geom_line(aes(y = t1, x = log2(muc), group = variable, linetype = variable)) +
@@ -202,7 +206,7 @@ plot_t1_loec_c <- ggplot(t1_loec_c) +
   # appearance
   mytheme + 
   # legend title
-  scale_shape_manual('Method', values=c(16,2,4,17)) +
+  scale_shape_manual('Method', values=c(16,2,4,1, 17)) +
   scale_linetype_discrete('Method')
 plot_t1_loec_c 
 
@@ -210,12 +214,13 @@ plot_t1_loec_c
 ### ------------------------
 ### Tabular output
 ldf <- dcast(t1_loec_c, N + muc ~ variable, value.var = "t1")
-colnames(ldf) <- c('N', '$\\mu_C$', 'LM', '$GLM_{nb}$', '$GLM_{qp}$', 'np')
+colnames(ldf) <- c('N', '$\\mu_C$', 'LM', '$GLM_{nb}$', '$GLM_{qp}$', '$GLM_{p}$', 'np')
 print(xtable(ldf, 
              caption = 'Count data simulations - Type 1 error to detect LOEC. N = sample sizes, 
              $\\mu_C$ = mean abundance in control, LM = Linear model after transformation, 
              $GLM_{nb}$ = negative binomial model, $GLM_{qp}$ = quasi-Poisson model, 
-            np = pairwise Wilcoxon.', label = 'tab:t1_loec_c'),
+            $GLM_{p}$ = Poisson model, np = pairwise Wilcoxon.', 
+             label = 'tab:t1_loec_c'),
       file = file.path(suppdir, "supp1", "tab", "t1_loec_c.tex"), 
       table.placement = 'H', caption.placement = 'top', size = 'footnotesize',
       include.rownames = FALSE, sanitize.text.function=function(x){x})
@@ -243,7 +248,9 @@ if(exp_plot)
 max(pow_loec_c[pow_loec_c$N == 3 & !pow_loec_c$variable %in% c('glm_nb'), 'power'])
 
 # compare power
-merged <- merge(pow_glob_c[ , c(1,2,4, 5)], pow_loec_c, by = c('N', 'muc', 'variable'), suffixes = c('glob', 'loec'))
+merged <- merge(pow_glob_c[ , c(1,2,4, 5)], 
+                pow_loec_c, by = c('N', 'muc', 'variable'), 
+                suffixes = c('glob', 'loec'))
 merged$diff <- merged$powerloec - merged$powerglob
 plot(merged$diff)
 max(abs(merged$diff[!merged$variable %in% c('glm_nb', 'np')]))
@@ -256,12 +263,14 @@ diffdf
 
 # Convergence table
 ldf <- dcast(pow_glob_c, N + muc ~ variable, value.var = "conv")
-ldf <- ldf[ , -c(6, 7)]
-colnames(ldf) <- c('N', '$\\mu_C$', 'LM', '$GLM_{nb}$', '$GLM_{qp}$')
+ldf <- ldf[ , -c(6, 8)]
+colnames(ldf) <- c('N', '$\\mu_C$', 'LM', '$GLM_{nb}$', '$GLM_{qp}$', '$GLM_{p}$')
 print(xtable(ldf, 
              caption = 'Count data simulations - Proportion of models converged. N = sample sizes, 
              $\\mu_C$ = mean abundance in control, LM = Linear model after transformation, 
-             $GLM_{nb}$ = negative binomial model, $GLM_{qp}$ = quasi-Poisson model.', label = 'tab:conv'),
+             $GLM_{nb}$ = negative binomial model, $GLM_{qp}$ = quasi-Poisson model, 
+             $GLM_{p}$ = Poisson model', 
+             label = 'tab:conv'),
       file = file.path(suppdir, "supp1", "tab", "conv.tex"), 
       table.placement = 'H', caption.placement = 'top', size = 'footnotesize',
       include.rownames = FALSE, sanitize.text.function=function(x){x})
@@ -315,7 +324,8 @@ print(xtable(ldf,
 #   scale_y_continuous(breaks = c(0, 0.8, 1), labels = c('0', '80', '100')) + 
 #   scale_x_continuous(breaks = c(1.5, 6.5), labels = c('small', 'big')) +
 #   # colors
-#   scale_color_manual('', values =  c('#FA6C00', 'gray25'), guide = guide_legend(override.aes = list(size = 2)))   +
+#   scale_color_manual('', values =  c('#FA6C00', 'gray25'), 
+      # guide = guide_legend(override.aes = list(size = 2)))   +
 #   theme(legend.justification=c(0,1), 
 #         legend.position=c(0,1), 
 #         axis.text=element_text(size=22),
@@ -331,7 +341,8 @@ print(xtable(ldf,
 #            data = data.frame(xb = 5.2, xe = 6, yb = 0.45, ye = 0.5, N = 9), 
 #            xjitteramount = 0.4)
 # myp 
-# ggsave('/home/edisz/Documents/Uni/Projects/PHD/MISC/AG_presentations/fig/myp2.pdf', myp, width = 10, height = 6)
+# ggsave('/home/edisz/Documents/Uni/Projects/PHD/MISC/AG_presentations/fig/myp2.pdf', 
+# myp, width = 10, height = 6)
 
 
 

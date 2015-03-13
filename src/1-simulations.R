@@ -73,7 +73,7 @@ for(i in seq_len(nrow(todo_c))){
 
 # run methods
 if(sim1){
-  res2_c <- llply(sims2_c, resfoo1, .progress = 'text', npb = 400)
+  res2_c <- llply(sims2_c, resfoo1, .progress = 'text', npb = 500)
   saveRDS(res2_c, file.path(cachedir, 'res2_c.rds'))
 } 
 
@@ -83,10 +83,8 @@ if(sim1){
 ### Simulation 2 -  Binomial data
 ### Written by Eduard Szöcs
 ### ----------------------------------------------------------------------------
-
 ### ------------------------
 ### Power Simulations
-
 # Settings
 # sample sizes
 N <- c(3, 6 ,9)
