@@ -12,6 +12,7 @@
 \newcommand{\envelope}{(\raisebox{-.5pt}{\scalebox{1.45}{\Letter}}\kern-.1pt) }
 
 % to compare to old
+% cd /home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/manuscript/
 % % first compare bibliography
 % latexdiff submission/report/report.bbl revision/report/report.bbl > revision/diff/diff.bbl
 
@@ -21,7 +22,7 @@
 
 %% ----------------------------------------------------------------------------
 \title{Ecotoxicology is not normal.}
-\subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
+\subtitle{A comparison of statistical approaches for analysis of non-normally distributed data in ecotoxicology.}
 \author{Eduard Szöcs \and Ralf B. Schäfer}
 \institute{Eduard Szöcs \envelope  and Ralf B. Schäfer \at
 Institute for Environmental Sciences \\
@@ -83,8 +84,7 @@ Ecotoxicological experiments often involve small sample sizes due to practical c
 For example, extremely low samples sizes (n \textless 5) are common in many mesocosm studies \citep{sanderson_pesticide_2002,szocs_analysing_2015}.
 Small sample sizes lead to low power in statistical hypothesis testing, on which many ecotoxiological approaches (e.g. risk assessment for pesticides) rely. 
 Such an endpoint are L/NOEC (Lowest / No observed effect concentration) values.
-Although their use has been heavily criticized in the past \citep{laskowski_good_1995},  they are still regularly used in ecotoxicology \citep{jager_bad_2012}.
-Especially in mesocosm studies L/NOEC calculations are used in the majority of mesocosm experiments \citep{brock_minimum_2015, efsa_ppr_guidance_2013}. 
+Although their use has been heavily criticized in the past \citep{laskowski_good_1995}, they are the predominant endpoint in mesocosm experiments \citep{brock_minimum_2015, efsa_ppr_guidance_2013}. 
 
 We explore how GLMs may enhance inference in ecotoxicological studies and compared three types of statistical methods (transformation and normality assumption, GLM, non-parametric tests).
 We first illustrate differences between statistical methods using a data set from a mesocosm study.

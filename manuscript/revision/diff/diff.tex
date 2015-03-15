@@ -1,7 +1,7 @@
 \documentclass[twocolumn, natbib]{svjour3}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL submission/report/report.tex   Fri Feb 13 15:20:06 2015
-%DIF ADD revision/report/report.tex     Thu Mar 12 21:35:45 2015
+%DIF ADD revision/report/report.tex     Fri Mar 13 14:52:57 2015
 \usepackage{graphicx}%GRaphiken
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}%Tabellen!
@@ -15,20 +15,25 @@
 \usepackage{todonotes} %DIF > 
 %DIF -------
 \newcommand{\envelope}{(\raisebox{-.5pt}{\scalebox{1.45}{\Letter}}\kern-.1pt) }
-%DIF 12a13-20
- %DIF > 
+
+%DIF 13a14-22
 % to compare to old %DIF > 
+% cd /home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/manuscript/ %DIF > 
 % % first compare bibliography %DIF > 
 % latexdiff submission/report/report.bbl revision/report/report.bbl > revision/diff/diff.bbl %DIF > 
  %DIF > 
 % % then document %DIF > 
 % latexdiff --disable-citation-markup --math-markup=0 submission/report/report.tex revision/report/report.tex > revision/diff/diff.tex %DIF > 
  %DIF > 
+ %DIF > 
 %DIF -------
-
 %% ----------------------------------------------------------------------------
 \title{Ecotoxicology is not normal.}
-\subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
+%DIF 15c25
+%DIF < \subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
+%DIF -------
+\subtitle{A comparison of statistical approaches for analysis of non-normally distributed data in ecotoxicology.} %DIF > 
+%DIF -------
 \author{Eduard Szöcs \and Ralf B. Schäfer}
 \institute{Eduard Szöcs \envelope  and Ralf B. Schäfer \at
 Institute for Environmental Sciences \\
@@ -111,8 +116,9 @@ Ecotoxicological experiments often involve small sample sizes due to practical c
 For example, extremely low samples sizes (n \textless 5) are common in many mesocosm studies \citep{sanderson_pesticide_2002,szocs_analysing_2015}.
 Small sample sizes lead to low power in statistical hypothesis testing, on which many ecotoxiological approaches (e.g. risk assessment for pesticides) rely. 
 Such an endpoint are L/NOEC (Lowest / No observed effect concentration) values.
-Although their use has been heavily criticized in the past \citep{laskowski_good_1995},  they are still regularly used in ecotoxicology \citep{jager_bad_2012}.
-Especially in mesocosm studies L/NOEC calculations are used in the majority of mesocosm experiments \citep{brock_minimum_2015, efsa_ppr_guidance_2013}. 
+Although their use has been heavily criticized in the past \citep{laskowski_good_1995}, they are \DIFdelbegin \DIFdel{still regularly used in ecotoxicology }%DIFDELCMD < \citep{jager_bad_2012}%%%
+\DIFdel{.
+Especially in mesocosm studies L/NOEC calculations are used in the majority of mesocosm }\DIFdelend \DIFaddbegin \DIFadd{the predominant endpoint in mesocosm }\DIFaddend experiments \citep{brock_minimum_2015, efsa_ppr_guidance_2013}. 
 
 We explore how GLMs may enhance inference in ecotoxicological studies and compared three types of statistical methods (transformation and normality assumption, GLM, non-parametric tests).
 We first illustrate differences between statistical methods using a data set from a mesocosm study.
@@ -284,7 +290,7 @@ For each combination we simulated 250 data sets.
 
 \subsection{Data Analysis}
 We analysed the case study and the simulated data using the outlined methods.
-We compared the methods and models in terms of Type 1 error (maintain a significance level of 0.05 when there is no effect) and power (detect an effect when it is present).
+We compared the methods and models in terms of Type 1 error (\DIFdelbegin \DIFdel{maintain a significance level of 0.05 }\DIFdelend \DIFaddbegin \DIFadd{detection of an effect }\DIFaddend when there is \DIFdelbegin \DIFdel{no effect}\DIFdelend \DIFaddbegin \DIFadd{none}\DIFaddend ) and power (\DIFaddbegin \DIFadd{ability to }\DIFaddend detect an effect when it is present).
 All computations were done in R (Version 3.1.2) \citep{r_core_team_r:_2014} on a Linux machine.
 Source code for the simulations and analysis of the case study is available online at \url{https://github.com/EDiLD/usetheglm}.
 

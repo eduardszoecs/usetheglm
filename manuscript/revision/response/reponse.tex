@@ -22,8 +22,14 @@
 \marginsize{2.5cm}{2.5cm}{1.5cm}{2.5cm}
 
 % macros
+% add a counter
+\newcounter{cN}
+\setcounter{cN}{0}
+
 \newcommand{\comment}[1]{
-	\vspace{2em} \noindent \hangindent=0em \textbf{\textcolor{Maroon}{\uline{Comment}:~}}\emph{"#1"}
+	\vspace{2em} 
+	\refstepcounter{cN} % incrment counter
+	\noindent \hangindent=0em \textbf{\textcolor{Maroon}{\uline{Comment \thecN}:~}}\emph{"#1"}
 	}
 
 \newcommand{\response}[1]{
@@ -50,7 +56,9 @@
 We are thankful for reviewing our manuscript and the comments that helped to improve the paper. 
 We revised the manuscript according to comments of the three reviewers and are re-submitting the manuscript for consideration for publication in Environmental Science and Pollution Research. 
 
-In the remainder of this document, we describe the changes that we have made to the paper for resubmission. To assist the assessment of our changes we have submitted two versions of the revised manuscript: one with highlighted changes and another without any highlighting. Note, that changes in equations, citations and figures were not highlighted.
+In the remainder of this document, we describe the changes that we have made to the paper for resubmission. 
+To assist the assessment of our changes we have submitted two versions of the revised manuscript: one with highlighted changes and another without any highlighting. 
+Note, that changes in titles, equations, citations and figures were not highlighted.
 
 \vspace{2em}
 \hfill Kind regards,
@@ -60,13 +68,17 @@ In the remainder of this document, we describe the changes that we have made to 
 \newpage
 \section{ToDo:}
 \begin{enumerate}
-	\item modify simulations: use 1000 simulations, also run poisson models, run on aws EC2 instance.
-	\item restructure R scripts: 1-simulate.R (only simulations for both type) 2-results (the results from 1 and calc everything.)
-	\item check tabular output supplement!
+	\item modify simulations: use 1000 simulations,run on aws EC2 instance.
+	\item Now also added poisson GLM. incorporate into text!
+	\item recompile supplements
+	\item Holm also for case-study. Recalculate and rewrite 3-brock.R
+
 \end{enumerate}
+
+
 % ======================================================= %
 \section{Response to Reviewer 1}
-
+\vspace{-2em}
 \comment{The purpose of the manuscript is highly commendable. Unfortunately, the
 present manuscript has some major shortcomings: The simulation results,
 which constitute the key contribution, are far from being as unequivocal as
@@ -75,18 +87,20 @@ the title may lead one to think. Also, it is disturbing to see a fairly technica
 authors seem to lack some understanding of the models in some cases.}
 \response{aaaa}
 
-\comment{About the title: Please consider a more informative title such as ”Com-
-parison of statistical approaches for analysis of non-normally distributed
+%done
+\comment{About the title: Please consider a more informative title such as ”Comparison of statistical approaches for analysis of non-normally distributed
 response in ecotoxicology”. Also in view of the fact that the results are
 not very clearly favouring the generalized linear models (GLMs).}
-\response{}
+\response{We agree and changed the subtitle to \\
+\emph{"A comparison of statistical approaches for analysis of non-normally distributed data in ecotoxicology"}.}
 
+%done
 \comment{p. 2, left column, lines 2–12: The issue of LOEC/NOEC versus regres-
 sion is interesting but not really relevant to the aim of the manuscript.
 Consider skipping this part. However, you’re right that for small sam-
 ple sizes it is extremely important to choose the most efficient statistical
 analysis and the better the model describes the data the more efficient.}
-\response{}
+\response{We shortened this section. However, we sticked with a short introduction to LOEC/NOEC as inference on parameters has also been investigated by our simulations.}
 
 \comment{p. 2, left column, lines 56–59: You aren’t mentioning the issue with
 back-transformation So, in particular, $\beta x$ is not additive changes from
@@ -97,12 +111,13 @@ to back-transform is warranted (this is an issue regardless of whether
 GLMs or models for transformed responses are used!).}
 \response{}
 
+%done
 \comment{p. 2, right column, line 1: The real advantage of using a generalized
 linear model for count data shows up in case of many small counts and
 in the presence of ties. For large counts (e.g., corresponding to a large
 $\mu_C$ ) there is practically no difference. However, this difference may not
 show up in simulations when the sample size is kept between 3 and 9.}
-\response{}
+\response{We agree that for large counts there is no practical difference between methods. However, our simulation design aimed to mimic data sets frequently encountered in ecotoxicology. See also response to comment 13.}
 
 \comment{p. 2, right column, lines 19–21: It is not the response variable that is
 linked to the linear predictors, it is the mean of the response variable
@@ -140,14 +155,15 @@ in the presence of overdispersion.}
 
 \comment{p. 3, right column, line 28: How is multiple testing taken care of? This
 may also affect the simulation results.}
-\response{}
+\response{\todo{changed in code to holm -> mention in text!}}
 
+%declined
 \comment{p. 4, left column, line 2: The simulations will not be very informative
 for such small sample sizes (3–9) as all methods will have low power.
 Suggestion: Do also consider larger sample sizes: 12, 25, 50, 100. Not
 completely unrealistic any more as experiments tend to get larger. And
 then instead keep the $\mu_C$ small: 2, 4, 8, 16 to get more ties.}
-\response{}
+\response{Such small sample sizes are common in regulatory ecotoxicology. For example \todo{finalize}}
 
 %todo
 \comment{p. 4, left column, lines 10 and 28: In simulation studies it is quite
@@ -163,7 +179,7 @@ also reduce the sampling variability in the results).}
 prising as the simulated datasets are simply too small to fit complex
 models. Please re-consider the entire concept of the simulation (in
 particular which scenarios to consider).}
-\response{}
+\response{\todo{Convergence problems may be often encountered by ecotoxicologists...}See also response to comment 13.}
 
 \comment{p. 4, right column, lines 31–33: One explanation for the reduced power
 is certainly the multiple testing issue. Perhaps this point could be
@@ -206,6 +222,7 @@ data (instead of considering completely different designs).}
 
 % ======================================================= %	
 \section{Response to Reviewer 2}
+\vspace{-2em}
 
 \comment{One point to consider in a resubmission is that GLMs aren't for use for all non-normal data - some qualifications are needed of when to use GLMs.  Distributionally, GLMs replace the assumption of normality with the assumption that data come from the exponential family, which does not cover all situations.  More critically, GLMs replace the assumption of equal variance with an assumption that the mean-variance relationship follows a pre-specified pattern, and violation of this assumption has similar impacts to violations of the equal-variance assumption in a linear model would have.  Particular situations where GLMs are useful are binary data (known to be a quadratic mean-variance), count data (especially count data with lots of low counts, which typically cannot be transformed to normality effectively), and proportions constructed from counts.  These are the examples highlighted in the text, and are of clear relevance in ecotoxicology, but the argument does not extend much
 more broadly than these examples - it is not a case of "your data aren't normal so you should use GLMs".  It is more accurate to say "if you have binary, counts or proportions from counts you should use GLMs".  I think this requires a modest adjustment to the phrasing of the abstract and introduction to better qualify the situations where GLMs are appropriate.  e.g. where O'Hara and Kotze and Warton \& Hui are mentioned, this should be qualified to refer to counts and proportions (of counts) respectively.  I  don't think the title needs changing, sufficient qualification elsewhere of the type of non-normality if interest should do the trick.}
@@ -267,13 +284,14 @@ A related point is that the linear model had the advantage that it seemed to be 
 
 % ======================================================= %	
 \section{Response to Reviewer 3}
+\vspace{-2em}
 
 \comment{With its simulations in an ecotox. context, the paper is a fine contribution to make researchers aware of the possibilities and advantages of a generalized linear models (GLM). What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion. The paper and abstract can still be made more useful by given not just the recommendation for GLM but also to give advice and warnings of proper usage. For example, (almost) never use loglinear/Poisson regression without adjustment for overdispersion, be aware that a nicer looking model like the negative binomial may give inflated type I error, a case that is overcome in this paper by bootstrapping. The same applies to binomial/logit regression unless the experiment really consist of independent observations for each 0/1 result (and is not just a count with a predetermined maximum). In this light it is strange that the logistic/binomial case is treated differently from
-the loglinear/Poisson case! Should this not be repaired or at least given more warning. 
-(1) Also, if the authors stick to the binomial/logistic without overdispersion, the normal model could be made powerful in the simulations by treating the error variance as known, because it is a known constant for the arcsine transformation. 
-(2) Also, the simulation now use slight overdispersion whereas the example /typical data has large overdispersion. Add simulations with large overdispersion. The current ones can go to supplementary.
+the loglinear/Poisson case! Should this not be repaired or at least given more warning. \\
+(1) Also, if the authors stick to the binomial/logistic without overdispersion, the normal model could be made powerful in the simulations by treating the error variance as known, because it is a known constant for the arcsine transformation. \\
+(2) Also, the simulation now use slight overdispersion whereas the example /typical data has large overdispersion. Add simulations with large overdispersion. The current ones can go to supplementary. \\
 (3) Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone.  See the example. Discuss this ambiguity. You can perhaps use a bootstrap test based on (GLM?) monotonic regression or similar. I know some cues/leads in this direction.}
-\response{}
+\response{\todo{add warton 2005: almost never use glm without counting for overdispersion...}}
 
 %done
 \comment{Page 1 Line 22 right column: a continuous proportion is fine for area cover and so on, but not for proportion of surviving animals where is just "k out of n" turn into a proportion. Discrete therefore. }
@@ -282,7 +300,7 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 %done
 \comment{Line 58 right add ref to (Warton 2005).}
 \response{This reference fits very well to our paper - added.}
-\todo{Take this paper also into discussion.}
+\todo{Take this paper also into discussion.} \todo{See also the emphasized discussion on failing to account for overdispersion.}
 
 %done
 \comment{Page 2 Line 40 : , for y>0 should for y>= 0 and  be on the next line without an indent after formula (if it is not new paragraph).}
@@ -309,7 +327,8 @@ And: thus give attention to overdispersion in this case as well, particularly as
 
 %done
 \comment{Line 59 right. Only slight overdispersion, whereas the example data have large  overdispersion. Add large overdispersion.}
-\response{We now specify the overdisperion in terms of $\kappa$ in both, the case study and the simulation design. This clarifies that we simulated data mimicking the case study.}
+\response{We clarified this section. We now specify the overdisperion in terms of $\kappa$ in both, the case study and the simulation design. 
+The simulated data mimicked the case study and such data is common for mesocosm studies in ecotoxicology.}
 
 %done
 \comment{Page 4  L 19 ( missing.}
@@ -357,8 +376,9 @@ You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.
 \comment{Line 10-40 Again: discuss Type I error first. Then no mention of GLM\_nb in power.}
 \response{}
 
+%todo
 \comment{Line 18 right. Add after "non-normal data' the point the importance of proper accounting for under and overdispersion when using GLM. What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion.}
-\response{}
+\response{We rerun our simulations and also included the Poisson GLM. The results for Poisson GLM are now also display in Figures 2+3. \todo{Moreover, we discussed failing to account for overdispersion.}}
 
 \comment{Line 41 right size of 9 -\textgreater size of 6-9 (?)}
 \response{}
