@@ -38,9 +38,10 @@ R code has been written hierarchically, that is scripts must be run in a specifi
 
 ### Notes
 
-`~/0-load.R` contains at the and some switches:
+`~/0-load.R` contains at the end of the file some switches:
 
-* If the switches `sim1` and `sim2` are set to `FALSE`, the simulations results are grabbed from cache. Otherwise, the actual simulation will run (takes some hours...).
+* If the switches `sim1` and `sim2` are set to `FALSE`, the simulations results are grabbed from cache. Otherwise, the actual simulation will run.
+* the count data simulations took ~ 12 hours on a amazon EC2 c3.2xlarge instance.
 * simulations can be run in parallel, set `parallel = TRUE` to use the `parallel` package for parallelization.
 
 
