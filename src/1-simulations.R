@@ -5,6 +5,7 @@ if(!exists("prj")){
   source(file.path(prj, "src", "0-load.R"))
 }
 
+
 ### ----------------------------------------------------------------------------
 ### Simulation 1 -  Count data
 ### Written by Eduard Szöcs
@@ -52,8 +53,12 @@ for(i in seq_len(nrow(todo_c))){
 
 # run methods
 if(sim1){
-  # res1_c <- llply(sims1_c[ which(todo_c$N == 3)], resfoo1, .progress = 'text', npb = 1, .parallel = parallel)
-  res1_c <- llply(sims1_c, resfoo1, .progress = 'text', npb = 500, .parallel = parallel)
+  if(parallel){
+    # res1_c <-mclapply(sims1_c, resfoo1, npb = 1, mc.cores = ncores)
+    res1_c <- mclapply(sims1_c, resfoo1, npb = 500,  mc.cores = ncores)
+  } else {
+    res1_c <- lapply(sims1_c, resfoo1, npb = 500)
+  }
   saveRDS(res1_c, file.path(cachedir, 'res1_c.rds'))
 } 
 
@@ -74,8 +79,12 @@ for(i in seq_len(nrow(todo_c))){
 
 # run methods
 if(sim1){
-  # res2_c <- llply(sims2_c[ which(todo_c$N == 3)], resfoo1, .progress = 'text', npb = 1, .parallel = parallel)
-  res2_c <- llply(sims2_c, resfoo1, .progress = 'text', npb = 500, .parallel = parallel)
+  if(parallel){
+    res2_c <- mclapply(sims2_c, resfoo1, npb = 500, mc.cores = ncores)
+  } else {
+    res2_c <- lapply(sims2_c, resfoo1, npb = 500)
+  }
+
   saveRDS(res2_c, file.path(cachedir, 'res2_c.rds'))
 } 
 
@@ -120,7 +129,7 @@ for(i in seq_len(nrow(todo_p))){
 
 # run methods
 if(sim2){
-  res1_p <- llply(sims1_p, resfoo2, .progress = 'text', .parallel = parallel)
+  res1_p <- llply(sims1_p, resfoo2, .progress = 'text')
   saveRDS(res1_p, file.path(cachedir, 'res1_p.rds'))
 }
 
@@ -137,7 +146,7 @@ for(i in seq_len(nrow(todo_p))){
 
 # run methods
 if(sim2){
-  res2_p <- llply(sims2_p, resfoo2, asin = 'ecotox', .progress = 'text', .parallel = parallel)
+  res2_p <- llply(sims2_p, resfoo2, asin = 'ecotox', .progress = 'text')
   saveRDS(res2_p, file.path(cachedir, 'res2_p.rds'))
 }
   

@@ -1,4 +1,4 @@
-### ----------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 ### Custom function for simulation and plotting
 ### Written by Eduard Szöcs
 ### ----------------------------------------------------------------------------
@@ -20,8 +20,8 @@ pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm', alternative = '
   # use wilcox.exact (for tied data)
   for(i in seq_len(nrow(tc))){
     pval[i] <- wilcox.exact(y[as.numeric(g) == tc[i, 2]], 
-                           y[as.numeric(g) == tc[i, 1]], exact = TRUE, 
-                           alternative = alternative)$p.value
+                            y[as.numeric(g) == tc[i, 1]], exact = TRUE, 
+                            alternative = alternative)$p.value
   }
   pval <- p.adjust(pval, padj)
   names(pval) = paste(tc[,1], tc[,2], sep = '-')
@@ -46,11 +46,14 @@ myPBrefdist <- function(m1, m0, data){
   m1r <-  try(update(m1, .~., data = newdata0))
   m0r <- try(update(m0, .~., data = newdata0))
   # check convergence (otherwise return NA for LR)
-  if(!is.null(m0r[['th.warn']]) | !is.null(m1r[['th.warn']]) | 
-       inherits(m0r, "try-error") | inherits(m1r, "try-error")){
+  if(inherits(m0r, "try-error") | inherits(m1r, "try-error")){
     LR <- 'convergence error'
   } else {
-    LR <- -2 * (logLik(m0r) - logLik(m1r))
+    if(!is.null(m0r[['th.warn']]) | !is.null(m1r[['th.warn']])){
+      LR <- 'convergence error'
+    } else {
+      LR <- -2 * (logLik(m0r) - logLik(m1r))
+    }
   }
   return(LR)
 }
@@ -64,7 +67,7 @@ myPBrefdist <- function(m1, m0, data){
 myPBmodcomp <- function(m1, m0, data, npb){
   ## calculate reference distribution
   LR <- replicate(npb, myPBrefdist(m1 = m1, m0 = m0, data = data), 
-                   simplify = TRUE)
+                  simplify = TRUE)
   # rm those
   LR <- as.numeric(LR)
   nconv_LR <- sum(!is.na(LR))
@@ -123,7 +126,7 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     A <- 1/min(y[y!=0])         
     yt <- log(A*y + 1)
     df <- data.frame(x, y, yt)
-
+    
     # -------------
     # Models
     # gaussian
@@ -142,15 +145,19 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     # ------------- 
     # Test of effects
     # check convergence
-    if(!is.null(modglm[['th.warn']]) | !is.null(modglm.null[['th.warn']]) | 
-       inherits(modglm, "try-error") | inherits(modglm.null, "try-error")){
+    if(inherits(modglm, "try-error") | inherits(modglm.null, "try-error")){
       p_glm_lr <- 'convergence error'
       p_glm_lrpb <- 'convergence error'
     } else {
-      p_glm_lr <- anova(modglm, modglm.null, test = 'Chisq')[2 , 'Pr(Chi)']
-      # Parametric bootstrap for GLM LR
-      glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, npb = npb)
-      p_glm_lrpb <- glm_pb$p.pb
+      if(!is.null(modglm[['th.warn']]) | !is.null(modglm.null[['th.warn']])){
+        p_glm_lr <- 'convergence error'
+        p_glm_lrpb <- 'convergence error'
+      } else {
+        p_glm_lr <- anova(modglm, modglm.null, test = 'Chisq')[2 , 'Pr(Chi)']
+        # Parametric bootstrap for GLM LR
+        glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, npb = npb)
+        p_glm_lrpb <- glm_pb$p.pb
+      }
     }
     # F Tests
     p_lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
@@ -167,20 +174,24 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
                           alternative = 'less'), test = adjusted('holm'))$test$pvalues
     suppressWarnings( # intended warnings about no min -> no LOEC
       loeclm <- min(which(mc_lm < 0.05))
-      )
+    )
     # negbin
-    if(!is.null(modglm[['th.warn']]) | inherits(modglm, "try-error")){
+    if(inherits(modglm, "try-error")){
       loecglm <- 'convergence error'
     } else {
-      mc_glm <- summary(glht(modglm, linfct = mcp(x = 'Dunnett'),  
-                             alternative = 'less'), test = adjusted('holm'))$test$pvalues
-      suppressWarnings(
-        loecglm <- min(which(mc_glm  < 0.05))
-      )
+      if(!is.null(modglm[['th.warn']])){
+        loecglm <- 'convergence error'
+      } else {
+        mc_glm <- summary(glht(modglm, linfct = mcp(x = 'Dunnett'),  
+                               alternative = 'less'), test = adjusted('holm'))$test$pvalues
+        suppressWarnings(
+          loecglm <- min(which(mc_glm  < 0.05))
+        )
+      }
     }
     # quasi
     mc_qglm <- summary(glht(modqglm, linfct = mcp(x = 'Dunnett'),  
-                          alternative = 'less'), test = adjusted('holm'))$test$pvalues
+                            alternative = 'less'), test = adjusted('holm'))$test$pvalues
     suppressWarnings( # intended warnings about no min -> no LOEC
       loecqglm <- min(which(mc_qglm < 0.05))
     ) 
@@ -193,10 +204,10 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     # pairwise wilcox
     suppressWarnings( # ties
       pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
-      )
+    )
     suppressWarnings(
       loecpw <- min(which(pw < 0.05))
-      )
+    )
     
     # ---------
     # return object
@@ -204,8 +215,8 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
                 p_glm_lrpb = p_glm_lrpb, p_pglm_lr = p_pglm_lr, p_k = p_k, 
                 loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, 
                 loecpglm = loecpglm, loecpw = loecpw
-                )
-           )
+    )
+    )
   }
   # run on each simulated data
   if(!is.null(nmax)){
@@ -228,8 +239,8 @@ p_glob1 <- function(z){
   names(ps) <- take
   ps <- melt(ps)
   out <- ddply(ps, .(variable), summarize,
-        power = sum(value < 0.05, na.rm = TRUE) / sum(!is.na(value)),
-        conv = sum(!is.na(value)) / length(value))
+               power = sum(value < 0.05, na.rm = TRUE) / sum(!is.na(value)),
+               conv = sum(!is.na(value)) / length(value))
   return(out)
 }
 
@@ -317,8 +328,8 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     # Transformations
     if(asin == 'ecotox'){
       y_asin <- ifelse(y  == 0, asin(sqrt(1 / (length(x) / 6 * n_animals))),
-                     ifelse((y / n_animals) == 1, asin(1) - asin(sqrt(1 / (length(x) / 6 * n_animals))),
-                            asin(sqrt(y / n_animals))))
+                       ifelse((y / n_animals) == 1, asin(1) - asin(sqrt(1 / (length(x) / 6 * n_animals))),
+                              asin(sqrt(y / n_animals))))
     }
     if(asin == 'asin'){
       y_asin <- asin(sqrt(y / n_animals))
@@ -335,7 +346,7 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
                   family = binomial(link = 'logit'))
     modglm.null <- glm(cbind(y, n_animals - y) ~ 1, data = df, 
                        family = binomial(link = 'logit'))
-
+    
     # ------------- 
     # Tests
     # LR Tests
@@ -360,15 +371,15 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     )
     suppressWarnings(
       pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
-      )
+    )
     suppressWarnings(
       loecpw <- min(which(pw < 0.05))
-      )
-
+    )
+    
     # --------------------------------------------
     # return object
     return(list(lm_f = lm_f, glm_lr = glm_lr, pk = pk, 
-      loeclm = loeclm, loecglm = loecglm, loecpw = loecpw
+                loeclm = loeclm, loecglm = loecglm, loecpw = loecpw
     ))
     
   }

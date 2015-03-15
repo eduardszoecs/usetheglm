@@ -55,10 +55,10 @@ exp_plot <- TRUE
 # number of simulated datasets 
 nsims <- 1000
 # run sims parallel?
-parallel = FALSE
-ncores = NULL
+parallel = TRUE
 if(parallel){
-  library(doMC)
-  if(!is.null(ncores))
-    doMC::registerDoMC(cores=ncores)
+  require(parallel)
+  ncores <- detectCores()
+  if(ncores > 1)
+    ncores <- ncores -1
 }
