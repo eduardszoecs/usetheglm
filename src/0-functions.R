@@ -43,8 +43,8 @@ myPBrefdist <- function(m1, m0, data){
   # refit with new data
   newdata0 <- data
   newdata0[ , as.character(formula(m0)[[2]])] <- x0
-  m1r <-  try(update(m1, .~., data = newdata0))
-  m0r <- try(update(m0, .~., data = newdata0))
+  m1r <-  try(update(m1, .~., data = newdata0), silent = TRUE)
+  m0r <- try(update(m0, .~., data = newdata0), silent = TRUE)
   # check convergence (otherwise return NA for LR)
   if(inherits(m0r, "try-error") | inherits(m1r, "try-error")){
     LR <- 'convergence error'
@@ -133,8 +133,8 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
     modlm <- lm(yt ~ x, data = df)
     modlm.null <- lm(yt ~ 1, data = df)
     # negative binomial 
-    modglm <- try(glm.nb(y ~ x, data = df))
-    modglm.null <- try(glm.nb(y ~ 1, data = df))
+    modglm <- try(glm.nb(y ~ x, data = df), silent = TRUE)
+    modglm.null <- try(glm.nb(y ~ 1, data = df), silent = TRUE)
     # quasipoisson (to tackle down convergence problems)
     modqglm <- glm(y ~ x, data = df, family = 'quasipoisson')
     modqglm.null <-  glm(y ~ 1, data = df, family = 'quasipoisson')
