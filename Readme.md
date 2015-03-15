@@ -1,43 +1,48 @@
-# Ecotoxicology is not normal.
-## - How the use of proper statistical models can increase statistical power in ecotoxicological experiments.
+Ecotoxicology is not normal.
+============================
+## How the use of proper statistical models can increase statistical power in ecotoxicological experiments.
 
-## Online repository for the paper submitted to [Environmental Science and Pollution Research](http://www.springer.com/environment/journal/11356)
+Online repository for the paper submitted to [Environmental Science and Pollution Research](http://www.springer.com/environment/journal/11356)
 
-### Authors: 
-
+### Authors
 [Eduard Szöcs](http://www.uni-koblenz-landau.de/en/campus-landau/faculty7/environmental-sciences/landscape-ecology/Staff/eduardszoecs), [Ralf B. Schäfer](http://www.uni-koblenz-landau.de/en/campus-landau/faculty7/environmental-sciences/landscape-ecology/Staff/ralf-schaefer/ralf-schaefer)
 
 
 ### Structure of this repository
 
 * `~/cache/`	: cached files (simulation results)
-* `~/cache/`  : manuscript files (LaTeX)
+* `~/manuscript/`  : manuscript files (LaTeX) - including review process
 * `~/src/`    	: Source code (R)
-* `~/supplement/`: Supplemental files (LaTeX)
-
-
+* `~/supplement/`: Supplementary material (LaTeX)
 
 #### Structure of `~/src/`
 
 R code has been written hierarchically, that is scripts must be run in a specific order.
 
 * `~/0-load.R`   				: Defines the project structure, loads packages, sources functions and sets some switches. This script has to be run first!
+* `~/0-functions.R`					: Custom functions needed for the simulations
 * `~/1-simulations.R`   : Run simulations
 * `~/2-results.R`				: Compile results
 * `~/3-brock.R`					: Script for motivating example (counts)
 * `~/3-weber.R`					: Script for motivating example (binomial)
-* `~/0-functions.R`					: Custom functions needed for the simulations
 
 
 ### How to reproduce the results
 
-* Download ('Download ZIP') this repository.
-* Extract the zip file.
-* Please uncomment and point the path in `~/0-load.R`, Lines 8-11 to the extracted folder.
-* run `~/0-load.R`
-* if necessary install missing packages
-* then you can run the other R scripts.
-* If the switches `sim1` and `sim2` in `~/0-load.R` are set to `FALSE`, the simulations results are grabbed from cache. Otherwise, the actual simulation will run (takes some hours...).
+1. Download ('Download ZIP') this repository.
+2. Extract the zip file.
+3. Uncomment and point the path in `~/0-load.R`, Lines 8-11 to the extracted folder.
+4. source `~/0-load.R` to setup the project (if necessary install missing packages)
+5. source `~/1-simulations.R` to run the simulations
+6. source `~/2-results.R`	to compile the results
+
+### Notes
+
+`~/0-load.R` contains at the and some switches:
+
+* If the switches `sim1` and `sim2` are set to `FALSE`, the simulations results are grabbed from cache. Otherwise, the actual simulation will run (takes some hours...).
+* simulations can be run in parallel, set `parallel = TRUE` to use the `parallel` package for parallelization.
+
 
 
 ### Information about the R Environment used

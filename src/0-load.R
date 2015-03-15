@@ -37,8 +37,9 @@ require(xtable)
 # source(file.path(srcdir, "themes.R"))
 source(file.path(srcdir, "0-functions.R"))
 
+
 #####--------------------------------------------------------------------------
-### Other switches
+### Switches
 # check if load.R already run
 ld <- TRUE
 # Run simulations? 
@@ -46,10 +47,6 @@ ld <- TRUE
 # if FALSE simulation results from cache
 sim1 <- FALSE
 sim2 <- FALSE
-# keep these objects
-keep_obj <- c(ls(), 'keep_obj')
-# random
-# seed <- 1234
 # export plots to figure dir?
 exp_plot <- TRUE
 # number of simulated datasets 
@@ -62,3 +59,6 @@ if(parallel){
   if(ncores > 1)
     ncores <- ncores -1
 }
+
+# keep these objects
+keep_obj <- c(ls(), 'keep_obj')
