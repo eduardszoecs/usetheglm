@@ -15,6 +15,12 @@
 \definecolor{mygray}{gray}{0.6}
 \usepackage[utf8]{inputenc}
 \usepackage[onehalfspacing]{setspace}
+\usepackage[
+	round,	%(defaultage in the main file and \input ) for round parentheses;
+	colon,	% (default) to separate multiple citations with colons;
+	authoryear,% (default) for author-year citations;
+	sort,		% orders multiple citations into the sequence in which they 
+]{natbib}					
 \usepackage[%disable
 	]{todonotes}
 
@@ -72,7 +78,7 @@ Note, that changes in titles, equations, citations and figures were not highligh
 	\item Now also added poisson GLM. incorporate into text!
 	\item recompile supplements
 	\item Holm also for case-study. Recalculate and rewrite 3-brock.R
-
+	\item update sysinfo in readme
 \end{enumerate}
 
 
@@ -100,7 +106,7 @@ sion is interesting but not really relevant to the aim of the manuscript.
 Consider skipping this part. However, you’re right that for small sam-
 ple sizes it is extremely important to choose the most efficient statistical
 analysis and the better the model describes the data the more efficient.}
-\response{We shortened this section. However, we sticked with a short introduction to LOEC/NOEC as inference on parameters has also been investigated by our simulations.}
+\response{We shortened this section. However, we sticked with a short introduction to LOEC/NOEC as inference on parameters is also part of our results.}
 
 \comment{p. 2, left column, lines 56–59: You aren’t mentioning the issue with
 back-transformation So, in particular, $\beta x$ is not additive changes from
@@ -163,13 +169,19 @@ for such small sample sizes (3–9) as all methods will have low power.
 Suggestion: Do also consider larger sample sizes: 12, 25, 50, 100. Not
 completely unrealistic any more as experiments tend to get larger. And
 then instead keep the $\mu_C$ small: 2, 4, 8, 16 to get more ties.}
-\response{Such small sample sizes are common in regulatory ecotoxicology. For example \todo{finalize}}
+\response{Our simulation design aimed to mimic data sets frequently encountered in ecotoxicology. 
+Sample sizes between 3 and 9 are very common in regulatory ecotoxicology. 
+For example, mesocosm experiments rarely exceed four replicates per treatment due to logistic constraints \citep{szocs_analysing_2015}. 
+Similarly the \emph{Daphia magna} standard test \citep{oecd_test_2004} requires only a minimum of four replicates.
+We believe that the current simulation design is relevant for ecotoxicologists and did not simulate larger sample sizes.
+Moreover, we provide a fully reproducible source code at \url{https://github.com/EDiLD/usetheglm}, enabling other researchers to easily adapt our simulation design to specific needs.
+}
 
-%todo
+%done
 \comment{p. 4, left column, lines 10 and 28: In simulation studies it is quite
 common to use 1000 simulated datasets for each scenario (it would
 also reduce the sampling variability in the results).}
-\response{We agree and rerun our simulations generating 1000 datasets for all scenarios.\todo{add computation time here}}
+\response{We agree and rerun our simulations generating 1000 datasets for all scenarios. Because of the increased computational burden we run the computation in parallel on Amazon EC2 instance (with 15 GB RAM, 2.8 GHz and 8 cores) - taking more then 12 hours for the count data simulations.}
 
 %done
 \comment{p. 4, left column, line 36: Please do define the type I error properly.}
@@ -386,6 +398,10 @@ You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.
 \comment{Line 44 right the transformation -\textgreater the LM}
 \response{}
 
+
+%% --------------------------------
+\bibliography{refs}
+\bibliographystyle{spbasic}
 
 
 % ======================================================= %
