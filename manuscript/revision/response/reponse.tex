@@ -75,10 +75,13 @@ Note, that changes in titles, equations, citations and figures were not highligh
 \section{ToDo:}
 \begin{enumerate}
 	\item Now also added poisson GLM. incorporate into text!
+	\item first t1 then power.
 	\item recompile supplements
 	\item Holm also for case-study. Recalculate and rewrite 3-brock.R
 	\item update sysinfo in readme
 	\item Comment 62 umsetzen.
+	\item binomial auf 1000 hochsetzen.
+	\item abstract: 
 \end{enumerate}
 
 
@@ -328,12 +331,13 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 
 %done
 \comment{Page 1 Line 22 right column: a continuous proportion is fine for area cover and so on, but not for proportion of surviving animals where is just "k out of n" turn into a proportion. Discrete therefore. }
-\response{Thank you for pointing to this error. Of course, we meant discrete proportions.}
+\response{Thank you for pointing to this error. Of course, we meant discrete proportions and changed accordingly.}
 
 %done
 \comment{Line 58 right add ref to (Warton 2005).}
-\response{This reference fits very well to our paper - added.}
-\todo{Take this paper also into discussion.} \todo{See also the emphasized discussion on failing to account for overdispersion.}
+\response{This reference fits very well to our paper and we added it.}
+\todo{Take this paper also into discussion.} 
+\todo{See also the emphasized discussion on failing to account for overdispersion.}
 
 %done
 \comment{Page 2 Line 40 : , for y>0 should for y>= 0 and  be on the next line without an indent after formula (if it is not new paragraph).}
@@ -349,6 +353,7 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 %done
 \comment{Page 3 line 17 n= 4.10 = 40 what does the mean here/ what is the purpose?}
 \response{We are sorry for this error. It was a remnant of a early version of the manuscript - removed.}
+
 
 \comment{Line 41 : give more attention to the condition for the binomial: independent observations of each of the successes (k) out of the number of experiments (n).
 And: thus give attention to overdispersion in this case as well, particularly as you found nasty things for the LR of  NB.}
@@ -367,8 +372,10 @@ The simulated data mimicked the case study and such data is common for mesocosm 
 \comment{Page 4  L 19 ( missing.}
 \response{We fixed the wrong citation type.}
 
+%done
 \comment{Line 56 left to 2 right. Four p-values: what to believe? Your simulations (although with small overdispersion) show it. The LR of NB cannot be trusted. So the 0.016 is out. The remaining tests all show about the same p-value if you interpret statistics properly. Please note that the distinction between significant and non-signicant (here p = 0.061 and 0.042) in itself is statistically insignificant. (Gelman \& Stern 2006).}
-\response{}
+\response{We fully agree with the reviewer and cautioned that p-values should not be overinterpreted by ecotoxicologists (citing Gelman \& Stern 2006). 
+Parameter estimates (and their uncertainty) give much more information - on which we also emphasized in Figure 1.}
 
 \comment{Line 4 right : the backtransformed mean gives a median on the original scale, a value that is more interesting than the mean (generally for skew data),  and for skew right always smaller than the mean.}
 \response{}
@@ -376,18 +383,19 @@ The simulated data mimicked the case study and such data is common for mesocosm 
 %todo
 \comment{Section 3.2
 Always start with the Type I error results because the power results are without meaning if the Type I error is inflated. This also applies the order of the figs: interchange the two rows of subfigs. }
-\response{We also changed the order of the subfigures.}
-\todo{reorder in text}
+\response{We also changed the order of the subfigures. \todo{reorder in text}}
 
+%done
 \comment{21 right: remove GLM\_nb in this sentence as GLM\_nb must be discarded due to inflated Type I error.}
-\response{}
+\response{We agree and changed accordingly.}
 
 \comment{L32 right. ", but this." Although you should reorder the results, I mention that the "but this" should at least be "This could fortunately be …"[and we could not have known for sure (apart from the general warnings about LR) without the simulations] This inflated error for GLM\_nb must receive more attention. It is an interesting result of this study: you must to bootstrap when using NB.}
 \response{}
 
+%todo
 \comment{Page 5
 Fig. 2 legend. Add that n =100 simulations. Add the interpretation that  GLM\_nb has inflated type I error, and that its line for power is just added for completeness and should not be interpreted as an estimate of the true power.}
-\response{}
+\response{We added the number of simulated datasets to all figure captions. We emphasized in the main text that power should not be interpreted when type I error rates are high. \todo{text changes}}
 
 \comment{Page 6
 Fig.5 LM for 0.8 has a high Type I error. Does it deviate significantly from 0.05? [same question for the high Type I for GLM\_nb in fig 2]. Use confidence interval for binomial p = 0.05 n = 100.}
@@ -397,8 +405,9 @@ Fig.5 LM for 0.8 has a high Type I error. Does it deviate significantly from 0.0
 You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.182 already causes the difference. (it probably does not). The important difference is the use of the Willems test! Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone! See the report of the Williams test below.}
 \response{}
 
+%done
 \comment{Page 7 L35 Move ref to Warton to after data.}
-\response{}
+\response{We changed accordingly.}
 
 \comment{L45 Add a reference to (ter Braak \& Šmilauer 2014) who advocate the use of the transformation approach in a multivariate (dimension reduction) context.}
 \response{}
@@ -416,7 +425,7 @@ For a comparison of MCP see \citet{jaki_statistical_2013}, who recommend a combi
 %todo
 \comment{Line 18 right. Add after "non-normal data' the point the importance of proper accounting for under and overdispersion when using GLM. What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion.}
 \response{We rerun our simulations and also included the Poisson GLM. 
-The results for Poisson GLM are now also display in Figures 2+3 and we discuss the consequences of failing to account for overdisperion.}
+The results for Poisson GLM are now also display in Figures 2+3 and we discuss the consequences of failing to account for overdisperion. \todo{changes to text}}
 
 \comment{Line 41 right size of 9 -\textgreater size of 6-9 (?)}
 \response{}

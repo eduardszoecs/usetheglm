@@ -233,9 +233,7 @@ Counts were drawn from a negative binomial distribution with overdispersion at a
 We simulated data sets with different number of replicates (N = \{3, 6, 9\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 64, 128\}). 
 For power estimation, mean abundance in treatments T2 - T5 was reduced to half of control and T1 ($\mu_\text{\tiny T2}~=~...~=~\mu_\text{\tiny T5}~=~0.5~\mu_\text{\tiny C} = 0.5~\mu_\text{\tiny T1}$), resulting in a theoretical LOEC at T2.
 Mean abundance was kept equal between all groups in Type 1 error simulations.
-
-We generated 100 data sets for each combination of N and $\mu_\text{\tiny C}$ and analysed these using the models outlined previously.
-We did not fit Poisson models because we simulated data with overdispersion.
+We generated 1000 data sets for each combination of N and $\mu_\text{\tiny C}$ and analysed these using the models outlined previously.
 
 
 \subsubsection{Binomial data}
@@ -273,16 +271,16 @@ The pairwise Wilcoxon test did not detect any treatment different from control.
 %% --------------------------------
 \subsection{Simulations}
 \subsubsection{Count data}
+For detecting a general treatment effect $GLM_{nb}$ and $GLM_{p}$ showed inflated type 1 error rates, whereas $KW$ was conservative at low sample sizes (Figure \ref{fig:p_glob_c}).
+Using parametric bootstrap this could be fixed for the negative binomial model.
+For detecting a treatment effect $GLM_{npb}$ and $GLM_{qp}$ exhibited higher power than $LM$ and $KW$, the latter having least power.
 For our simulation design (reduction in abundance by 50\%) a sample size per treatment of n = 9 was needed to achieve a power greater than 80\%.
-For detecting a treatment effect $GLM_{nb}$, $GLM_{npb}$ and $GLM_{qp}$ exhibited higher power than $LM$ and $KW$, the latter having least power.
-Type 1 error rate was inflated for $GLM_{nb}$, but this could be fixed by using parametric bootstrap.
-KW was conservative at low sample sizes (Figure \ref{fig:p_glob_c}).
-At small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of the negative binomial models ($GLM_{nb}$ and $GLM_{npb}$) did not converge to a solution (convergence rate \textless 80\% of the simulations, Supplement 1). 
+At small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of the negative binomial models ($GLM_{nb}$ and $GLM_{npb}$) did not converge to a solution (convergence rate \textless 85\% of the simulations, Supplement 1). 
 
 \begin{figure*}
   \centering
   \includegraphics[width = 129mm]{p_glob_c.pdf}
-  \caption{Count data simulations (n = 1000): Type 1 error (top) and Power (bottom) for the test of a treatment effect.
+  \caption{Count data simulations (1000 simulated datasets): Type 1 error (top) and Power (bottom) for the test of a treatment effect.
   Only type 1 errors \textless 25\% are displayed. 
   $GLM_p$ showed type 1 errors \textgreater 20\% in all simulation scenarios.
   For n = \{3, 6\} and $\mu_C$ = \{2, 4\} less than 85\% of $GLM_{nb}$ and $GLM_{npb}$ models did converge.
@@ -291,16 +289,17 @@ At small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of
   \label{fig:p_glob_c}
 \end{figure*}
 
+For LOEC determination $GLM_{nb}$ and $GLM_{p}$ showed an increased Type 1 error and all other methods being slightly conservative (Figure \ref{fig:p_loec_c}).
 The inferences on LOEC generally showed less power.
-For $LM$ this reduction was up to 35\% compared to the overall treatment effect (n = 9, $\mu_C$ = 64, Figures \ref{fig:p_glob_c} and \ref{fig:p_loec_c}).
-The power to detect the LOEC was highest for $GLM_{nb}$ and $GLM_{qp}$. $LM$ and WT showed less power, with WT having no power to detect the LOEC at low sample sizes.
-At low sample sizes $GLM_{nb}$ showed an increased Type 1 error and WT was slightly conservative (Figure \ref{fig:p_loec_c}).
+$LM$ showed a mean reduction of 20.7\% and $GLM_qp$ 24.3 \%.
+Power to detect the LOEC was highest for $GLM_{qp}$. $LM$ and $WT$ showed less power, with $WT$ having no power to detect the LOEC at low sample sizes.
+
 
 \begin{figure*}
   \centering
   \includegraphics[width = 129mm]{p_loec_c.pdf}
-  \caption{Count data simulations: Type 1 error (top) and Power (bottom) for determination of LOEC.
-  Only type 1 errors \textless 25\% are displayed.
+  \caption{Count data simulations (1000 simulated datasets): Type 1 error (top) and Power (bottom) for determination of LOEC.
+  For clarity only type 1 errors \textless 25\% are displayed.
   For n = \{3, 6\} and $\mu_C$ = \{2, 4\} less than 85\% of $GLM_{nb}$ models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
@@ -351,6 +350,9 @@ $GLM_{bin}$ was conservative at small effect sizes ($p_E > 0.8$) and WT was gene
 \subsection{Case study}
 %% ---- Case study
 The outlined case study demonstrates that the choice of the statistical model and procedure can have substantial impact on ecotoxicological inferences and endpoints like the LOEC.
+Therefore, ecotoxicologists should not base their inferences solely on statistical significance tests, but also on parameter estimates, their uncertainty and importance \citep{gelman_difference_2006}.
+Nevertheless, \citet{ohara_not_2010} showed that $LM$ using a log transformation gave unreliable and biased parameter estimates, whereas GLMs performed well with little bias.
+
 This is further highlighted by the fact that for the same model (linear model of transformed data), \citet{brock_minimum_2015} reported a 10-fold lower LOEC (\mbox{0.3 mg/L}) then found in our study (3 mg/L, Figure \ref{fig:example}).
 The reasons are be manifold: \citep{brock_minimum_2015} used a $log(2~y + 1)$ transformation, whereas we used a $log(A~y + 1)$ transformation, where A = 2 / 11 = 0.182 \citep{van_den_brink_impact_2000}.
 Furthermore, \citet{brock_minimum_2015} used a one-sided Williams test which assumes a monotonic dose-response relationship.
@@ -370,13 +372,12 @@ Knowing what type of data is modelled (see Methods section), the model selection
 Our simulations showed that generally GLMs have greater power than data transformations.
 However, the simulations also suggest that the power at the population level in common mesocosm experiments is low.
 For common samples sizes and a reduction in abundance of 50\% we found a low power to detect any treatment-related effect (\textless 50\% for methods with appropriate Type 1 error, Figure \ref{fig:p_glob_c}).
-Additionally, \citet{ohara_not_2010} showed that using a log transformation gave unreliable and biased parameter estimates.
 Statistical power to detect the correct LOEC was even lower (less than 30\%).
 This suggests that population level NOECs reported from mesocosm experiments should be interpreted with caution and underpins the criticism of NOEC \citep{laskowski_good_1995,landis_well_2011}.
 
 %% --- Multivariate + GLMM -------
 Mesocosm studies allow also inferences on community level. 
-For community analyses \emph{GLM for multivariate data} have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \citep{warton_distance-based_2012,szocs_analysing_2015}. 
+For community analyses \emph{GLM for multivariate data} \citep{warton_distance-based_2012} have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \citep{szocs_analysing_2015}. 
 Although our simulations covered only simple experimental designs at the population level, findings may also extend to more complex situations. 
 Nested or repeated designs with non-normal data could be analysed using Generalised Linear Mixed Models (GLMM) and may have advantages with respect to power \citep{stroup_rethinking_2014}.
 
