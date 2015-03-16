@@ -30,4 +30,4 @@
 # other
 report_old
 *.zip
-
+cache/aws*
