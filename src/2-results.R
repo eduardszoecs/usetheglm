@@ -87,7 +87,8 @@ plot_t1_glob_c  <- ggplot(t1_glob_c) +
   mytheme + 
   # legend title
   scale_shape_manual('Method', values=c(16,2,4,0,1,17)) +
-  scale_linetype_discrete('Method')
+  scale_linetype_discrete('Method') +
+  coord_cartesian(ylim = c(-0.005, 0.25))
 plot_t1_glob_c
 
 
@@ -207,7 +208,8 @@ plot_t1_loec_c <- ggplot(t1_loec_c) +
   mytheme + 
   # legend title
   scale_shape_manual('Method', values=c(16,2,4,1, 17)) +
-  scale_linetype_discrete('Method')
+  scale_linetype_discrete('Method') +
+  coord_cartesian(ylim = c(-0.005, 0.25))
 plot_t1_loec_c 
 
 

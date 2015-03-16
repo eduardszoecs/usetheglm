@@ -1,7 +1,7 @@
 \documentclass[twocolumn, natbib]{svjour3}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL submission/report/report.tex   Fri Feb 13 15:20:06 2015
-%DIF ADD revision/report/report.tex     Sun Mar 15 16:30:18 2015
+%DIF ADD revision/report/report.tex     Mon Mar 16 12:48:44 2015
 \usepackage{graphicx}%GRaphiken
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}%Tabellen!
@@ -243,6 +243,8 @@ Bootstrapping is computationally very intensive and for this reason we applied i
 
 To assess the LOEC we used Dunnett contrasts \DIFaddbegin \citep{dunnett_multiple_1955} \DIFaddend with one-sided Wald t tests (normal and quasi-Poisson models) and one-sided Wald Z tests (Poisson, negative binomial and binomial models).
 Beside these parametric methods we also applied two, in ecotoxicology commonly used, non-parametric methods: The Kruskal-Wallis test  ($KW$) to test for a general treatment effect and a pairwise Wilcoxon test ($WT$) to determine the LOEC.
+\DIFaddbegin \DIFadd{We adjusted for multiple testing using the method of }\citet{holm_simple_1979}\DIFadd{.
+}\DIFaddend 
 
 
 
@@ -260,7 +262,7 @@ A total of 18 mesocosm have been sampled from 6 treatments (Control (n = 4), 0.1
   \caption{Data from \citet{brock_minimum_2015} (dots). 
   Predicted values (triangles) and 95\% Wald Z or t confidence intervals from the fitted models (vertical lines) are given beside.
   Horizontal bars above indicate treatments statistically significant different from the control group (Dunnett contrasts).
-  The data showed \DIFdelbeginFL \DIFdelFL{considerable }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{slight }\DIFaddendFL overdispersion (\DIFdelbeginFL \DIFdelFL{$\Theta = 22.41$}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$\kappa = 0.26$}\DIFaddendFL ) and therefore, the Poisson model underestimates the \DIFaddbeginFL \DIFaddFL{width of }\DIFaddendFL confidence intervals.
+  The data showed \DIFdelbeginFL \DIFdelFL{considerable }\DIFdelendFL overdispersion (\DIFdelbeginFL \DIFdelFL{$\Theta = 22.41$}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$\kappa = 0.26$}\DIFaddendFL ) and therefore, the Poisson model underestimates the \DIFaddbeginFL \DIFaddFL{width of }\DIFaddendFL confidence intervals.
   }
   \label{fig:example}
 \end{figure}
@@ -271,7 +273,7 @@ A total of 18 mesocosm have been sampled from 6 treatments (Control (n = 4), 0.1
 \subsubsection{Count data}
 To further scrutinise the differences between methods we simulated data sets with known properties.
 We simulated count data that mimics the data of the case study with five treatments (T1 - T5) and one control group (C).
-Counts were drawn from a negative binomial distribution with slight over dispersion at all treatments ($\kappa = 0.25$, eqn. \ref{eqn:negbin}).
+Counts were drawn from a negative binomial distribution with \DIFdelbegin \DIFdel{slight over dispersion }\DIFdelend \DIFaddbegin \DIFadd{overdispersion }\DIFaddend at all treatments ($\kappa = 0.25$, eqn. \ref{eqn:negbin}).
 We simulated data sets with different number of replicates (N = \{3, 6, 9\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 64, 128\}). 
 For power estimation, mean abundance in treatments T2 - T5 was reduced to half of control and T1 ($\mu_\text{\tiny T2}~=~...~=~\mu_\text{\tiny T5}~=~0.5~\mu_\text{\tiny C} = 0.5~\mu_\text{\tiny T1}$), resulting in a theoretical LOEC at T2.
 Mean abundance was kept equal between all groups in Type 1 error simulations.
@@ -325,8 +327,10 @@ At small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of
 \begin{figure*}
   \centering
   \includegraphics[width = 129mm]{p_glob_c.pdf}
-  \caption{Count data simulations: Power (top) and Type 1 error (bottom) for the test of a treatment effect.
-  For n = 3 and $\mu_C$ = \{2, 4\} less than 80\% of $GLM_{nb}$ and $GLM_{npb}$ models did converge.
+  \caption{Count data simulations \DIFdelbeginFL \DIFdelFL{: Power }\DIFdelendFL (\DIFdelbeginFL \DIFdelFL{top}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{n = 1000}\DIFaddendFL )\DIFdelbeginFL \DIFdelFL{and }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{: }\DIFaddendFL Type 1 error (\DIFaddbeginFL \DIFaddFL{top) and Power (}\DIFaddendFL bottom) for the test of a treatment effect.
+  \DIFaddbeginFL \DIFaddFL{Only type 1 errors \textless 25\% are displayed. 
+  $GLM_p$ showed type 1 errors \textgreater 20\% in all simulation scenarios.
+  }\DIFaddendFL For n = \DIFaddbeginFL \DIFaddFL{\{}\DIFaddendFL 3\DIFaddbeginFL \DIFaddFL{, 6\} }\DIFaddendFL and $\mu_C$ = \{2, 4\} less than \DIFdelbeginFL \DIFdelFL{80}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85}\DIFaddendFL \% of $GLM_{nb}$ and $GLM_{npb}$ models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_glob_c}
@@ -334,14 +338,15 @@ At small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of
 
 The inferences on LOEC generally showed less power.
 For $LM$ this reduction was up to 35\% compared to the overall treatment effect (n = 9, $\mu_C$ = 64, Figures \ref{fig:p_glob_c} and \ref{fig:p_loec_c}).
-The power to detect the LOEC was highest for $GLM_{nb}$ and $GLM_{npb}$. $LM$ and WT showed less power, with WT having no power to detect the LOEC at low sample sizes.
+The power to detect the LOEC was highest for $GLM_{nb}$ and \DIFdelbegin \DIFdel{$GLM_{npb}$}\DIFdelend \DIFaddbegin \DIFadd{$GLM_{qp}$}\DIFaddend . $LM$ and WT showed less power, with WT having no power to detect the LOEC at low sample sizes.
 At low sample sizes $GLM_{nb}$ showed an increased Type 1 error and WT was slightly conservative (Figure \ref{fig:p_loec_c}).
 
 \begin{figure*}
   \centering
   \includegraphics[width = 129mm]{p_loec_c.pdf}
-  \caption{Count data simulations: Power (top) and Type 1 error (bottom) for determination of LOEC.
-  For n = 3 and $\mu_C$ = \{2, 4\} less than 80\% of $GLM_{nb}$ and $GLM_{npb}$ models did converge.
+  \caption{Count data simulations: \DIFdelbeginFL \DIFdelFL{Power }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type 1 error }\DIFaddendFL (top) and \DIFdelbeginFL \DIFdelFL{Type 1 error }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Power }\DIFaddendFL (bottom) for determination of LOEC.
+  \DIFaddbeginFL \DIFaddFL{Only type 1 errors \textless 25\% are displayed.
+  }\DIFaddendFL For n = \DIFaddbeginFL \DIFaddFL{\{}\DIFaddendFL 3\DIFaddbeginFL \DIFaddFL{, 6\} }\DIFaddendFL and $\mu_C$ = \{2, 4\} less than \DIFdelbeginFL \DIFdelFL{80}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85}\DIFaddendFL \% of $GLM_{nb}$ \DIFdelbeginFL \DIFdelFL{and $GLM_{npb}$ }\DIFdelendFL models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_loec_c}
@@ -394,7 +399,7 @@ The outlined case study demonstrates that the choice of the statistical model an
 This is further highlighted by the fact that for the same model (linear model of transformed data), \citet{brock_minimum_2015} reported a 10-fold lower LOEC (\mbox{0.3 mg/L}) then found in our study (3 mg/L, Figure \ref{fig:example}).
 The reasons are be manifold: \citep{brock_minimum_2015} used a $log(2~y + 1)$ transformation, whereas we used a $log(A~y + 1)$ transformation, where A = 2 / 11 = 0.182 \citep{van_den_brink_impact_2000}.
 Furthermore, \citet{brock_minimum_2015} used a one-sided Williams test which assumes a monotonic dose-response relationship.
-In contrast, we used a one-sided Dunnett test, which does not assume monotonicity and allows individual comparisons between treatment groups and the control, but has under monotonicity less power \citep{jaki_statistical_2013}.
+In contrast, we used \DIFdelbegin \DIFdel{a }\DIFdelend one-sided \DIFdelbegin \DIFdel{Dunnett test}\DIFdelend \DIFaddbegin \DIFadd{comparisons to the control (Dunnett contrasts)}\DIFaddend , which does not assume monotonicity and allows individual comparisons between treatment groups and the control, but has under monotonicity less power \citep{jaki_statistical_2013}.
 
 
 %% ---- Guide GLMs
@@ -446,7 +451,7 @@ $GLM_{qp}$ assumes a simpler, linear mean-variance relationship, which might exp
 Binomial data \DIFdelbegin \DIFdel{is }\DIFdelend \DIFaddbegin \DIFadd{are }\DIFaddend often collected in lab trials, where increasing the sample size is easy to accomplish. 
 We found notable differences in power to detect a treatment effect up to a sample size of 9.
 Similarly, \citet{warton_arcsine_2011} also found that \DIFdelbegin \DIFdel{GLM }\DIFdelend \DIFaddbegin \DIFadd{GLMs }\DIFaddend have higher power than arcsine transformed linear models.
-Nevertheless, for deriving LOECs the transformation performed better at low sample sizes (n = 3) (Figure \ref{fig:p_loec_p}). 
+Nevertheless, for deriving LOECs the \DIFdelbegin \DIFdel{transformation }\DIFdelend \DIFaddbegin \DIFadd{$LM$ }\DIFaddend performed better at low sample sizes (n = 3) (Figure \ref{fig:p_loec_p}). 
 
 We recommend that non-normal data should be analysed by GLMs and not by transformations or non-parametric methods.
 To improve the power to detect effects, GLMs should become a standard method in ecotoxicology and incorporated into respective guidelines.

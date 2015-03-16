@@ -74,11 +74,11 @@ Note, that changes in titles, equations, citations and figures were not highligh
 \newpage
 \section{ToDo:}
 \begin{enumerate}
-	\item modify simulations: use 1000 simulations,run on aws EC2 instance.
 	\item Now also added poisson GLM. incorporate into text!
 	\item recompile supplements
 	\item Holm also for case-study. Recalculate and rewrite 3-brock.R
 	\item update sysinfo in readme
+	\item Comment 62 umsetzen.
 \end{enumerate}
 
 
@@ -154,14 +154,16 @@ variance in all equations? Or skip the variance where not needed (as
 in this case).}
 \response{}
 
+%done
 \comment{p. 3, right column, Fig. 1: Please be precise in the figure text: By using
 the Poisson model the width of confidence intervals is underestimated
 in the presence of overdispersion.}
 \response{We agree and stated more precisely that the width of confidence intervals is underestimated.}
 
+%done
 \comment{p. 3, right column, line 28: How is multiple testing taken care of? This
 may also affect the simulation results.}
-\response{\todo{changed in code to holm -> mention in text!}}
+\response{We adjusted multiple testing using the method of \citet{holm_simple_1979}. We added this information to the manuscript.}
 
 %declined
 \comment{p. 4, left column, line 2: The simulations will not be very informative
@@ -187,11 +189,13 @@ also reduce the sampling variability in the results).}
 \comment{p. 4, left column, line 36: Please do define the type I error properly.}
 \response{We agree and rephrased to: \\ \emph{"[...] Type 1 error (detection of an effect when there is none) [...]"}}
 
+%done
 \comment{p. 4, right column, lines 26–29: The lack of convergence is not sur-
 prising as the simulated datasets are simply too small to fit complex
 models. Please re-consider the entire concept of the simulation (in
 particular which scenarios to consider).}
-\response{\todo{Convergence problems may be often encountered by ecotoxicologists...}See also response to comment 13.}
+\response{Our simulations covered scenarios often encountered by ecotoxicologists and therefore, it is like that practicing ecotoxicologists will also encounter such convergence problems. 
+See also response to comment 13.}
 
 \comment{p. 4, right column, lines 31–33: One explanation for the reduced power
 is certainly the multiple testing issue. Perhaps this point could be
@@ -203,15 +207,32 @@ significance level in all cases? This seems to be a subjective assessment
 (as the level is above in some cases for N = 3).}
 \response{}
 
+%done
 \comment{p. 6, right column, lines 43–46: Why didn’t you also use the transfor-
 mation suggested by Brock et al. (2015)? Would be useful to see the
 comparison.}
-\response{}
+\response{As pointed out in the introduction, there is little information and advice which transformation to use. 
+The $log(A~y + 1)$ is the most commonly used transformation in ecotoxicological mesocosm experiments.
+We used only the $log(A~y + 1)$ transformation because our paper did not aim to compare different transformations and there are some inconsistencies in \citet{brock_minimum_2015}.
+They state:  \\
+\emph{"For the examples presented in this paper, we
+followed Van den Brink et al. (2000) using the transformation
+y(x)=ln(ax+1), where x is the measured abundance and the
+factor ‘a’ is selected in such a way that the lowest non-zero
+abundance of the data set is transformed to 1."} \\
+Maybe this is just a typographical error, but in the publication of \citet{van_den_brink_impact_2000} it is stated: \\
+\emph{"We decided that the
+factor Ax in the ln(Ax +1) transformation should
+make 2 by taking the lowest abundance value
+higher than zero for x."} \\
+Moreover, in the supporting material of \citet{brock_minimum_2015}, they used a $log(2~y + 1)$ transformation to which we refer to in our manuscript.
+}
 
+%done
 \comment{p. 6, right column, line 49: Dunnett test is R terminology (yes, it
 may be found in other recent publications, but it doesn’t make it more
 correct). Please use a term like ”comparisons to the control”.}
-\response{}
+\response{We agree and changed accordingly.}
 
 \comment{p. 7, right column, lines 7–10: A nice result that is not found in
 many publication: non-parametric approaches lack power (due to less
@@ -382,24 +403,30 @@ You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.
 \comment{L45 Add a reference to (ter Braak \& Šmilauer 2014) who advocate the use of the transformation approach in a multivariate (dimension reduction) context.}
 \response{}
 
-\comment{Line 1 right (like GLMs) -> (like GLMs and the Williams test)}
-\response{}
+%decline
+\comment{Line 1 right (like GLMs) -\textgreater (like GLMs and the Williams test)}
+\response{We did not investigate the differences between multiple comparison procedures (MCP). 
+We used Dunnett constrast for in all simulations, because only these allow individual comparisons between treatments and the control. 
+For a comparison of MCP see \citet{jaki_statistical_2013}, who recommend a combination of both, Dunnett and Williams constrasts.
+}
 
 \comment{Line 10-40 Again: discuss Type I error first. Then no mention of GLM\_nb in power.}
 \response{}
 
 %todo
 \comment{Line 18 right. Add after "non-normal data' the point the importance of proper accounting for under and overdispersion when using GLM. What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion.}
-\response{We rerun our simulations and also included the Poisson GLM. The results for Poisson GLM are now also display in Figures 2+3. \todo{Moreover, we discussed failing to account for overdispersion.}}
+\response{We rerun our simulations and also included the Poisson GLM. 
+The results for Poisson GLM are now also display in Figures 2+3 and we discuss the consequences of failing to account for overdisperion.}
 
 \comment{Line 41 right size of 9 -\textgreater size of 6-9 (?)}
 \response{}
 
 \comment{Line 44 right the transformation -\textgreater the LM}
-\response{}
+\response{We changed accordingly.}
 
 
 %% --------------------------------
+\newpage
 \bibliography{refs}
 \bibliographystyle{spbasic}
 

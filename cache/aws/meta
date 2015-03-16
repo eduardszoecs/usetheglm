@@ -1,4 +1,4 @@
 cd /home/edisz/Documents/personal/keys/
 
-scp -i edisz_ec2.pem ubuntu@54.93.211.185:/home/edisz/usetheglm/cache/res1_c.rds /home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/cache/aws/res1_c.rds
+scp -i edisz_ec2.pem ubuntu@54.93.211.151:/home/edisz/usetheglm/cache/res2_c.rds /home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/cache/aws/res2_c.rds
  
