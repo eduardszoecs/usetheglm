@@ -105,7 +105,7 @@ pEs <- seq(0.6, 0.95, 0.05)
 # both as grid
 todo_p <- expand.grid(N = N, pE = pEs)
 
-# create simulate data
+# create simulated data
 sims1_p <- NULL
 set.seed(1234)
 for(i in seq_len(nrow(todo_p))){
@@ -140,7 +140,7 @@ if(sim2){
 ### ------------------------
 # Type1 Error simulations
 
-# create simulate data
+# create simulated data
 sims2_p <- NULL
 for(i in seq_len(nrow(todo_p))){
   sims2_p[[i]] <- dosim2(N = todo_p[i, 'N'], 

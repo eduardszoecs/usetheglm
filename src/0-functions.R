@@ -406,8 +406,8 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
 #' @param z an object as returned by resfoo2
 #' @return a data.frame with power values
 p_glob <- function(z){ 
-  # extract p-values
-  ps <- ldply(z, function(w) unlist(w)[1:3])
+  # extract p-values [omits qglm]
+  ps <- ldply(z, function(w) unlist(w)[c(1,2,4)])
   pow <- apply(ps, 2, function(z) sum(z < 0.05, na.rm = TRUE)) / length(z)
   return(pow)
 }
@@ -421,7 +421,7 @@ p_glob <- function(z){
 #' for power estimation loec should be at concentration 2
 p_loec <- function(z, type = NULL){
   # extract p-values
-  loecs <- ldply(z, function(w) unlist(w)[4:6])
+  loecs <- ldply(z, function(w) unlist(w)[c(5, 6, 8)])
   if(type == 't1'){
     pow <- apply(loecs, 2, function(x) sum(x != Inf, na.rm = TRUE) / length(x))
   } 

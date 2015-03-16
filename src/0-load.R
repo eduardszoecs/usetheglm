@@ -52,10 +52,11 @@ exp_plot <- TRUE
 # number of simulated datasets 
 nsims <- 1000
 # run sims parallel?
-parallel = TRUE
+parallel = FALSE
 if(parallel){
   require(parallel)
   ncores <- detectCores()
+  # keep one core for OS
   if(ncores > 1)
     ncores <- ncores -1
 }
