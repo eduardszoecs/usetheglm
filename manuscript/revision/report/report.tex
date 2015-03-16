@@ -17,7 +17,8 @@
 % latexdiff submission/report/report.bbl revision/report/report.bbl > revision/diff/diff.bbl
 
 % % then document
-% latexdiff --disable-citation-markup --math-markup=0 submission/report/report.tex revision/report/report.tex > revision/diff/diff.tex
+% latexdiff --disable-citation-markup --math-markup=3 submission/report/report.tex revision/report/report.tex > revision/diff/diff.tex
+
 
 
 %% ----------------------------------------------------------------------------
@@ -103,37 +104,41 @@ To meet the assumptions of the standard linear model, count data usually needs t
 We followed the recommendations of \citet{van_den_brink_impact_2000} and used a log(Ay + 1) transformation (eqn. \ref{eqn:trans}):
 
 \begin{align}
-  y^T_i & = log(Ay_i + 1) \label{eqn:trans}
+  y^T & = log(Ay + 1) \label{eqn:trans}
 \end{align}
 
-, where $y_i$ is the measured and $y_i^T$ the transformed abundance. 
+, where $y$ is the measured and $y^T$ the transformed abundance. 
 The factor $A$ was chosen in such way that $Ay$ equals 2 for the lowest non-zero abundance value (y).
 
 Then we fitted the linear model to the transformed abundances (hereafter $LM$):
 
 \begin{align}
   y_i^T &\sim N(\mu_i, \sigma^2) \nonumber \\
-  y_i^T &= \alpha + \beta x_i \label{eqn:normal} \\
-  var(y_i^T) &= \sigma^2 \nonumber
+  E(y_i^T) = \mu_i ~&\text{and}~ var(y_i^T) = \sigma^2 \label{eqn:normal} \\
+    \mu_i &= \beta X_i  \nonumber
 \end{align}
 
-This model assumes a normal distributed response with constant variance ($\sigma^2$).
-Note, that we parameterised the model as contrast ($\beta x_i$) to the control group ($\alpha$) so that parameters ($\beta$) are directly interpretable as changes from the control group (eqn. \ref{eqn:normal}).
+This model assumes a normal distributed of the transformed abundances.
+The expected value for each treatment i is given by its mean ($\mu_i$) and the variance ($\sigma^2$) is constant between treatments.
+$X_i$ is a set of explanatory variables coding the treatments and $\beta$ are the parameters to be estimated from the data (eqn. \ref{eqn:normal}).
 
 
 \subsubsection{Generalised Linear Models}
 GLMs extend the normal model by modelling other distributions.
-Instead of transforming the response variable, the counts could be directly modelled by a Poisson distribution ($GLM_p$):
+Instead of transforming the response variable, the counts could be directly modelled by a Poisson GLM ($GLM_p$):
 
 \begin{align}
   y_i &\sim P(\lambda_i) \nonumber \\
-  log(\lambda_i) &= \mu_i \label{eqn:pois} \\
-  \mu_i &= \alpha + \beta x_i \nonumber \\
-  var(y_i) &= \lambda_i \nonumber
+  E(y_i) &= var(y_i) = \lambda_i \label{eqn:pois} \\
+  \lambda_i &= e^{\beta X_i}  \nonumber
 \end{align}
+\todo{maybe add link function here?!}
+This model assumes poisson distributed abudances.
+The expected value for each treatment i is give by its mean. \todo{todo}
 
 Again, this model was parametrised as contrast to the control group. 
 The response variable is linked to the predictors via a log-function to avoid negative fitted values (eqn. \ref{eqn:pois}). 
+
 The Poisson distribution assumes that mean and variance are equal - an assumption that is rarely met with ecological data, which is typically characterized by greater variance than the mean (overdispersion).
 To overcome this problem a quasi-Poisson distribution could be used which introduces an additional overdispersion parameter ($\Theta$) ($GLM_{qp}$, eqn. \ref{eqn:quasi}).
 
@@ -187,7 +192,10 @@ Data of type \emph{x out of N} can be modelled by a binomial distribution with p
 , where N = number of exposed animals and $\pi$ is the probability of survival.
 The variance of the binomial distribution is a quadratic function of the mean (eqn. \ref{eqn:bin}).
 The parameters $\beta$ of this model are directly interpretable as changes in log odds compared to the control group.
-Note, that there are also quasi-binomial models available if the assumed mean-variance relationship is not met. 
+
+Similarly to counts, binomial data may also show exceeding variability. 
+Methods to deal with overdispersed binomial data are either quasi methods (see above) or Generalized Linear Mixed models (GLMM).
+However, these are not further investigated in this paper (see \citet{warton_arcsine_2011} for a comparison).
 
 
 %% --------------------------------
@@ -241,7 +249,7 @@ We simulated data from a commonly used design as described in \citet{weber_short
 Proportions were drawn from a Bin(10, $\pi$) distribution, with varying probability of survival ($\pi$ = \{0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95\}) and varying number of replicates (N = \{3, 6, 9\}).
 For Type 1 error estimation, $\pi$ was held constant between groups.
 For power estimation $\pi$ in C and T1 was fixed at 0.95 and was set to values between 0.6 and 0.95 for the treatments T2 - T5. 
-For each combination we simulated 250 data sets. 
+For each combination we simulated 1000 data sets. 
 
 \subsection{Data Analysis}
 We analysed the case study and the simulated data using the outlined methods.
@@ -271,35 +279,37 @@ The pairwise Wilcoxon test did not detect any treatment different from control.
 %% --------------------------------
 \subsection{Simulations}
 \subsubsection{Count data}
-For detecting a general treatment effect $GLM_{nb}$ and $GLM_{p}$ showed inflated type 1 error rates, whereas $KW$ was conservative at low sample sizes (Figure \ref{fig:p_glob_c}).
-Using parametric bootstrap this could be fixed for the negative binomial model.
-For detecting a treatment effect $GLM_{npb}$ and $GLM_{qp}$ exhibited higher power than $LM$ and $KW$, the latter having least power.
+For detecting a general treatment effect $GLM_{nb}$ and $GLM_{p}$ showed inflated type 1 error rates, whereas $KW$ was conservative at low sample sizes.
+However, using parametric bootstrap for the negative binomial model ($GLM_{npb}$) resulted in an appropriate type 1 error rates.
+For detecting a treatment effect $GLM_{npb}$ and $GLM_{qp}$ exhibited higher power than $LM$ and $KW$, the latter having least power (Figure \ref{fig:p_glob_c}).
 For our simulation design (reduction in abundance by 50\%) a sample size per treatment of n = 9 was needed to achieve a power greater than 80\%.
 At small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of the negative binomial models ($GLM_{nb}$ and $GLM_{npb}$) did not converge to a solution (convergence rate \textless 85\% of the simulations, Supplement 1). 
 
 \begin{figure*}
   \centering
   \includegraphics[width = 129mm]{p_glob_c.pdf}
-  \caption{Count data simulations (1000 simulated datasets): Type 1 error (top) and Power (bottom) for the test of a treatment effect.
+  \caption{Count data simulations: Type 1 error (top) and Power (bottom) for the test of a treatment effect.
   Only type 1 errors \textless 25\% are displayed. 
   $GLM_p$ showed type 1 errors \textgreater 20\% in all simulation scenarios.
+  Power levels for models with inflated type I error are shown for completeness.
   For n = \{3, 6\} and $\mu_C$ = \{2, 4\} less than 85\% of $GLM_{nb}$ and $GLM_{npb}$ models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_glob_c}
 \end{figure*}
 
-For LOEC determination $GLM_{nb}$ and $GLM_{p}$ showed an increased Type 1 error and all other methods being slightly conservative (Figure \ref{fig:p_loec_c}).
+For LOEC determination $GLM_{nb}$ and $GLM_{p}$ showed an increased Type 1 error and all other methods being slightly conservative.
 The inferences on LOEC generally showed less power.
-$LM$ showed a mean reduction of 20.7\% and $GLM_qp$ 24.3 \%.
-Power to detect the LOEC was highest for $GLM_{qp}$. $LM$ and $WT$ showed less power, with $WT$ having no power to detect the LOEC at low sample sizes.
-
+$LM$ showed a mean reduction of 20.7\% and $GLM_{qp}$ of 24.3 \%.
+Power to detect the LOEC was highest for $GLM_{qp}$. 
+$LM$ and $WT$ showed less power, with $WT$ having no power to detect the LOEC at low sample sizes (Figure \ref{fig:p_loec_c}).
 
 \begin{figure*}
   \centering
   \includegraphics[width = 129mm]{p_loec_c.pdf}
-  \caption{Count data simulations (1000 simulated datasets): Type 1 error (top) and Power (bottom) for determination of LOEC.
+  \caption{Count data simulations: Type 1 error (top) and Power (bottom) for determination of LOEC.
   For clarity only type 1 errors \textless 25\% are displayed.
+  Power levels for models with inflated type I error are shown for completeness.
   For n = \{3, 6\} and $\mu_C$ = \{2, 4\} less than 85\% of $GLM_{nb}$ models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
@@ -308,11 +318,12 @@ Power to detect the LOEC was highest for $GLM_{qp}$. $LM$ and $WT$ showed less p
 
 
 \subsubsection{Binomial data}
+
+$GLM_{bin}$ showed slightly increased type 1 error rates at low sample sizes and small effect sizes.
+$KW$ was more conservative than $LM$ and $GLM_{bin}$.
 $GLM_{bin}$ showed the greatest power for testing the treatment effect. 
-This was especially apparent at low sample sizes (n = 3), with up to 24\% higher power compared to LM.
-KW had the lowest power and was slightly conservative.
-However, the differences between methods quickly vanished with increasing samples sizes. 
-KW was more conservative than LM and $GLM_{bin}$ (Figure \ref{fig:p_glob_p}).
+This was especially apparent at low sample sizes (n = 3), with up to 27\% higher power compared to LM.
+However, the differences between methods quickly vanished with increasing samples sizes (Figure \ref{fig:p_glob_p}).
 
 \begin{figure*}
   \centering
@@ -325,23 +336,22 @@ KW was more conservative than LM and $GLM_{bin}$ (Figure \ref{fig:p_glob_p}).
   \label{fig:p_glob_p}
 \end{figure*}
 
+For inference on LOEC we found that all methods were slightly conservative.
+$WT$ was generally more conservative and $GLM_{bin}$ especially at low effect sizes ($p_E > 0.7$).
 Inference on LOEC was not as powerful as inference on the general treatment effect.
-Contrary to the general treatment effect, $LM$ showed the higher power than $GLM_{bin}$ at small sample sizes.
-However, these differences in power were only apparent at n = 3 and vanished quickly with increasing sample sizes (Figure \ref{fig:p_loec_p}). 
-WT had no power for n = 3 and showed less power in the other simulation runs.
-$LM$ maintained a Type 1 error level of 0.05 in all simulations. 
-$GLM_{bin}$ was conservative at small effect sizes ($p_E > 0.8$) and WT was generally conservative showing lowered Type 1 error rates (Figure \ref{fig:p_loec_p}).
+Contrary to the general treatment effect, $LM$ showed the higher power than $GLM_{bin}$ at small sample sizes (n = {3, 6}).
+$WT$ had no power for n = 3 and showed less power in the other simulation runs (Figure \ref{fig:p_loec_p}).
 
-\begin{figure}
+\begin{figure*}
   \centering
-  \includegraphics[width = 84mm]{p_loec_p.pdf}
+  \includegraphics[width = 129mm]{p_loec_p.pdf}
   \caption{
   Binomial data simulations: 
   Power (top) and Type 1 error (bottom) for the test for determination of LOEC. 
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_loec_p}
-\end{figure}
+\end{figure*}
 
 
 %% ----------------------------------------------------------------------------
@@ -389,8 +399,8 @@ As we showed, using appropriate statistical methods (like GLMs) can enhance the 
 
 %% --- Non-parametric
 \citet{wang_making_2011} advocated that in the typical case of small sample sizes (n \textless 20) and non-normal data, non-parametric tests perform better than parametric tests assuming normality.
-In contrast, our results showed that the often applied Kruskal test and pairwise Wilcoxon test have equal or less power compared to tests assuming normality after data transformation.
-Moreover, GLMs always performed better than non-parametric tests. 
+In contrast, our results showed that the often applied $KW$ and $WT$ have less power compared to $LM$.
+Moreover, $GLMs$ always performed better than non-parametric tests. 
 Though more powerful non-parametric tests may be available \citep{konietschke_rank-based_2012}, these are focused on hypothesis testing and do not provide estimation of effect sizes.
 Additionally to testing, GLMs allow the estimation and interpretation of effects that might not be statistically significant, but ecologically relevant.
 Therefore, we advise using GLMs instead of non-parametric tests for non-normal data.

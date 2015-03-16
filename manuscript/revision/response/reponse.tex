@@ -64,7 +64,7 @@ We revised the manuscript according to comments of the three reviewers and are r
 
 In the remainder of this document, we describe the changes that we have made to the paper for resubmission. 
 To assist the assessment of our changes we have submitted two versions of the revised manuscript: one with highlighted changes and another without any highlighting. 
-Note, that changes in titles, equations, citations and figures were not highlighted.
+Note, that changes in titles, citations and figures were not highlighted.
 
 \vspace{2em}
 \hfill Kind regards,
@@ -80,7 +80,6 @@ Note, that changes in titles, equations, citations and figures were not highligh
 	\item Holm also for case-study. Recalculate and rewrite 3-brock.R
 	\item update sysinfo in readme
 	\item Comment 62 umsetzen.
-	\item binomial auf 1000 hochsetzen.
 	\item abstract: 
 \end{enumerate}
 
@@ -147,10 +146,12 @@ GLM. So Eqn. (4) doesn’t make sense.}
 the text?}
 \response{}
 
+%done
 \comment{p. 3, left column, lines 26–42: What about over-dispersion for binomial
 data? Shouldn’t that also be mentioned now that you consider models
 for over-dispersion for count data.}
-\response{}
+\response{We added that overdispersion might also occur in binomial data and pointed the reader to \citet{warton_arcsine_2011}.}
+
 
 \comment{p. 3, left column, line 33: Why not specify the mean next to the
 variance in all equations? Or skip the variance where not needed (as
@@ -205,10 +206,11 @@ is certainly the multiple testing issue. Perhaps this point could be
 addressed?}
 \response{}
 
+%done
 \comment{p. 4, right column, lines 57–58: Did LM really maintain the nominal
 significance level in all cases? This seems to be a subjective assessment
 (as the level is above in some cases for N = 3).}
-\response{}
+\response{We rerun our analyses using 1000 simulations (see also comment 14) and updated this section.}
 
 %done
 \comment{p. 6, right column, lines 43–46: Why didn’t you also use the transfor-
@@ -268,8 +270,9 @@ more broadly than these examples - it is not a case of "your data aren't normal 
 \comment{In the first paragraph, "positive" is used where "non-negative" is needed (i.e. zero is a possible value), also change bonded to bounded}
 \response{We fully agree and changed accordingly.}
 
+%done
 \comment{Page 2, second column - the parameterisation isn't equal to the Poisson model - the mean model is the same, I think that is what was meant.}
-\response{} 
+\response{We edited this section (see also comment 6) and corrected this.} 
 
 \comment{Page 2, second column - also, strictly speaking, not all the methods mentioned here are GLMs.  Negative binomial regression ("NB2") is a GLM if the overdispersion parameter is fixed, otherwise it is a generalisation of GLM.  Similarly, quasi-Poisson isn't really a GLM, but a related method.}
 \response{}
@@ -392,10 +395,12 @@ Always start with the Type I error results because the power results are without
 \comment{L32 right. ", but this." Although you should reorder the results, I mention that the "but this" should at least be "This could fortunately be …"[and we could not have known for sure (apart from the general warnings about LR) without the simulations] This inflated error for GLM\_nb must receive more attention. It is an interesting result of this study: you must to bootstrap when using NB.}
 \response{}
 
-%todo
+%done
 \comment{Page 5
 Fig. 2 legend. Add that n =100 simulations. Add the interpretation that  GLM\_nb has inflated type I error, and that its line for power is just added for completeness and should not be interpreted as an estimate of the true power.}
-\response{We added the number of simulated datasets to all figure captions. We emphasized in the main text that power should not be interpreted when type I error rates are high. \todo{text changes}}
+\response{We unified the simulations and generated simulated 1000 data sets for each type of scenario (see comment 14). Moreover, we added \\
+\emph{"Power levels for models with inflated type I error are shown for completeness."}\\
+to figure captions 2 and 3.}
 
 \comment{Page 6
 Fig.5 LM for 0.8 has a high Type I error. Does it deviate significantly from 0.05? [same question for the high Type I for GLM\_nb in fig 2]. Use confidence interval for binomial p = 0.05 n = 100.}

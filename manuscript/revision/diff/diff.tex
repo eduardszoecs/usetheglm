@@ -1,7 +1,7 @@
 \documentclass[twocolumn, natbib]{svjour3}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL submission/report/report.tex   Fri Feb 13 15:20:06 2015
-%DIF ADD revision/report/report.tex     Mon Mar 16 16:55:33 2015
+%DIF ADD revision/report/report.tex     Mon Mar 16 22:20:22 2015
 \usepackage{graphicx}%GRaphiken
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}%Tabellen!
@@ -136,17 +136,16 @@ Then we further elaborate differences in detecting a general treatment effect an
 To meet the assumptions of the standard linear model, count data usually needs to be transformed. 
 We followed the recommendations of \citet{van_den_brink_impact_2000} and used a log(Ay + 1) transformation (eqn. \ref{eqn:trans}):
 
-\DIFdelbegin %DIFDELCMD < \begin{align}
-%DIFDELCMD <   y^T_i & = log(Ay_i + 1) \label{eqn:trans} \\
-%DIFDELCMD <   A & = 2~/~min(y)~~~\text{, for}~ y > 0 \nonumber
-%DIFDELCMD < \end{align}
+\begin{align}
+  y^T \DIFdelbegin \DIFdel{_i }\DIFdelend & = log(Ay \DIFdelbegin \DIFdel{_i }\DIFdelend + 1) \label{eqn:trans}
+\DIFdelbegin %DIFDELCMD < \\
+%DIFDELCMD <   %%%
+\DIFdel{A }%DIFDELCMD < & %%%
+\DIFdel{= 2~/~min(y)~~~\text{, for}~ y > 0 }%DIFDELCMD < \nonumber
 %DIFDELCMD < %%%
-\DIFdelend \DIFaddbegin \begin{align}
-  y^T_i & = log(Ay_i + 1) \label{eqn:trans}
-\end{align}
-\DIFaddend 
+\DIFdelend \end{align}
 
-, where $y_i$ is the measured \DIFdelbegin \DIFdel{abundance }\DIFdelend and $y_i^T$ the transformed abundance. 
+, where \DIFdelbegin \DIFdel{$y_i$ }\DIFdelend \DIFaddbegin \DIFadd{$y$ }\DIFaddend is the measured \DIFdelbegin \DIFdel{abundance and $y_i^T$ }\DIFdelend \DIFaddbegin \DIFadd{and $y^T$ }\DIFaddend the transformed abundance. 
 \DIFaddbegin \DIFadd{The factor $A$ was chosen in such way that $Ay$ equals 2 for the lowest non-zero abundance value (y).
 }\DIFaddend 
 
@@ -154,12 +153,18 @@ Then we fitted the linear model to the transformed abundances (hereafter $LM$):
 
 \begin{align}
   y_i^T &\sim N(\mu_i, \sigma^2) \nonumber \\
-  y_i^T &= \alpha + \beta x_i \label{eqn:normal} \\
-  var(y_i^T) &= \sigma^2 \nonumber
+  \DIFaddbegin \DIFadd{E(}\DIFaddend y_i^T\DIFdelbegin %DIFDELCMD < &%%%
+\DIFdelend \DIFaddbegin \DIFadd{) }\DIFaddend = \DIFdelbegin \DIFdel{\alpha + \beta x_i }%DIFDELCMD < \label{eqn:normal} \\
+%DIFDELCMD <   %%%
+\DIFdelend \DIFaddbegin \DIFadd{\mu_i ~}&\DIFadd{\text{and}~ }\DIFaddend var(y_i^T) \DIFdelbegin %DIFDELCMD < &%%%
+\DIFdelend = \sigma^2 \DIFaddbegin \label{eqn:normal} \\
+    \DIFadd{\mu_i }&\DIFadd{= \beta X_i  }\DIFaddend \nonumber
 \end{align}
 
-This model assumes a normal distributed response with constant variance ($\sigma^2$).
-Note, that we parameterised the model as contrast ($\beta x_i$) to the control group ($\alpha$) so that parameters ($\beta$) are directly interpretable as changes from the control group (eqn. \ref{eqn:normal}).
+This model assumes a normal distributed \DIFdelbegin \DIFdel{response with constant variance ($\sigma^2$).
+Note, that we parameterised the model as contrast ($\beta x_i$) to the control group ($\alpha$) so that parameters (}\DIFdelend \DIFaddbegin \DIFadd{of the transformed abundances.
+The expected value for each treatment i is given by its mean ($\mu_i$) and the variance ($\sigma^2$) is constant between treatments.
+$X_i$ is a set of explanatory variables coding the treatments and }\DIFaddend $\beta$ \DIFdelbegin \DIFdel{) are directly interpretable as changes from the control group }\DIFdelend \DIFaddbegin \DIFadd{are the parameters to be estimated from the data }\DIFaddend (eqn. \ref{eqn:normal}).
 
 
 \subsubsection{Generalised Linear Models}
@@ -168,10 +173,13 @@ Instead of transforming the response variable, the counts could be directly mode
 
 \begin{align}
   y_i &\sim P(\lambda_i) \nonumber \\
-  log(\lambda_i) &= \mu_i \label{eqn:pois} \\
-  \mu_i &= \alpha + \beta x_i \nonumber \\
-  var(y_i) &= \lambda_i \nonumber
-\end{align}
+  \DIFaddbegin \DIFadd{E(y_i) }&\DIFadd{= var(y_i) = \lambda_i }\nonumber \\
+  \DIFaddend log(\lambda_i) &= \mu_i \label{eqn:pois} \\
+  \mu_i &= \DIFdelbegin \DIFdel{\alpha + \beta x}\DIFdelend \DIFaddbegin \DIFadd{\beta X}\DIFaddend _i \nonumber \\ 
+\DIFdelbegin \DIFdel{var(y_i) }%DIFDELCMD < &%%%
+\DIFdel{= \lambda_i }%DIFDELCMD < \nonumber
+%DIFDELCMD < %%%
+\DIFdelend \end{align}
 
 Again, this model was parametrised as contrast to the control group. 
 The response variable is linked to the predictors via a log-function to avoid negative fitted values (eqn. \ref{eqn:pois}). 
@@ -228,7 +236,11 @@ Data of type \emph{x out of N} can be modelled by a binomial distribution with p
 , where N = number of exposed animals and $\pi$ is the probability of survival.
 The variance of the binomial distribution is a quadratic function of the mean (eqn. \ref{eqn:bin}).
 The parameters $\beta$ of this model are directly interpretable as changes in log odds compared to the control group.
-Note, that there are also quasi-binomial models available if the assumed mean-variance relationship is not met. 
+\DIFdelbegin \DIFdel{Note, that there are also quasi-binomial models available if the assumed mean-variance relationship is not met}\DIFdelend \DIFaddbegin 
+
+\DIFadd{Similarly to counts, binomial data may also show exceeding variability. 
+Methods to deal with overdispersed binomial data are either quasi methods (see above) or Generalized Linear Mixed models (GLMM).
+However, these methods are not further investigated in this paper (see }\citealt{warton_arcsine_2011} \DIFadd{for a comparison)}\DIFaddend .
 
 
 %% --------------------------------
@@ -291,7 +303,7 @@ We simulated data from a commonly used design as \DIFdelbegin \DIFdel{in }%DIFDE
 Proportions were drawn from a Bin(10, $\pi$) distribution, with varying probability of survival ($\pi$ = \{0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95\}) and varying number of replicates (N = \{3, 6, 9\}).
 For Type 1 error estimation, $\pi$ was held constant between groups.
 For power estimation $\pi$ in C and T1 was fixed at 0.95 and was set to values between 0.6 and 0.95 for the treatments T2 - T5. 
-For each combination we simulated 250 data sets. 
+For each combination we simulated \DIFdelbegin \DIFdel{250 }\DIFdelend \DIFaddbegin \DIFadd{1000 }\DIFaddend data sets. 
 
 \subsection{Data Analysis}
 We analysed the case study and the simulated data using the outlined methods.
@@ -321,9 +333,9 @@ The pairwise Wilcoxon test did not detect any treatment different from control.
 %% --------------------------------
 \subsection{Simulations}
 \subsubsection{Count data}
-For \DIFaddbegin \DIFadd{detecting a general treatment effect $GLM_{nb}$ and $GLM_{p}$ showed inflated type 1 error rates, whereas $KW$ was conservative at low sample sizes (Figure \ref{fig:p_glob_c}).
-Using parametric bootstrap this could be fixed for the negative binomial model.
-For detecting a treatment effect $GLM_{npb}$ and $GLM_{qp}$ exhibited higher power than $LM$ and $KW$, the latter having least power.
+For \DIFaddbegin \DIFadd{detecting a general treatment effect $GLM_{nb}$ and $GLM_{p}$ showed inflated type 1 error rates, whereas $KW$ was conservative at low sample sizes.
+However, using parametric bootstrap for the negative binomial model ($GLM_{npb}$) resulted in an appropriate type 1 error rates.
+For detecting a treatment effect $GLM_{npb}$ and $GLM_{qp}$ exhibited higher power than $LM$ and $KW$, the latter having least power (Figure \ref{fig:p_glob_c}).
 For }\DIFaddend our simulation design (reduction in abundance by 50\%) a sample size per treatment of n = 9 was needed to achieve a power greater than 80\%.
 \DIFdelbegin \DIFdel{For detecting a treatment effect $GLM_{nb}$, $GLM_{npb}$ and $GLM_{qp}$ exhibited higher power than $LM$ and $KW$, the latter having least power.
 Type 1 error rate was inflated for $GLM_{nb}$, but this could be fixed by using parametric bootstrap.
@@ -333,29 +345,30 @@ KW was conservative at low sample sizes (Figure \ref{fig:p_glob_c}).
 \begin{figure*}
   \centering
   \includegraphics[width = 129mm]{p_glob_c.pdf}
-  \caption{Count data simulations \DIFdelbeginFL \DIFdelFL{: Power }\DIFdelendFL (\DIFdelbeginFL \DIFdelFL{top}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{1000 simulated datasets}\DIFaddendFL )\DIFdelbeginFL \DIFdelFL{and }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{: }\DIFaddendFL Type 1 error (\DIFaddbeginFL \DIFaddFL{top) and Power (}\DIFaddendFL bottom) for the test of a treatment effect.
+  \caption{Count data simulations: \DIFdelbeginFL \DIFdelFL{Power }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type 1 error }\DIFaddendFL (top) and \DIFdelbeginFL \DIFdelFL{Type 1 error }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Power }\DIFaddendFL (bottom) for the test of a treatment effect.
   \DIFaddbeginFL \DIFaddFL{Only type 1 errors \textless 25\% are displayed. 
   $GLM_p$ showed type 1 errors \textgreater 20\% in all simulation scenarios.
+  Power levels for models with inflated type I error are shown for completeness.
   }\DIFaddendFL For n = \DIFaddbeginFL \DIFaddFL{\{}\DIFaddendFL 3\DIFaddbeginFL \DIFaddFL{, 6\} }\DIFaddendFL and $\mu_C$ = \{2, 4\} less than \DIFdelbeginFL \DIFdelFL{80}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85}\DIFaddendFL \% of $GLM_{nb}$ and $GLM_{npb}$ models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_glob_c}
 \end{figure*}
 
-\DIFaddbegin \DIFadd{For LOEC determination $GLM_{nb}$ and $GLM_{p}$ showed an increased Type 1 error and all other methods being slightly conservative (Figure \ref{fig:p_loec_c}).
+\DIFaddbegin \DIFadd{For LOEC determination $GLM_{nb}$ and $GLM_{p}$ showed an increased Type 1 error and all other methods being slightly conservative.
 }\DIFaddend The inferences on LOEC generally showed less power.
 \DIFdelbegin \DIFdel{For }\DIFdelend $LM$ \DIFdelbegin \DIFdel{this reduction was up to 35\% compared to the overall treatment effect (n = 9, $\mu_C$ = 64, Figures \ref{fig:p_glob_c} and \ref{fig:p_loec_c}).
-The power }\DIFdelend \DIFaddbegin \DIFadd{showed a mean reduction of 20.7\% and $GLM_qp$ 24.3 \%.
-Power }\DIFaddend to detect the LOEC was highest for \DIFdelbegin \DIFdel{$GLM_{nb}$ and $GLM_{npb}$}\DIFdelend \DIFaddbegin \DIFadd{$GLM_{qp}$}\DIFaddend . $LM$ and \DIFdelbegin \DIFdel{WT }\DIFdelend \DIFaddbegin \DIFadd{$WT$ }\DIFaddend showed less power, with \DIFdelbegin \DIFdel{WT }\DIFdelend \DIFaddbegin \DIFadd{$WT$ }\DIFaddend having no power to detect the LOEC at low sample sizes.
-\DIFdelbegin \DIFdel{At low sample sizes $GLM_{nb}$ showed an increased Type 1 error and WT was slightly conservative (Figure \ref{fig:p_loec_c}).
-}\DIFdelend 
-
+The power }\DIFdelend \DIFaddbegin \DIFadd{showed a mean reduction of 20.7\% and $GLM_{qp}$ of 24.3 \%.
+Power }\DIFaddend to detect the LOEC was highest for \DIFdelbegin \DIFdel{$GLM_{nb}$ and $GLM_{npb}$}\DIFdelend \DIFaddbegin \DIFadd{$GLM_{qp}$}\DIFaddend . 
+$LM$ and \DIFdelbegin \DIFdel{WT }\DIFdelend \DIFaddbegin \DIFadd{$WT$ }\DIFaddend showed less power, with \DIFdelbegin \DIFdel{WT }\DIFdelend \DIFaddbegin \DIFadd{$WT$ }\DIFaddend having no power to detect the LOEC at low sample sizes \DIFdelbegin \DIFdel{.
+At low sample sizes $GLM_{nb}$ showed an increased Type 1 error and WT was slightly conservative }\DIFdelend (Figure \ref{fig:p_loec_c}).
 
 \begin{figure*}
   \centering
   \includegraphics[width = 129mm]{p_loec_c.pdf}
-  \caption{Count data simulations \DIFdelbeginFL \DIFdelFL{: Power }\DIFdelendFL (\DIFdelbeginFL \DIFdelFL{top}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{1000 simulated datasets}\DIFaddendFL )\DIFdelbeginFL \DIFdelFL{and }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{: }\DIFaddendFL Type 1 error (\DIFaddbeginFL \DIFaddFL{top) and Power (}\DIFaddendFL bottom) for determination of LOEC.
+  \caption{Count data simulations: \DIFdelbeginFL \DIFdelFL{Power }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type 1 error }\DIFaddendFL (top) and \DIFdelbeginFL \DIFdelFL{Type 1 error }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Power }\DIFaddendFL (bottom) for determination of LOEC.
   For \DIFaddbeginFL \DIFaddFL{clarity only type 1 errors \textless 25\% are displayed.
+  Power levels for models with inflated type I error are shown for completeness.
   For }\DIFaddendFL n = \DIFaddbeginFL \DIFaddFL{\{}\DIFaddendFL 3\DIFaddbeginFL \DIFaddFL{, 6\} }\DIFaddendFL and $\mu_C$ = \{2, 4\} less than \DIFdelbeginFL \DIFdelFL{80}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85}\DIFaddendFL \% of $GLM_{nb}$ \DIFdelbeginFL \DIFdelFL{and $GLM_{npb}$ }\DIFdelendFL models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
@@ -364,11 +377,15 @@ Power }\DIFaddend to detect the LOEC was highest for \DIFdelbegin \DIFdel{$GLM_{
 
 
 \subsubsection{Binomial data}
-$GLM_{bin}$ showed the greatest power for testing the treatment effect. 
-This was especially apparent at low sample sizes (n = 3), with up to 24\% higher power compared to LM.
-KW had the lowest power and was slightly conservative.
-However, the differences between methods quickly vanished with increasing samples sizes. 
-KW was more conservative than LM and $GLM_{bin}$ (Figure \ref{fig:p_glob_p}).
+\DIFaddbegin 
+
+\DIFaddend $GLM_{bin}$ showed \DIFaddbegin \DIFadd{slightly increased type 1 error rates at low sample sizes and small effect sizes.
+$KW$ was more conservative than $LM$ and $GLM_{bin}$.
+$GLM_{bin}$ showed }\DIFaddend the greatest power for testing the treatment effect. 
+This was especially apparent at low sample sizes (n = 3), with up to \DIFdelbegin \DIFdel{24}\DIFdelend \DIFaddbegin \DIFadd{27}\DIFaddend \% higher power compared to LM.
+\DIFdelbegin \DIFdel{KW had the lowest power and was slightly conservative.
+}\DIFdelend However, the differences between methods quickly vanished with increasing samples sizes \DIFdelbegin \DIFdel{. 
+KW was more conservative than LM and $GLM_{bin}$ }\DIFdelend (Figure \ref{fig:p_glob_p}).
 
 \begin{figure*}
   \centering
@@ -381,23 +398,33 @@ KW was more conservative than LM and $GLM_{bin}$ (Figure \ref{fig:p_glob_p}).
   \label{fig:p_glob_p}
 \end{figure*}
 
-Inference on LOEC was not as powerful as inference on the general treatment effect.
-Contrary to the general treatment effect, $LM$ showed the higher power than $GLM_{bin}$ at small sample sizes.
-However, these differences in power were only apparent at n = 3 and vanished quickly with increasing sample sizes (Figure \ref{fig:p_loec_p}). 
-WT had no power for n = 3 and showed less power in the other simulation runs.
+\DIFaddbegin \DIFadd{For inference on LOEC we found that all methods were slightly conservative.
+$WT$ was generally more conservative and $GLM_{bin}$ especially at low effect sizes ($p_E > 0.7$).
+}\DIFaddend Inference on LOEC was not as powerful as inference on the general treatment effect.
+Contrary to the general treatment effect, $LM$ showed the higher power than $GLM_{bin}$ at small sample sizes \DIFdelbegin \DIFdel{.
+However, these differences in power were only apparent at }\DIFdelend \DIFaddbegin \DIFadd{(}\DIFaddend n = \DIFaddbegin {\DIFaddend 3\DIFdelbegin \DIFdel{and vanished quickly with increasing sample sizes (Figure \ref{fig:p_loec_p}).
+WT }\DIFdelend \DIFaddbegin \DIFadd{, 6}}\DIFadd{).
+$WT$ }\DIFaddend had no power for n = 3 and showed less power in the other simulation runs \DIFdelbegin \DIFdel{.
 $LM$ maintained a Type 1 error level of 0.05 in all simulations. 
-$GLM_{bin}$ was conservative at small effect sizes ($p_E > 0.8$) and WT was generally conservative showing lowered Type 1 error rates (Figure \ref{fig:p_loec_p}).
+$GLM_{bin}$ was conservative at small effect sizes ($p_E > 0.8$) and WT was generally conservative showing lowered Type 1 error rates (}\DIFdelend \DIFaddbegin \DIFadd{(}\DIFaddend Figure \ref{fig:p_loec_p}).
 
-\begin{figure}
-  \centering
-  \includegraphics[width = 84mm]{p_loec_p.pdf}
-  \caption{
+\DIFdelbegin %DIFDELCMD < \begin{figure}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \begin{figure*}
+  \DIFaddendFL \centering
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width = 84mm]{p_loec_p.pdf}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width = 129mm]{p_loec_p.pdf}
+  \DIFaddendFL \caption{
   Binomial data simulations: 
   Power (top) and Type 1 error (bottom) for the test for determination of LOEC. 
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_loec_p}
-\end{figure}
+\DIFdelbeginFL %DIFDELCMD < \end{figure}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \end{figure*}
+\DIFaddend 
 
 
 %% ----------------------------------------------------------------------------
@@ -449,8 +476,8 @@ As we showed, using appropriate statistical methods (like GLMs) can enhance the 
 
 %% --- Non-parametric
 \citet{wang_making_2011} advocated that in the typical case of small sample sizes (n \textless 20) and non-normal data, non-parametric tests perform better than parametric tests assuming normality.
-In contrast, our results showed that the often applied Kruskal test and pairwise Wilcoxon test have equal or less power compared to tests assuming normality after data transformation.
-Moreover, GLMs always performed better than non-parametric tests. 
+In contrast, our results showed that the often applied \DIFdelbegin \DIFdel{Kruskal test and pairwise Wilcoxon test have equal or }\DIFdelend \DIFaddbegin \DIFadd{$KW$ and $WT$ have }\DIFaddend less power compared to \DIFdelbegin \DIFdel{tests assuming normality after data transformation}\DIFdelend \DIFaddbegin \DIFadd{$LM$}\DIFaddend .
+Moreover, \DIFdelbegin \DIFdel{GLMs }\DIFdelend \DIFaddbegin \DIFadd{$GLMs$ }\DIFaddend always performed better than non-parametric tests. 
 Though more powerful non-parametric tests may be available \citep{konietschke_rank-based_2012}, these are focused on hypothesis testing and do not provide estimation of effect sizes.
 Additionally to testing, GLMs allow the estimation and interpretation of effects that might not be statistically significant, but ecologically relevant.
 Therefore, we advise using GLMs instead of non-parametric tests for non-normal data.
