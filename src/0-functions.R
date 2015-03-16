@@ -346,6 +346,11 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
                   family = binomial(link = 'logit'))
     modglm.null <- glm(cbind(y, n_animals - y) ~ 1, data = df, 
                        family = binomial(link = 'logit'))
+    # quasi-binomial model
+    modqglm <- glm(cbind(y, n_animals - y) ~ x, data = df, 
+                   family ='quasibinomial')
+    modqglm.null <- glm(cbind(y, n_animals - y) ~ 1, data = df, 
+                   family ='quasibinomial')
     
     # ------------- 
     # Tests
@@ -353,6 +358,7 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     glm_lr <- anova(modglm, modglm.null, test = 'Chisq')[2 , 'Pr(>Chi)']
     # F Tests
     lm_f <- anova(modlm, modlm.null, test = 'F')[2, 'Pr(>F)']
+    qglm_f <- anova(modqglm, modqglm.null, test = 'F')[2, 'Pr(>F)']
     # kruskal test
     pk <- kruskal.test(y ~ x, data = df)$p.value
     
@@ -369,6 +375,11 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     suppressWarnings(
       loecglm <- min(which(mc_glm  < 0.05))
     )
+    mc_qglm <- summary(glht(modqglm, linfct = mcp(x = 'Dunnett'),  
+                           alternative = 'less'), test = adjusted('holm'))$test$pvalues
+    suppressWarnings(
+      loecqglm <- min(which(mc_qglm  < 0.05))
+    )
     suppressWarnings(
       pw <- pairwise_wilcox(y, x, padj = 'holm', dunnett = TRUE)
     )
@@ -378,8 +389,9 @@ resfoo2 <- function(z, verbose = TRUE, asin = 'ecotox'){
     
     # --------------------------------------------
     # return object
-    return(list(lm_f = lm_f, glm_lr = glm_lr, pk = pk, 
-                loeclm = loeclm, loecglm = loecglm, loecpw = loecpw
+    return(list(lm_f = lm_f, glm_lr = glm_lr, qglm_f = qglm_f, pk = pk, 
+                loeclm = loeclm, loecglm = loecglm, loecqglm = loecqglm, 
+                loecpw = loecpw
     ))
     
   }

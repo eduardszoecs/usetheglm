@@ -255,6 +255,13 @@ merged <- merge(pow_glob_c[ , c(1,2,4, 5)],
                 suffixes = c('glob', 'loec'))
 merged$diff <- merged$powerloec - merged$powerglob
 plot(merged$diff)
+merged
+ggplot(merged, aes(x = variable, y = diff)) +
+  geom_boxplot()
+a <- merged[!merged$variable %in% c('glm_nb', 'np', 'glm_p'), ]
+# mean reduction
+ddply(a, .(variable), summarise, mean(diff))
+
 max(abs(merged$diff[!merged$variable %in% c('glm_nb', 'np')]))
 max(abs(merged$diff[merged$variable %in% c('lm')]))
 merged[merged$variable == 'lm', ]
@@ -399,7 +406,7 @@ print(xtable(ldf,
 ### ------------------------
 ## Plot T1-error
 t1_glob_p <- ldply(res2_p, p_glob)
-t1_glob_p$ps <- todo_p$ps
+t1_glob_p$ps <- todo_p$pE
 t1_glob_p$N <- todo_p$N
 t1_glob_p <- melt(t1_glob_p, id.vars = c('ps', 'N'))
 levels(t1_glob_p$variable) <- c('lm', 'glm', 'np')

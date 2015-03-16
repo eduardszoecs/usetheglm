@@ -80,7 +80,7 @@ for(i in seq_len(nrow(todo_c))){
 # run methods
 if(sim1){
   if(parallel){
-    res2_c <- mclapply(sims2_c, resfoo1, npb = 500, verbose =FALSE, mc.cores = ncores)
+    res2_c <- mclapply(sims2_c, resfoo1, npb = 500, verbose = FALSE, mc.cores = ncores)
   } else {
     res2_c <- lapply(sims2_c, resfoo1, npb = 500)
   }
@@ -129,7 +129,11 @@ for(i in seq_len(nrow(todo_p))){
 
 # run methods
 if(sim2){
-  res1_p <- llply(sims1_p, resfoo2, .progress = 'text')
+  if(parallel){
+    res1_p <- mclapply(sims1_p, resfoo2, verbose = FALSE, mc.cores = ncores)
+  } else {
+    res1_p <- lapply(sims1_p, resfoo2)
+  }
   saveRDS(res1_p, file.path(cachedir, 'res1_p.rds'))
 }
 
@@ -146,7 +150,12 @@ for(i in seq_len(nrow(todo_p))){
 
 # run methods
 if(sim2){
-  res2_p <- llply(sims2_p, resfoo2, asin = 'ecotox', .progress = 'text')
+  if(parallel){
+    res2_p <- mclapply(sims2_p, resfoo2, verbose = FALSE, mc.cores = ncores)
+  } else {
+    res2_p <- lapply(sims2_p, resfoo2)
+  }
   saveRDS(res2_p, file.path(cachedir, 'res2_p.rds'))
 }
+
   
