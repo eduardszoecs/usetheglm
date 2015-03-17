@@ -104,10 +104,10 @@ To meet the assumptions of the standard linear model, count data usually needs t
 We followed the recommendations of \citet{van_den_brink_impact_2000} and used a log(Ay + 1) transformation (eqn. \ref{eqn:trans}):
 
 \begin{align}
-  y^T & = log(Ay + 1) \label{eqn:trans}
+  y_i^T & = log(Ay_i + 1) \label{eqn:trans}
 \end{align}
 
-, where $y$ is the measured and $y^T$ the transformed abundance. 
+, where $y_i$ is the measured and $y_i^T$ the transformed abundance of the $i$th observation. 
 The factor $A$ was chosen in such way that $Ay$ equals 2 for the lowest non-zero abundance value (y).
 
 Then we fitted the linear model to the transformed abundances (hereafter $LM$):
@@ -115,12 +115,12 @@ Then we fitted the linear model to the transformed abundances (hereafter $LM$):
 \begin{align}
   y_i^T &\sim N(\mu_i, \sigma^2) \nonumber \\
   E(y_i^T) = \mu_i ~&\text{and}~ var(y_i^T) = \sigma^2 \label{eqn:normal} \\
-    \mu_i &= \beta X_i  \nonumber
+  \mu_i &= \beta Treatment_i  \nonumber
 \end{align}
 
 This model assumes a normal distributed of the transformed abundances.
-The expected value for each treatment i is given by its mean ($\mu_i$) and the variance ($\sigma^2$) is constant between treatments.
-$X_i$ is a set of explanatory variables coding the treatments and $\beta$ are the parameters to be estimated from the data (eqn. \ref{eqn:normal}).
+The expected value for each observation $i$ is given by its mean ($\mu_i$) and the variance ($\sigma^2$) is constant between treatments.
+We allow this mean to vary between treatments and $\beta$ are the coefficients related to these changes between treatments (eqn. \ref{eqn:normal}).
 
 
 \subsubsection{Generalised Linear Models}
@@ -128,35 +128,36 @@ GLMs extend the normal model by modelling other distributions.
 Instead of transforming the response variable, the counts could be directly modelled by a Poisson GLM ($GLM_p$):
 
 \begin{align}
-  y_i &\sim P(\lambda_i) \nonumber \\
-  E(y_i) &= var(y_i) = \lambda_i \label{eqn:pois} \\
-  \lambda_i &= e^{\beta X_i}  \nonumber
+  y_i &\sim P(\mu_i) \nonumber \\
+  E(y_i) &= var(y_i) = \mu_i \label{eqn:pois} \\
+  \mu_i &= e^{\beta Treatment_i}  \nonumber
 \end{align}
-\todo{maybe add link function here?!}
-This model assumes poisson distributed abudances.
-The expected value for each treatment i is give by its mean. \todo{todo}
 
-Again, this model was parametrised as contrast to the control group. 
-The response variable is linked to the predictors via a log-function to avoid negative fitted values (eqn. \ref{eqn:pois}). 
+This model assumes poisson distributed abundances with mean $\lambda_i \ge 0$.
+The expected value for each observation $i$ is give by its mean. 
+Moreover, this model assumes that mean and variance are equal.
+The mean is linked exponentially the predictors (treatments) to avoid negative means (eqn. \ref{eqn:pois}). 
 
-The Poisson distribution assumes that mean and variance are equal - an assumption that is rarely met with ecological data, which is typically characterized by greater variance than the mean (overdispersion).
-To overcome this problem a quasi-Poisson distribution could be used which introduces an additional overdispersion parameter ($\Theta$) ($GLM_{qp}$, eqn. \ref{eqn:quasi}).
+The assumption of equal mean and variance is rarely met with ecological data, which is typically characterized by greater variance than the mean (overdispersion).
+To overcome this problem a quasi-Poisson model ($GLM_{qp}$) could be used, which assumes that variance is a linear function of the mean (eqn. \ref{eqn:quasi}):
 
 \begin{align}
-  y_i &\sim P(\lambda_i, \Theta) \label{eqn:quasi} \\
-  var(y_i) &= \Theta \lambda_i  \nonumber
+  var(y_i) &= \Theta \mu_i  \label{eqn:quasi}
 \end{align}
 
-The quasi-Poisson model yields to parameter estimates equal to the Poisson model (eqn. \ref{eqn:pois}), but with standard errors scaled by the degree of overdispersion.
+Here, $\Theta$ is used to account for additional variation and is known as overdispersion parameter.
+The quasi-Poisson model is a post hoc method, meaning that first a Poisson model is estimated (eqn. \ref{eqn:pois}) and than the standard errors are scaled by the degree of overdispersion.
 
 Another possibility to deal with overdispersion is to fit a negative binomial distribution ($GLM_{nb}$, eqn. \ref{eqn:negbin}).
 
 \begin{align}
-  y_i &\sim NB(\lambda, \kappa) \label{eqn:negbin}  \\
-  var(y_i) &= \lambda_i + \kappa \lambda_i^2 \nonumber
+  y_i &\sim NB(\mu_i, \kappa) \nonumber  \\
+  E(y_i) = \mu_i ~&\text{and}~var(y_i) = \mu_i + \mu_i^2 / \kappa \label{eqn:negbin} \\
+  \mu_i &= e^{\beta Treatment_i}  \nonumber 
 \end{align}
 
-In both cases the parametrisation and link function is equal to the Poisson GLM (eqn. \ref{eqn:pois}).
+This models assumes that abundances are negative binomially distributed, with a mean of $\mu_i \ge 0$ and a variance $\mu_i + \mu_i^2 / \kappa$.
+Like in the Poisson model we use a log-link
 Note, that the quasi-Poisson model assumes a linear mean-variance relationship (eqn. \ref{eqn:quasi}), whereas the negative binomial model assumes a quadratic relationship (eqn. \ref{eqn:negbin}).
 
 The above described models are most commonly used in ecology \citep{ver_hoef_quasi-poisson_2007}, although other distributions for count data are possible, like the negative binomial model with a linear mean-variance relationship (also known as NB1) or the poisson inverse gaussian model \citep{hilbe_modeling_2014}.
@@ -226,7 +227,7 @@ A total of 18 mesocosm have been sampled from 6 treatments (Control (n = 4), 0.1
   \caption{Data from \citet{brock_minimum_2015} (dots). 
   Predicted values (triangles) and 95\% Wald Z or t confidence intervals from the fitted models (vertical lines) are given beside.
   Horizontal bars above indicate treatments statistically significant different from the control group (Dunnett contrasts).
-  The data showed overdispersion ($\kappa = 0.26$) and therefore, the Poisson model underestimates the width of confidence intervals.
+  The data showed overdispersion ($\kappa = 4$) and therefore, the Poisson model underestimates the width of confidence intervals.
   }
   \label{fig:example}
 \end{figure}
@@ -237,7 +238,7 @@ A total of 18 mesocosm have been sampled from 6 treatments (Control (n = 4), 0.1
 \subsubsection{Count data}
 To further scrutinise the differences between methods we simulated data sets with known properties.
 We simulated count data that mimics the data of the case study with five treatments (T1 - T5) and one control group (C).
-Counts were drawn from a negative binomial distribution with overdispersion at all treatments ($\kappa = 0.25$, eqn. \ref{eqn:negbin}).
+Counts were drawn from a negative binomial distribution with overdispersion at all treatments ($\kappa = 4$, eqn. \ref{eqn:negbin}).
 We simulated data sets with different number of replicates (N = \{3, 6, 9\}) and different abundances in control treatments ($\mu_\text{\tiny C}$ = \{2, 4, 8, 16, 32, 64, 128\}). 
 For power estimation, mean abundance in treatments T2 - T5 was reduced to half of control and T1 ($\mu_\text{\tiny T2}~=~...~=~\mu_\text{\tiny T5}~=~0.5~\mu_\text{\tiny C} = 0.5~\mu_\text{\tiny T1}$), resulting in a theoretical LOEC at T2.
 Mean abundance was kept equal between all groups in Type 1 error simulations.
@@ -254,7 +255,7 @@ For each combination we simulated 1000 data sets.
 \subsection{Data Analysis}
 We analysed the case study and the simulated data using the outlined methods.
 We compared the methods and models in terms of Type 1 error (detection of an effect when there is none) and power (ability to detect an effect when it is present).
-All simulations were done in R (Version 3.1.2) \citep{r_core_team_r:_2014} on a Amazon EC2 Linux instance (64bit, 15GB RAM, 8 cores, 2.8 GHz).
+All simulations were done in R (Version 3.1.2) \citep{r_core_team_r:_2014} on a Amazon EC2 virtual Linux server (64bit, 15GB RAM, 8 cores, 2.8 GHz).
 Source code for the simulations and analysis of the case study is available online at \url{https://github.com/EDiLD/usetheglm}.
 
 
@@ -287,7 +288,7 @@ At small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of
 
 \begin{figure*}
   \centering
-  \includegraphics[width = 129mm]{p_glob_c.pdf}
+  \includegraphics[width = 126mm]{p_glob_c.pdf}
   \caption{Count data simulations: Type 1 error (top) and Power (bottom) for the test of a treatment effect.
   Only type 1 errors \textless 25\% are displayed. 
   $GLM_p$ showed type 1 errors \textgreater 20\% in all simulation scenarios.
@@ -306,7 +307,7 @@ $LM$ and $WT$ showed less power, with $WT$ having no power to detect the LOEC at
 
 \begin{figure*}
   \centering
-  \includegraphics[width = 129mm]{p_loec_c.pdf}
+  \includegraphics[width = 126mm]{p_loec_c.pdf}
   \caption{Count data simulations: Type 1 error (top) and Power (bottom) for determination of LOEC.
   For clarity only type 1 errors \textless 25\% are displayed.
   Power levels for models with inflated type I error are shown for completeness.
@@ -342,16 +343,16 @@ Inference on LOEC was not as powerful as inference on the general treatment effe
 Contrary to the general treatment effect, $LM$ showed the higher power than $GLM_{bin}$ at small sample sizes (n = {3, 6}).
 $WT$ had no power for n = 3 and showed less power in the other simulation runs (Figure \ref{fig:p_loec_p}).
 
-\begin{figure*}
+\begin{figure}
   \centering
-  \includegraphics[width = 129mm]{p_loec_p.pdf}
+  \includegraphics[width = 84mm]{p_loec_p.pdf}
   \caption{
   Binomial data simulations: 
   Power (top) and Type 1 error (bottom) for the test for determination of LOEC. 
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_loec_p}
-\end{figure*}
+\end{figure}
 
 
 %% ----------------------------------------------------------------------------

@@ -80,6 +80,10 @@ modpois_upr <- modpois$family$linkinv(modpois_p$fit + 1.96 * modpois_p$se.fit)
 ### quasi-Poisson GLM
 modqpois <- glm(Abundance ~ Concentration, data = df, family = quasipoisson)
 summary(modqpois)
+# # same as
+# summary(modpois)
+# disp <- sum(resid(modpois, type = 'pearson')^2) / modpois$df.residual
+# sqrt(diag(vcov(modpois))) * sqrt(disp)
 
 ## Inference, global test
 # F test
@@ -102,6 +106,10 @@ modqpois_upr <- modqpois$family$linkinv(modqpois_p$fit + 1.96 * modqpois_p$se.fi
 ### Negative binomial GLM
 modnb <- glm.nb(Abundance ~ Concentration, data = df)
 summary(modnb)
+# alternatively:
+# require(COUNT)
+# cc <- nbinomial(Abundance ~ Concentration, data = df)
+# summary(cc)
 
 ## Inference, global test
 # LR test

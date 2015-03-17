@@ -75,10 +75,8 @@ Note, that changes in titles, citations and figures were not highlighted.
 \section{ToDo:}
 \begin{enumerate}
 	\item Now also added poisson GLM. incorporate into text!
-	\item first t1 then power.
-	\item recompile supplements
+	\item recompile/update/enhance supplements
 	\item Holm also for case-study. Recalculate and rewrite 3-brock.R
-	\item update sysinfo in readme
 	\item Comment 62 umsetzen.
 	\item abstract: 
 \end{enumerate}
@@ -87,20 +85,24 @@ Note, that changes in titles, citations and figures were not highlighted.
 % ======================================================= %
 \section{Response to Reviewer 1}
 \vspace{-2em}
+%todo
 \comment{The purpose of the manuscript is highly commendable. Unfortunately, the
 present manuscript has some major shortcomings: The simulation results,
 which constitute the key contribution, are far from being as unequivocal as
 the title may lead one to think. Also, it is disturbing to see a fairly technical
 (and for ESPR non-standard) formulation of statistical models and yet the
 authors seem to lack some understanding of the models in some cases.}
-\response{aaaa}
+\response{We changed the subtitle (see also comment 2) and update the notation of the models used (see also comments 6, 7, 8, 10, 25, and 43).
+The simulations scenarios are close-knit to experiments and data often encountered in ecotoxicology which are characterised by small sample sizes and a factorial design (see also comment 13). 
+Therefore, we submitted to ESPR, though, it might be interesting also to a greater audience.}
 
 %done
 \comment{About the title: Please consider a more informative title such as ”Comparison of statistical approaches for analysis of non-normally distributed
 response in ecotoxicology”. Also in view of the fact that the results are
 not very clearly favouring the generalized linear models (GLMs).}
 \response{We agree and changed the subtitle to \\
-\emph{"A comparison of statistical approaches for analysis of non-normally distributed data in ecotoxicology"}.}
+\emph{"A comparison of statistical approaches for analysis of non-normally distributed data in ecotoxicology"}. 
+}
 
 %done
 \comment{p. 2, left column, lines 2–12: The issue of LOEC/NOEC versus regres-
@@ -127,24 +129,27 @@ $\mu_C$ ) there is practically no difference. However, this difference may not
 show up in simulations when the sample size is kept between 3 and 9.}
 \response{We agree that for large counts there is no practical difference between methods. However, our simulation design aimed to mimic data sets frequently encountered in ecotoxicology. See also response to comment 13.}
 
+%done
 \comment{p. 2, right column, lines 19–21: It is not the response variable that is
 linked to the linear predictors, it is the mean of the response variable
 (McCullagh \& Nelder, 1989). This is a basic fact of generalized linear
 models as you also show in Eqn. (3). Please explain Eqn. (3) in more
 detail (explain the parameters).}
-\response{}
+\response{The reviewer is correct and we rephrased this complete section.}
 
+%done
 \comment{p. 2, right column, lines 25–27: There exists no quasi-Poisson distri-
 bution!!! You use R terminology, but this is not in this case statistical
 terminology. Please consult McCullagh \& Nelder (1989) to understand
 that over-dispersion is dealt with by means of an ad hoc scaling of the
 standard errors that takes place after having fitted the ordinary Poisson
 GLM. So Eqn. (4) doesn’t make sense.}
-\response{}
+\response{The reviewer is correct that the quasi-Poisson model does not correspond to any distribution. We rephrased this section.}
 
+%done
 \comment{p. 2, right column, Eqn. (5): Have you explained the parameters in
 the text?}
-\response{}
+\response{We added the missing explanation for eqn. 5. Moreover, we unified the explanations of the models.}
 
 %done
 \comment{p. 3, left column, lines 26–42: What about over-dispersion for binomial
@@ -152,11 +157,11 @@ data? Shouldn’t that also be mentioned now that you consider models
 for over-dispersion for count data.}
 \response{We added that overdispersion might also occur in binomial data and pointed the reader to \citet{warton_arcsine_2011}.}
 
-
+%done
 \comment{p. 3, left column, line 33: Why not specify the mean next to the
 variance in all equations? Or skip the variance where not needed (as
 in this case).}
-\response{}
+\response{We edited sections 2.1 and 2.2 and specified the mean next to the variance.}
 
 %done
 \comment{p. 3, right column, Fig. 1: Please be precise in the figure text: By using
@@ -264,7 +269,7 @@ data (instead of considering completely different designs).}
 
 \comment{One point to consider in a resubmission is that GLMs aren't for use for all non-normal data - some qualifications are needed of when to use GLMs.  Distributionally, GLMs replace the assumption of normality with the assumption that data come from the exponential family, which does not cover all situations.  More critically, GLMs replace the assumption of equal variance with an assumption that the mean-variance relationship follows a pre-specified pattern, and violation of this assumption has similar impacts to violations of the equal-variance assumption in a linear model would have.  Particular situations where GLMs are useful are binary data (known to be a quadratic mean-variance), count data (especially count data with lots of low counts, which typically cannot be transformed to normality effectively), and proportions constructed from counts.  These are the examples highlighted in the text, and are of clear relevance in ecotoxicology, but the argument does not extend much
 more broadly than these examples - it is not a case of "your data aren't normal so you should use GLMs".  It is more accurate to say "if you have binary, counts or proportions from counts you should use GLMs".  I think this requires a modest adjustment to the phrasing of the abstract and introduction to better qualify the situations where GLMs are appropriate.  e.g. where O'Hara and Kotze and Warton \& Hui are mentioned, this should be qualified to refer to counts and proportions (of counts) respectively.  I  don't think the title needs changing, sufficient qualification elsewhere of the type of non-normality if interest should do the trick.}
-\response{}
+\response{We agree and revised out manuscript accordingly. We changed the subtitle (see comment 2). \todo{abstract, text}}
 
 %done
 \comment{In the first paragraph, "positive" is used where "non-negative" is needed (i.e. zero is a possible value), also change bonded to bounded}
@@ -274,21 +279,23 @@ more broadly than these examples - it is not a case of "your data aren't normal 
 \comment{Page 2, second column - the parameterisation isn't equal to the Poisson model - the mean model is the same, I think that is what was meant.}
 \response{We edited this section (see also comment 6) and corrected this.} 
 
+
 \comment{Page 2, second column - also, strictly speaking, not all the methods mentioned here are GLMs.  Negative binomial regression ("NB2") is a GLM if the overdispersion parameter is fixed, otherwise it is a generalisation of GLM.  Similarly, quasi-Poisson isn't really a GLM, but a related method.}
-\response{}
+\response{\todo{GLM rausnehmen?!}}
 
 \comment{Section 2.2 - a description of what is meant by binomial data would be helpful at the start of this section.  Perhaps for completeness a description of what is meant by counts would help at the start of section 2.1}
 \response{}
 
+%done
 \comment{Section 2.2.2 - it would be useful to also mention GLMMs with a random intercept term.  Often with this sort of data there are extra sources of variation from one sample to the next that are not explained by the binomial assumption, and this is the most natural way to account for it.}
-\response{}
+\response{We added a reference to GLMM and \citep{warton_arcsine_2011} to this section.}
 
 \comment{Sections 2.1, 2.2: references to relevant articles or texts would be useful for GLMs, where the reader can find more details at a level appropriate for readership (e.g. a Zuur text?  Quinn \& Keough?).  Also point readers to supp 2 for code and a worked example.}
 \response{}
 
 %done
 \comment{page 3, line 58, the parametric bootstrap}
-\response{} Changed accordingly.
+\response{We changed accordingly.}
 
 \comment{Page 3, second column, line 30: Wald tests should be used with caution, when a mean estimate is zero (or close to it) they can have strange behaviour (related to the issue of separable data - parameter estimates and ses diverging, test statistics going to zero).}
 \response{}
@@ -298,7 +305,7 @@ more broadly than these examples - it is not a case of "your data aren't normal 
 
 % done
 \comment{page 7 first column, line 7: bounds not bonds}
-\response{} Thanks for pointing to this typo.
+\response{Thanks for pointing to this typo.}
 
 \comment{Section 4.1 the case study discussion was a little confusing.  So is the point that you can get different results by linear models according to transformation, but that GLMs can resolve the problem of choice of transformation?  (by replacing it with a decision about mean-variance relationship?)  I think a stronger point is that the GLM is usually a better fit to count data, no transformation can make data Gaussian when it has lots of zeros and small counts, but GLM is designed for such data.  If diagnostic tools support this argument for your case study they could be included.}
 \response{}
@@ -306,6 +313,7 @@ more broadly than these examples - it is not a case of "your data aren't normal 
 \comment{page 7 column 1 line 27: it is not so much unreliable and biased - they are estimating a different parameter (in an unbiased fashion) - they estimate the mean of log(Ax+1) data, and a problem is that this has no natural interpretation in terms of the original data.  It is fair to make the point that it is biased as an estimate of the mean response, but it would be helpful to explain why and how the estimators have problematic interpretations.}
 \response{}
 
+%done
 \comment{page 7 column 1 line 50: a priori not a priory\\
 page 7 column 2 line 37: data are (data being the plural of datum)\\
 page 7 column 2 line 42: GLMs have (or GLM has)}
@@ -347,8 +355,9 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 \response{We clarified this equation and moved this part of eqn. 1 to the text: \\
 \emph{"The factor $A$ was chosen in such way that $Ay$ equals 2 for the lowest non-zero abundance value (y)."}}
 
+%done
 \comment{Line 51 x\_i is undefined. The model appear to specify a simple linear regression or a control-one\_treatment model. Neither is used in the paper!!! Modify the notation therefore..}
-\response{}
+\response{We clarified this whole section. Eqn. 2 is in fact a simple linear regression, but with dummy coded predictors / treatments.}
 
 \comment{Line 59 Mention backtransformation here, which works fine for the confidence intervals, and not the backtransformed is the median on the original scale. If you want to backtransform to the original mean, use exp(mean+ 0.5*sigma2). (Aitchison \& Brown 1969) page 8 (Jongman et al. 1995)page 19. }
 \response{}
@@ -383,10 +392,10 @@ Parameter estimates (and their uncertainty) give much more information - on whic
 \comment{Line 4 right : the backtransformed mean gives a median on the original scale, a value that is more interesting than the mean (generally for skew data),  and for skew right always smaller than the mean.}
 \response{}
 
-%todo
+%done
 \comment{Section 3.2
 Always start with the Type I error results because the power results are without meaning if the Type I error is inflated. This also applies the order of the figs: interchange the two rows of subfigs. }
-\response{We also changed the order of the subfigures. \todo{reorder in text}}
+\response{We agree and changed the order (first type I error, then power) in the text, as well as in the figures.}
 
 %done
 \comment{21 right: remove GLM\_nb in this sentence as GLM\_nb must be discarded due to inflated Type I error.}
@@ -424,8 +433,9 @@ We used Dunnett constrast for in all simulations, because only these allow indiv
 For a comparison of MCP see \citet{jaki_statistical_2013}, who recommend a combination of both, Dunnett and Williams constrasts.
 }
 
+%done
 \comment{Line 10-40 Again: discuss Type I error first. Then no mention of GLM\_nb in power.}
-\response{}
+\response{We agree and changed accordingly. See also comment 52.}
 
 %todo
 \comment{Line 18 right. Add after "non-normal data' the point the importance of proper accounting for under and overdispersion when using GLM. What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion.}
@@ -435,6 +445,7 @@ The results for Poisson GLM are now also display in Figures 2+3 and we discuss t
 \comment{Line 41 right size of 9 -\textgreater size of 6-9 (?)}
 \response{}
 
+%done
 \comment{Line 44 right the transformation -\textgreater the LM}
 \response{We changed accordingly.}
 
