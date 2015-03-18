@@ -23,8 +23,6 @@ figdir <- file.path(prj, "manuscript/revision/report") # figures for latex
 
 #####--------------------------------------------------------------------------
 ### install missing if needed!
-# require(checkpoint)
-# checkpoint("2015-03-01")
 require(reshape2)
 require(ggplot2)
 require(plyr)

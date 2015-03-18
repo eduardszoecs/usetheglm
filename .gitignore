@@ -26,3 +26,4 @@
 report_old
 *.zip
 cache/aws*
+packrat/lib*/
