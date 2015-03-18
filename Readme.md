@@ -12,6 +12,7 @@ Online repository for the paper submitted to [Environmental Science and Pollutio
 
 * `~/cache/`	: cached files (simulation results)
 * `~/manuscript/`  : manuscript files (LaTeX) - including review process
+* `~/packrat/`    : packrat library
 * `~/src/`    	: Source code (R)
 * `~/supplement/`: Supplementary material (LaTeX)
 
