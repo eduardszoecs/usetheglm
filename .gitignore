@@ -5,7 +5,6 @@
 
 # Sublime
 .directory
-
 # Latex
 *aux
 *log
@@ -15,18 +14,14 @@
 *concordance.tex
 *bbl
 *blg
-
 # Markdown
 *report_markdown*
 *html
-
 # data
 *data
-
 # sublime
 *.sublime-project
 *.sublime-workspace
-
 # other
 report_old
 *.zip
