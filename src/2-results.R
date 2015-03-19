@@ -425,7 +425,8 @@ plot_t1_glob_p <- ggplot(t1_glob_p) +
   mytheme + 
   # legend title
   scale_shape_manual('Method', values=c(16,2,17)) +
-  scale_linetype_discrete('Method') 
+  scale_linetype_discrete('Method') +
+  coord_cartesian(ylim = c(-0.005, 0.1))
 plot_t1_glob_p
 
 ### ------------------------
@@ -518,7 +519,8 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
   mytheme + 
   # legend title
   scale_shape_manual('Method', values=c(16,2,17)) +
-  scale_linetype_discrete('Method')
+  scale_linetype_discrete('Method') +
+  coord_cartesian(ylim = c(-0.005, 0.1))
 plot_t1_loec_p
 
 ### ------------------------

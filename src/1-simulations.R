@@ -55,9 +55,9 @@ for(i in seq_len(nrow(todo_c))){
 if(sim1){
   if(parallel){
     # res1_c <-mclapply(sims1_c, resfoo1, npb = 1, mc.cores = ncores)
-    res1_c <- mclapply(sims1_c, resfoo1, npb = 500,  verbose = FALSE, mc.cores = ncores)
+    res1_c <- mclapply(sims1_c, resfoo1, npb = 500,  verbose = FALSE, mc.cores = ncores, pb = pb)
   } else {
-    res1_c <- lapply(sims1_c, resfoo1, npb = 500)
+    res1_c <- lapply(sims1_c, resfoo1, npb = 500, pb = pb)
   }
   saveRDS(res1_c, file.path(cachedir, 'res1_c.rds'))
 } 
@@ -80,9 +80,9 @@ for(i in seq_len(nrow(todo_c))){
 # run methods
 if(sim1){
   if(parallel){
-    res2_c <- mclapply(sims2_c, resfoo1, npb = 500, verbose = FALSE, mc.cores = ncores)
+    res2_c <- mclapply(sims2_c, resfoo1, npb = 500, verbose = FALSE, mc.cores = ncores, pb = pb)
   } else {
-    res2_c <- lapply(sims2_c, resfoo1, npb = 500)
+    res2_c <- lapply(sims2_c, resfoo1, npb = 500, pb = pb)
   }
 
   saveRDS(res2_c, file.path(cachedir, 'res2_c.rds'))

@@ -48,7 +48,7 @@ packrat will try to install these packages from the snapshot on first start of R
 * If the switches `sim1` and `sim2` are set to `FALSE`, the simulations results are grabbed from cache. Otherwise, the actual simulation will run.
 * the count data simulations took ~ 12 hours on a amazon EC2 c3.2xlarge instance.
 * simulations can be run in parallel, set `parallel = TRUE` to use the `parallel` package for parallelization.
-
+* Clearly, most time is consumed for bootstrap, set `pb = FALSE` to omit it.
 
 
 ### Information about the R Environment used

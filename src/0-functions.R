@@ -115,11 +115,11 @@ dosim1 <- function(N, mu, theta, nsims = 100){
 #' 7) LOEC from neg.bin. glm using one-sided Dunnett test [loecglm]
 #' 8) LOEC from quasi-poisson glm using one-sided Dunnett test [loecqglm]
 #' 9) LOEC from one-sided pairwise Wilcoxon with Holm-correction
-resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
+resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL, pb = TRUE){
   if(verbose){
     message('n: ', length(z$x) / 6, '; muc = ', mean(z$y[,1][z$x == 1]))
   }
-  ana <- function(y, x, npb){
+  ana <- function(y, x, npb, pb){
     # -------------
     # Transformations
     # ln(ax + 1) transformation
@@ -154,9 +154,13 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
         p_glm_lrpb <- 'convergence error'
       } else {
         p_glm_lr <- anova(modglm, modglm.null, test = 'Chisq')[2 , 'Pr(Chi)']
-        # Parametric bootstrap for GLM LR
-        glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, npb = npb)
-        p_glm_lrpb <- glm_pb$p.pb
+        if(pb){
+          # Parametric bootstrap for GLM LR
+          glm_pb <- myPBmodcomp(modglm, modglm.null, data = df, npb = npb)
+          p_glm_lrpb <- glm_pb$p.pb
+        } else {
+          p_glm_lrpb <- NA
+        }
       }
     }
     # F Tests
@@ -220,9 +224,9 @@ resfoo1 <- function(z, verbose = TRUE, npb = 400, nmax = NULL){
   }
   # run on each simulated data
   if(!is.null(nmax)){
-    res <- apply(z$y[ ,seq_len(nmax)], 2, ana, x = z$x, npb = npb)
+    res <- apply(z$y[ ,seq_len(nmax)], 2, ana, x = z$x, npb = npb, pb = pb)
   } else {
-    res <- apply(z$y, 2, ana, x = z$x, npb = npb)
+    res <- apply(z$y, 2, ana, x = z$x, npb = npb, pb = pb)
   }
   return(res)
 }

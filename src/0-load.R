@@ -62,5 +62,8 @@ if(parallel){
     ncores <- ncores -1
 }
 
+# run parametric boostrap?
+pb <-  TRUE
+
 # keep these objects
 keep_obj <- c(ls(), 'keep_obj')
