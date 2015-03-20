@@ -380,7 +380,7 @@ plot_pow_glob_p <- ggplot(pow_glob_p) +
   geom_point(aes(y = value, x = pE, shape = variable), size = 4, color = 'black') +
   facet_grid( ~N, labeller = n_labeller) +  
   # axes
-  labs(x = expression('pE'), 
+  labs(x = expression(pi[C]), 
        y = expression(paste('Power (global test , ', alpha, ' = 0.05)'))) +
   # appearance
   mytheme +
@@ -419,7 +419,7 @@ plot_t1_glob_p <- ggplot(t1_glob_p) +
                linetype = 'dashed') + 
   facet_grid( ~N, labeller = n_labeller) +  
   # axes
-  labs(x = expression(pi), 
+  labs(x =  expression(pi[C]), 
        y = expression(paste('Type 1 error (global test , ', alpha, ' = 0.05)'))) +
   # appearance
   mytheme + 
@@ -476,7 +476,7 @@ plot_pow_loec_p <- ggplot(pow_loec_p) +
   geom_point(aes(y = value, x = pE, shape = variable), 
              size = 4,  color = 'black') +
   facet_grid( ~N, labeller = n_labeller) + 
-  labs(x = 'pE', 
+  labs(x =  expression(pi[C]), 
        y = expression(paste('Power (LOEC , ', alpha, ' = 0.05)'))) + 
   mytheme +
   scale_shape_manual('Method', values=c(16,2,17), labels = c('LM', expression(GLM[bin]), 'WT')) +
@@ -513,7 +513,7 @@ plot_t1_loec_p <- ggplot(t1_loec_p) +
                linetype = 'dashed') + 
   facet_grid( ~N, labeller = n_labeller) + 
   # axes
-  labs(x = expression(pi), 
+  labs(x =  expression(pi[C]), 
        y = expression(paste('Type 1 error (LOEC , ', alpha, ' = 0.05)'))) + 
   # appearance
   mytheme + 

@@ -103,8 +103,6 @@ not very clearly favouring the generalized linear models (GLMs).}
 \emph{"A comparison of statistical approaches for analysis of count and proportion data in ecotoxicology"}. 
 }
 
-\todo{nb biased -> parametric bootstrap!}
-
 %done
 \comment{p. 2, left column, lines 2–12: The issue of LOEC/NOEC versus regres-
 sion is interesting but not really relevant to the aim of the manuscript.
@@ -209,10 +207,11 @@ particular which scenarios to consider).}
 \response{Our simulations covered scenarios often encountered by ecotoxicologists and therefore, it is like that practicing ecotoxicologists will also encounter such convergence problems. 
 See also response to comment 13.}
 
+%done
 \comment{p. 4, right column, lines 31–33: One explanation for the reduced power
 is certainly the multiple testing issue. Perhaps this point could be
 addressed?}
-\response{}
+\response{We added this point to the discussion.}
 
 %done
 \comment{p. 4, right column, lines 57–58: Did LM really maintain the nominal
@@ -272,9 +271,10 @@ data (instead of considering completely different designs).}
 \section{Response to Reviewer 2}
 \vspace{-2em}
 
+%done
 \comment{One point to consider in a resubmission is that GLMs aren't for use for all non-normal data - some qualifications are needed of when to use GLMs.  Distributionally, GLMs replace the assumption of normality with the assumption that data come from the exponential family, which does not cover all situations.  More critically, GLMs replace the assumption of equal variance with an assumption that the mean-variance relationship follows a pre-specified pattern, and violation of this assumption has similar impacts to violations of the equal-variance assumption in a linear model would have.  Particular situations where GLMs are useful are binary data (known to be a quadratic mean-variance), count data (especially count data with lots of low counts, which typically cannot be transformed to normality effectively), and proportions constructed from counts.  These are the examples highlighted in the text, and are of clear relevance in ecotoxicology, but the argument does not extend much
 more broadly than these examples - it is not a case of "your data aren't normal so you should use GLMs".  It is more accurate to say "if you have binary, counts or proportions from counts you should use GLMs".  I think this requires a modest adjustment to the phrasing of the abstract and introduction to better qualify the situations where GLMs are appropriate.  e.g. where O'Hara and Kotze and Warton \& Hui are mentioned, this should be qualified to refer to counts and proportions (of counts) respectively.  I  don't think the title needs changing, sufficient qualification elsewhere of the type of non-normality if interest should do the trick.}
-\response{We agree and revised our manuscript accordingly. We changed the subtitle (see also comment 2) and the abstract \todo{abstract fertig machen} (see also comment 21). The main text is now more specific to counts and proportions from counts.}
+\response{We agree and revised our manuscript accordingly. We changed the subtitle (see also comment 2) and the abstract (see also comment 21). The main text is now more specific to counts and proportions from counts.}
 
 %done
 \comment{In the first paragraph, "positive" is used where "non-negative" is needed (i.e. zero is a possible value), also change bonded to bounded}
@@ -304,21 +304,24 @@ more broadly than these examples - it is not a case of "your data aren't normal 
 \comment{page 3, line 58, the parametric bootstrap}
 \response{We changed accordingly.}
 
+%done
 \comment{Page 3, second column, line 30: Wald tests should be used with caution, when a mean estimate is zero (or close to it) they can have strange behaviour (related to the issue of separable data - parameter estimates and ses diverging, test statistics going to zero).}
-\response{}
+\response{We are thankful for this comment and added discussion of the Hauck-Donner effect.}
 
+%done
 \comment{Page 4, second column, lower means: it is noted that the means are lower when data are transformed.  This is known as transformation bias, and occurs because the transform linear model is actually estimating something different - it is no longer trying to estimate mean response.  It would be helpful to say this and maybe include a useful reference.  This also gets at the issue of interpretability - a disadvantage of the transform approach is a loss of interpretability, because we are no longer modelling mean response.}
-\response{}
+\response{We added discussion of transformation bias, see also comment 4.}
 
 % done
 \comment{page 7 first column, line 7: bounds not bonds}
 \response{Thanks for pointing to this typo.}
 
 \comment{Section 4.1 the case study discussion was a little confusing.  So is the point that you can get different results by linear models according to transformation, but that GLMs can resolve the problem of choice of transformation?  (by replacing it with a decision about mean-variance relationship?)  I think a stronger point is that the GLM is usually a better fit to count data, no transformation can make data Gaussian when it has lots of zeros and small counts, but GLM is designed for such data.  If diagnostic tools support this argument for your case study they could be included.}
-\response{}
+\response{\todo{todo}}
 
+%done
 \comment{page 7 column 1 line 27: it is not so much unreliable and biased - they are estimating a different parameter (in an unbiased fashion) - they estimate the mean of log(Ax+1) data, and a problem is that this has no natural interpretation in terms of the original data.  It is fair to make the point that it is biased as an estimate of the mean response, but it would be helpful to explain why and how the estimators have problematic interpretations.}
-\response{}
+\response{We added discussion of transformation bias, see also comment 4.}
 
 %done
 \comment{page 7 column 1 line 50: a priori not a priory\\
@@ -326,14 +329,15 @@ page 7 column 2 line 37: data are (data being the plural of datum)\\
 page 7 column 2 line 42: GLMs have (or GLM has)}
 \response{We are thankful for pointing to this errors and changed accordingly.}
 
+%done
 \comment{page 7 column 2 line 44: the higher power in Fig 5 seemed to be through the GLMs being more conservative, rather than due to greater efficiency.  This issue could likely be fixed using a parametric bootstrap, as was done previously in figure 2.
 A related point is that the linear model had the advantage that it seemed to be better at maintaining nominal significance levels at small sample sizes, which should be mentioned.  As the authors say however it did not have as good power (and also loses something in interpretability and biased estimation of means).  Hence while the GLM has a number of advantages, combining it with param bootstrap at small sample sizes might be worth considering to address the Type I error issue.}
-\response{}
+\response{We agree and pointed to parametric bootstrap for situations of low sample sizes and/or estimates on the boundary of parameter space. See also comment 31}
 
 \comment{Supplement 2 is a useful addition, and it might be worth giving it a little more emphasis in the text to ensure ecotoxicologists wanting to try out new analyses give it a look.  A couple of suggestions though:
 - there is no parametric bootstrap code there at the moment.  This would be easy enough to do by using the mvabund package, calling manyglm (even on a univariate response) then anova(..., resamp="monte.carlo")  will do a parametric bootstrap.
 - you can construct residual plots for GLMs on this package, using the plot function on a fitted manyglm object.}
-\response{}
+\response{\todo{todo}}
 
 
 % ======================================================= %	
@@ -345,7 +349,12 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 (1) Also, if the authors stick to the binomial/logistic without overdispersion, the normal model could be made powerful in the simulations by treating the error variance as known, because it is a known constant for the arcsine transformation. \\
 (2) Also, the simulation now use slight overdispersion whereas the example /typical data has large overdispersion. Add simulations with large overdispersion. The current ones can go to supplementary. \\
 (3) Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone.  See the example. Discuss this ambiguity. You can perhaps use a bootstrap test based on (GLM?) monotonic regression or similar. I know some cues/leads in this direction.}
-\response{\todo{add warton 2005: almost never use glm without counting for overdispersion...}}
+\response{We rerun our simulations and now include also the poisson GLM with overdispersed data. This clearly shows the effect of not accounting for overdispersion and is discussed now. \\
+We sticked with the binomial simulations without overdispersion, because we don't know if overdispersion is a common phenomena with ecotoxcicological data.
+However, we point the reader to overdispersion and methods to account for it. \\
+Our simulations mimicked the data of the case study and we clarified this.
+\todo{Williams}
+}
 
 %done
 \comment{Page 1 Line 22 right column: a continuous proportion is fine for area cover and so on, but not for proportion of surviving animals where is just "k out of n" turn into a proportion. Discrete therefore. }
@@ -366,17 +375,18 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 \comment{Line 51 x\_i is undefined. The model appear to specify a simple linear regression or a control-one\_treatment model. Neither is used in the paper!!! Modify the notation therefore..}
 \response{We clarified this whole section. Eqn. 2 is in fact a simple linear regression, but with dummy coded predictors / treatments.}
 
+%done
 \comment{Line 59 Mention backtransformation here, which works fine for the confidence intervals, and not the backtransformed is the median on the original scale. If you want to backtransform to the original mean, use exp(mean+ 0.5*sigma2). (Aitchison \& Brown 1969) page 8 (Jongman et al. 1995)page 19. }
-\response{}
+\response{We agree and added a discussion of backtransformation bias. See also comment 4.}
 
 %done
 \comment{Page 3 line 17 n= 4.10 = 40 what does the mean here/ what is the purpose?}
 \response{We are sorry for this error. It was a remnant of a early version of the manuscript - removed.}
 
-
+%done
 \comment{Line 41 : give more attention to the condition for the binomial: independent observations of each of the successes (k) out of the number of experiments (n).
 And: thus give attention to overdispersion in this case as well, particularly as you found nasty things for the LR of  NB.}
-\response{}
+\response{We now point the reader to overdispersed binomial data, though our simulation design does not cover these cases.}
 
 %done
 \comment{Line 28 right. Ref for Dunnett contrasts.}
@@ -396,8 +406,9 @@ The simulated data mimicked the case study and such data is common for mesocosm 
 \response{We fully agree with the reviewer and cautioned that p-values should not be overinterpreted by ecotoxicologists (citing Gelman \& Stern 2006). 
 Parameter estimates (and their uncertainty) give much more information - on which we also emphasized in Figure 1.}
 
+%done
 \comment{Line 4 right : the backtransformed mean gives a median on the original scale, a value that is more interesting than the mean (generally for skew data),  and for skew right always smaller than the mean.}
-\response{}
+\response{We agree and added a discussion of backtransformation bias. See also comments 4 and 44.}
 
 %done
 \comment{Section 3.2
@@ -408,8 +419,9 @@ Always start with the Type I error results because the power results are without
 \comment{21 right: remove GLM\_nb in this sentence as GLM\_nb must be discarded due to inflated Type I error.}
 \response{We agree and changed accordingly.}
 
+%done
 \comment{L32 right. ", but this." Although you should reorder the results, I mention that the "but this" should at least be "This could fortunately be …"[and we could not have known for sure (apart from the general warnings about LR) without the simulations] This inflated error for GLM\_nb must receive more attention. It is an interesting result of this study: you must to bootstrap when using NB.}
-\response{}
+\response{We reordered and edited the respective results and discussion sections and emphasize more on this.}
 
 %done
 \comment{Page 5
@@ -418,6 +430,7 @@ Fig. 2 legend. Add that n =100 simulations. Add the interpretation that  GLM\_nb
 \emph{"Power levels for models with inflated type I error are shown for completeness."}\\
 to figure captions 2 and 3.}
 
+%done
 \comment{Page 6
 Fig.5 LM for 0.8 has a high Type I error. Does it deviate significantly from 0.05? [same question for the high Type I for GLM\_nb in fig 2]. Use confidence interval for binomial p = 0.05 n = 100.}
 \response{We refined our simulations (see comment 14, )}

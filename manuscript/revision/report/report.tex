@@ -17,7 +17,7 @@
 % latexdiff submission/report/report.bbl revision/report/report.bbl > revision/diff/diff.bbl
 
 % % then document
-% latexdiff --disable-citation-markup --math-markup=3 submission/report/report.tex revision/report/report.tex > revision/diff/diff.tex
+% latexdiff --disable-citation-markup --math-markup=3 -t CTRADITIONAL submission/report/report.tex revision/report/report.tex > revision/diff/diff.tex
 
 
 
@@ -40,11 +40,12 @@ Tel.: +49 06341 280 31552 \\
 
 %% ----------------------------------------------------------------------------
 \begin{document}
+\sloppy
 \maketitle
 
 %% ----------------------------------------------------------------------------
 \begin{abstract}
-Counts and proportions from counts are data types of encountered by ecotoxicologists.
+Counts and proportions are data types of encountered by ecotoxicologists.
 However, such data is rare normally distributed.
 To meet the assumptions of normality and heteroscedasticity, the standard procedure has been to either transform the data or use non-parametric methods if this fails.
 Generalised Linear Models (GLM) allow to model directly distributions fitting to such data.
@@ -252,9 +253,9 @@ We generated 1000 data sets for each combination of N and $\mu_\text{\tiny C}$ a
 
 \subsubsection{Binomial data}
 We simulated data from a commonly used design as described in \citet{weber_short-term_1989}, with 5 treated (T1 - T5) and a control group (C). 
-Proportions were drawn from a Bin(10, $\pi$) distribution, with varying probability of survival ($\pi$ = \{0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95\}) and varying number of replicates (N = \{3, 6, 9\}).
-For Type 1 error estimation, $\pi$ was held constant between groups.
-For power estimation $\pi$ in C and T1 was fixed at 0.95 and was set to values between 0.6 and 0.95 for the treatments T2 - T5. 
+Proportions were drawn from a Bin(10, $\pi$) distribution, with varying probability of survival ($\pi_C$ = \{0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95\}) and varying number of replicates (N = \{3, 6, 9\}).
+For Type 1 error estimation, $\pi_C$ was held constant between groups.
+For power estimation $\pi_C$ in C and T1 was fixed at 0.95 and was set to values between 0.6 and 0.95 for the treatments T2 - T5. 
 For each combination we simulated 1000 data sets and analysed these using the models outlined in section \ref{ssec:bin}.
 
 \subsection{Data Analysis}
@@ -377,10 +378,9 @@ The reasons are be manifold: \citep{brock_minimum_2015} used a $log(2~y + 1)$ tr
 Furthermore, \citet{brock_minimum_2015} used a one-sided Williams test which assumes a monotonic dose-response relationship.
 In contrast, we used one-sided comparisons to the control (Dunnett contrasts), which does not assume monotonicity and allows individual comparisons between treatment groups and the control, but has under monotonicity less power \citep{jaki_statistical_2013}.
 
-
 %% ---- Guide GLMs
-Moreover, the case study illustrates the potential effects of overdispersion that is not accounted for: standard errors will be underestimated and significance overestimated (Figures \ref{fig:example}).
-This is also shown by our simulations (Figures \ref{fig:p_glob_c}, \ref{fig:p_loec_c}) where $GLM_p$ showed increased type 1 error rates because of overdispersed simulated data.
+Overdispersion is common with ecological datasets \citep{warton_many_2005} and the case study illustrates the potential effects of overdispersion that is not accounted for: standard errors will be underestimated and significance overestimated (Figures \ref{fig:example}).
+This is also shown by our simulations (Figures \ref{fig:p_glob_c}, \ref{fig:p_loec_c}) where $GLM_p$ showed increased type 1 error rates because of overdispersed simulated data. 
 However, in factorial designs the mean-variance relationship can be easily checked by plotting mean versus variance of the treatment groups (see Supplement 2).
 In the introduction we pointed out that there is little advice how to choose between the plenty of possible transformations - how do GLMs simplify this problem?
 The distribution modelled can be chosen by the nature of the data giving a statistically sound model reflecting its properties (e.g. bounds, integer or continuous data etc.).
@@ -392,8 +392,8 @@ Knowing what type of data is modelled (see Methods section), the model selection
 Our simulations showed that generally GLMs have greater power than data transformations.
 However, the simulations also suggest that the power at the population level in common mesocosm experiments is low.
 For common samples sizes and a reduction in abundance of 50\% we found a low power to detect any treatment-related effect (\textless 50\% for methods with appropriate Type 1 error, Figure \ref{fig:p_glob_c}).
-Statistical power to detect the correct LOEC was even lower (less than 30\%).
-This suggests that population level NOECs reported from mesocosm experiments should be interpreted with caution and underpins the criticism of NOEC \citep{laskowski_good_1995,landis_well_2011}.
+Statistical power to detect the correct LOEC was even lower (less than 30\%), which can be attributed to multiple testing.
+The low power of all methods for detecting the LOEC suggests that population level NOECs reported from mesocosm experiments should be interpreted with caution and underpins the criticism of NOEC \citep{laskowski_good_1995,landis_well_2011}.
 
 %% --- Multivariate + GLMM -------
 Mesocosm studies allow also inferences on community level. 
@@ -417,12 +417,16 @@ Additionally to testing, GLMs allow the estimation and interpretation of effects
 Therefore, we advise using GLMs instead of non-parametric tests for non-normal data.
 
 %% ---- Problems GLM
-At small sample sizes and low abundances a significant amount of negative binomial models did not converge.
-We used an iterative algorithm to fit these models \citep{venables_modern_2002} and other methods assessing the likelihood directly may perform better.
-Moreover, the Likelihood-Ratio test gave an increased Type-I error for these models, where the non reliability of the LR statistic for small sample sizes has long been reported \citep{bolker_generalized_2009,wilks_large-sample_1938}. 
-We found that parametric bootstrap ($GLM_{npb}$) provides a valuable alternative in such situations (Figure \ref{fig:p_glob_c}).
-At small samples sizes, low abundances or few treatment groups it is difficult to determine the mean-variance relationship.
-$GLM_{qp}$ assumes a simpler, linear mean-variance relationship, which might explain the higher power compared to $GLM_{npb}$ at small sample sizes (Figure \ref{fig:p_glob_c}, top).
+We found an increased Type-I error for $GLM_{nb}$ at low sample sizes.
+However, it is well known that the LR statistic is not reliable at small sample sizes \citep{bolker_generalized_2009,wilks_large-sample_1938}.
+Parametric bootstrap ($GLM_{npb}$) is a valuable alternative in such situations and maintains appropriate levels (Figure \ref{fig:p_glob_c}).
+Moreover, at small sample sizes and low abundances a significant amount of negative binomial models did not converge.
+We used an iterative algorithm to fit these models \citep{venables_modern_2002}and other methods assessing the likelihood directly may perform better.
+
+$GLM_{qp}$ showed higher statistical power than $GLM_{npb}$ (Figure \ref{fig:p_glob_c}, top).
+$GLM_{qp}$ assumes a simpler (linear) mean-variance relationship than the quadrativ relationship in $GLM_{npb}$. 
+This might explain these differences between these two methods, because at small samples sizes, low abundances or few treatment groups it is difficult to determine the mean-variance relationship.
+\todo{Absatz nochmal drüberlesen}
 
 %% --- binomial data
 Binomial data are often collected in lab trials, where increasing the sample size is easy to accomplish. 
@@ -430,7 +434,9 @@ We found notable differences in power to detect a treatment effect for all simul
 Similarly, \citet{warton_arcsine_2011} also found that GLMs have higher power than arcsine transformed linear models.
 Though we did not simulated overdispersed binomial data, this should be checked and accounted for.
 In such situations a GLMM may offer an appealing alternative \citep{warton_arcsine_2011}.
-Nevertheless, for deriving LOECs the $LM$ performed better at low sample sizes (n = 3) (Figure \ref{fig:p_loec_p}). 
+At low effect sizes $GLM_{bin}$ became conservative with increasing $\pi_C$, although this effect lessened as sample size increased (Figure \ref{fig:p_loec_p}). 
+This is because $\pi$ approaches its boundary and is also known as the \emph{Hauck-Donner effect} \citep{hauck_walds_1977}. A LR-Test or parametric bootstrap may provide an alternative in such situations \citep{bolker_generalized_2009}.
+This can explain why $LM$ performed better for deriving LOECs at low sample sizes .
 
 GLMs can be fitted with many statistical software packages and a lot of textbooks are available to introduce ecotoxicologists to these models (e.g. \citealt{zuur_beginners_2013} or \citealt{quinn_experimental_2009}).
 We recommend that ecotoxicologists should change their models instead of their data.
