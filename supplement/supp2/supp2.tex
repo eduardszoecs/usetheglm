@@ -100,7 +100,7 @@
 
 %% ----------------------------------------------------------------------------
 \title{Ecotoxicology is not normal.}
-\subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
+\subtitle{A comparison of statistical approaches for analysis of count and proportion data in ecotoxicology.}
 \author{Eduard Szöcs, Ralf B. Schäfer}
 \date{\today}
 
@@ -279,8 +279,8 @@ Here we perform a one-sided (\texttt{alternative='less'}) Dunnett (\texttt{mcp(t
 ## Linear Hypotheses:
 ##                     Estimate Std. Error t value Pr(<t)  
 ## T0.1 - Control >= 0  -0.5267     0.4536  -1.161 0.3841  
-## T0.3 - Control >= 0  -0.9558     0.4536  -2.107 0.1030  
-## T1 - Control >= 0    -1.0069     0.4536  -2.220 0.0860 .
+## T0.3 - Control >= 0  -0.9558     0.4536  -2.107 0.1031  
+## T1 - Control >= 0    -1.0069     0.4536  -2.220 0.0859 .
 ## T3 - Control >= 0    -1.4121     0.4536  -3.113 0.0183 *
 ## T10 - Control >= 0   -1.2575     0.5144  -2.445 0.0590 .
 ## ---
@@ -505,7 +505,7 @@ The LOEC can be determined with \texttt{multcomp}:
 ## 
 ## Linear Hypotheses:
 ##                     Estimate Std. Error z value Pr(<z)  
-## T0.1 - Control >= 0  -0.5092     0.3889  -1.309 0.3514  
+## T0.1 - Control >= 0  -0.5092     0.3889  -1.309 0.3515  
 ## T0.3 - Control >= 0  -0.9970     0.4656  -2.142 0.0737 .
 ## T1 - Control >= 0    -0.8560     0.4409  -1.941 0.1154  
 ## T3 - Control >= 0    -1.6032     0.5985  -2.679 0.0179 *
@@ -624,11 +624,11 @@ Similar for LOEC:
 ## 
 ## Linear Hypotheses:
 ##                     Estimate Std. Error z value  Pr(<z)    
-## T0.1 - Control >= 0  -0.5092     0.3951  -1.289 0.31527    
-## T0.3 - Control >= 0  -0.9970     0.3988  -2.500 0.02740 *  
-## T1 - Control >= 0    -0.8560     0.3975  -2.153 0.06499 .  
+## T0.1 - Control >= 0  -0.5092     0.3951  -1.289 0.31523    
+## T0.3 - Control >= 0  -0.9970     0.3988  -2.500 0.02738 *  
+## T1 - Control >= 0    -0.8560     0.3975  -2.153 0.06493 .  
 ## T3 - Control >= 0    -1.6032     0.4066  -3.943 < 0.001 ***
-## T10 - Control >= 0   -1.4313     0.4601  -3.111 0.00446 ** 
+## T10 - Control >= 0   -1.4313     0.4601  -3.111 0.00445 ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## (Adjusted p values reported -- single-step method)
@@ -821,7 +821,7 @@ And the LOEC is at the highest concentration:
 ## 32 - 0 >= 0  -0.14717    0.10880  -1.353 0.2784    
 ## 64 - 0 >= 0   0.04074    0.10880   0.374 0.9202    
 ## 128 - 0 >= 0 -0.07622    0.10880  -0.701 0.5578    
-## 256 - 0 >= 0 -0.22113    0.10880  -2.032 0.0986 .  
+## 256 - 0 >= 0 -0.22113    0.10880  -2.032 0.0985 .  
 ## 512 - 0 >= 0 -0.72735    0.10880  -6.685 <0.001 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1

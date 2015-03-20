@@ -1,7 +1,7 @@
 \documentclass[twocolumn, natbib]{svjour3}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL submission/report/report.tex   Fri Feb 13 15:20:06 2015
-%DIF ADD revision/report/report.tex     Tue Mar 17 17:28:54 2015
+%DIF ADD revision/report/report.tex     Wed Mar 18 20:34:32 2015
 \usepackage{graphicx}%GRaphiken
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}%Tabellen!
@@ -75,18 +75,22 @@ Tel.: +49 06341 280 31552 \\
 
 %% ----------------------------------------------------------------------------
 \begin{abstract}
-Ecotoxicologists are often confronted with non-normally distributed data.
-To meet the assumptions of normality and heteroscedasticity, the standard procedure has been to either transform the data or use non-parametric methods if this fails.
-Here, we compare the statistical power of analyses using transformed data or non-parametric methods to analyses using appropriate distributional assumptions, \allowbreak namely Generalised Linear Models (GLM).
+\DIFdelbegin \DIFdel{Ecotoxicologists are often confronted with non-normally distributed data .
+}\DIFdelend \DIFaddbegin \DIFadd{Counts and proportions from counts are data types of encountered by ecotoxicologists.
+However, such data is rare normally distributed.
+}\DIFaddend To meet the assumptions of normality and heteroscedasticity, the standard procedure has been to either transform the data or use non-parametric methods if this fails.
+\DIFaddbegin \DIFadd{Generalised Linear Models (GLM) allow to model directly distributions fitting to such data.
+}\DIFaddend Here, we compare the \DIFdelbegin \DIFdel{statistical power }\DIFdelend \DIFaddbegin \DIFadd{performance }\DIFaddend of analyses using transformed data\DIFdelbegin \DIFdel{or }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend non-parametric methods \DIFdelbegin \DIFdel{to analyses using appropriate distributional assumptions, }%DIFDELCMD < \allowbreak %%%
+\DIFdel{namely Generalised Linear Models (GLM)}\DIFdelend \DIFaddbegin \DIFadd{and GLMs}\DIFaddend .
 
-We simulated data mimicking ecotoxicological experiments of two common data types (counts and proportions). 
+We simulated data mimicking ecotoxicological experiments of two common data types (counts and proportions \DIFaddbegin \DIFadd{from counts}\DIFaddend ). 
 We compare the performance of methods in terms of statistical power and type 1 error.
 In addition, we outlined differences and advantages of GLMs on a real world mesocosm data set.
 
 We found that GLMs provide in most cases a gain in statistical power compared to analysis of transformed data or using non-parametric methods.
 We recommend that non-normal data should be analysed by GLMs and not by transformations or non-parametric methods.
-GLMs should become a standard method in ecotoxicology. 
- \keywords{Generalized Linear Models \and Transformations \and Simulation \and Power \and Type 1 error}
+GLMs should become a standard method in ecotoxicology. \DIFaddbegin \todo{letzter absatz noch überarbeiten...}
+ \DIFaddend \keywords{Generalized Linear Models \and Transformations \and Simulation \and Power \and Type 1 error}
 \end{abstract}
 
 
@@ -96,7 +100,7 @@ GLMs should become a standard method in ecotoxicology.
 \section{Introduction}
 \label{sec:intro}
 Ecotoxicologists perform various kinds of experiments yielding different types of data.
-Examples are: animal counts in mesocosm experiments (\DIFdelbegin \DIFdel{positive}\DIFdelend \DIFaddbegin \DIFadd{non-negative}\DIFaddend , integer-valued data), proportions of surviving animals (data \DIFdelbegin \DIFdel{bonded }\DIFdelend \DIFaddbegin \DIFadd{bounded }\DIFaddend between 0 and 1, \DIFdelbegin \DIFdel{continuous}\DIFdelend \DIFaddbegin \DIFadd{discrete}\DIFaddend ) or biomass in growth experiments (positive, continuous data).
+Examples are \DIFdelbegin \DIFdel{: }\DIFdelend animal counts in mesocosm experiments (\DIFdelbegin \DIFdel{positive}\DIFdelend \DIFaddbegin \DIFadd{non-negative}\DIFaddend , integer-valued data) \DIFdelbegin \DIFdel{, }\DIFdelend \DIFaddbegin \DIFadd{or }\DIFaddend proportions of surviving animals (data \DIFdelbegin \DIFdel{bonded }\DIFdelend \DIFaddbegin \DIFadd{bounded }\DIFaddend between 0 and 1, \DIFdelbegin \DIFdel{continuous)or biomass in growth experiments (positive, continuous data)}\DIFdelend \DIFaddbegin \DIFadd{discrete)}\DIFaddend .
 These data are typically not normally distributed. 
 Nevertheless, they are usually analysed using methods assuming a normal distribution and variance homogeneity \citep{wang_making_2011}. 
 To meet these assumptions, data are usually transformed.
@@ -107,11 +111,11 @@ Moreover, other transformations like the square root or fourth root are commonly
 Note that there has been little evaluation and advice for practitioners, which transformations to use.
 If the transformed data still do not meet the assumptions (i.e. normality and variance homogeneity), non-parametric tests are usually applied \citep{wang_making_2011}.
 
-Generalised linear models (GLM) provide a method to analyse such non-normally distributed data \citep{nelder_generalized_1972}.
+Generalised linear models (GLM) provide a method to analyse \DIFdelbegin \DIFdel{such non-normally distributed data }\DIFdelend \DIFaddbegin \DIFadd{counts or proportions from counts in a  statistically sound way }\DIFaddend \citep{nelder_generalized_1972}.
 GLMs can handle various types of data distributions, e.g. Poisson or negative binomial (for count data) or binomial (for proportions); the normal distribution being a special case of GLMs.
 Despite GLMs being available more than 40 years, ecotoxicologists do not regularly make use of them.
 Recent studies concluded that data transformations should be avoided and GLMs be used as they have better statistical properties \DIFdelbegin %DIFDELCMD < \citep{ohara_not_2010, warton_arcsine_2011}%%%
-\DIFdelend \DIFaddbegin \citep{ohara_not_2010, warton_arcsine_2011,warton_many_2005}\DIFaddend . 
+\DIFdelend \DIFaddbegin \DIFadd{(}\citealt{ohara_not_2010} \DIFadd{(counts), }\citealt{warton_arcsine_2011,warton_many_2005} \DIFadd{(proportions from counts))}\DIFaddend . 
 
 Ecotoxicological experiments often involve small sample sizes due to practical constraints. 
 For example, extremely low samples sizes (n \textless 5) are common in many mesocosm studies \citep{sanderson_pesticide_2002,szocs_analysing_2015}.
@@ -123,7 +127,7 @@ Especially in mesocosm studies L/NOEC calculations are used in the majority of m
 
 We explore how GLMs may enhance inference in ecotoxicological studies and compared three types of statistical methods (transformation and normality assumption, GLM, non-parametric tests).
 We first illustrate differences between statistical methods using a data set from a mesocosm study.
-Then we further elaborate differences in detecting a general treatment effect and determining the LOEC using simulations of two common data types in ecotoxicology: counts and proportions. 
+Then we further elaborate differences in detecting a general treatment effect and determining the LOEC using simulations of two common data types in ecotoxicology: counts and proportions \DIFaddbegin \DIFadd{from counts}\DIFaddend . 
 
 
 
@@ -133,11 +137,14 @@ Then we further elaborate differences in detecting a general treatment effect an
 
 %% --------------------------------
 \subsection{Models for count data}
-\subsubsection{Linear model for transformed data}
+\DIFaddbegin \label{ssec:counts}
+\DIFaddend \subsubsection{Linear model for transformed data}
 To meet the assumptions of the standard linear model, count data usually needs to be transformed. 
 We followed the recommendations of \citet{van_den_brink_impact_2000} and used a log(Ay + 1) transformation (eqn. \ref{eqn:trans}):
+\DIFdelbegin %DIFDELCMD < 
 
-\begin{align}
+%DIFDELCMD < %%%
+\DIFdelend \begin{align}
   y\DIFdelbegin \DIFdel{^T_i}\DIFdelend \DIFaddbegin \DIFadd{_i^T }\DIFaddend & = log(Ay_i + 1) \label{eqn:trans}
 \DIFdelbegin %DIFDELCMD < \\
 %DIFDELCMD <   %%%
@@ -152,8 +159,10 @@ The factor $A$ was chosen in such way that $Ay$ equals 2 for the lowest non-zero
 }\DIFaddend 
 
 Then we fitted the linear model to the transformed abundances (hereafter $LM$):
+\DIFdelbegin %DIFDELCMD < 
 
-\begin{align}
+%DIFDELCMD < %%%
+\DIFdelend \begin{align}
   y_i^T &\sim N(\mu_i, \sigma^2) \nonumber \\
   \DIFaddbegin \DIFadd{E(}\DIFaddend y_i^T\DIFdelbegin %DIFDELCMD < &%%%
 \DIFdelend \DIFaddbegin \DIFadd{) }\DIFaddend = \DIFdelbegin \DIFdel{\alpha + \beta x_i }%DIFDELCMD < \label{eqn:normal} \\
@@ -172,11 +181,13 @@ We allow this mean to vary between treatments and }\DIFaddend $\beta$ \DIFdelbeg
 \subsubsection{Generalised Linear Models}
 GLMs extend the normal model by modelling other distributions.
 Instead of transforming the response variable, the counts could be directly modelled by a Poisson \DIFdelbegin \DIFdel{distribution }\DIFdelend \DIFaddbegin \DIFadd{GLM }\DIFaddend ($GLM_p$):
+\DIFdelbegin %DIFDELCMD < 
 
-\begin{align}
+%DIFDELCMD < %%%
+\DIFdelend \begin{align}
   y_i &\sim P(\DIFdelbegin \DIFdel{\lambda}\DIFdelend \DIFaddbegin \DIFadd{\mu}\DIFaddend _i) \nonumber \\
   \DIFdelbegin \DIFdel{log(\lambda}\DIFdelend \DIFaddbegin \DIFadd{E(y}\DIFaddend _i) &= \DIFaddbegin \DIFadd{var(y_i) = }\DIFaddend \mu_i \label{eqn:pois} \\
-  \mu_i &= \DIFdelbegin \DIFdel{\alpha + \beta x_i }\DIFdelend \DIFaddbegin \DIFadd{e^{\beta Treatment_i}  }\DIFaddend \nonumber
+  \DIFdelbegin \DIFdel{\mu_i }\DIFdelend \DIFaddbegin \DIFadd{log(\mu_i) }\DIFaddend &= \DIFdelbegin \DIFdel{\alpha + \beta x}\DIFdelend \DIFaddbegin \DIFadd{\beta Treatment}\DIFaddend _i  \nonumber
 \DIFdelbegin %DIFDELCMD < \\
 %DIFDELCMD <   %%%
 \DIFdel{var(y_i) }%DIFDELCMD < &%%%
@@ -184,19 +195,22 @@ Instead of transforming the response variable, the counts could be directly mode
 %DIFDELCMD < %%%
 \DIFdelend \end{align}
 
-\DIFdelbegin \DIFdel{Again}\DIFdelend \DIFaddbegin \DIFadd{This model assumes poisson distributed abundances with mean $\lambda_i \ge 0$.
-The expected value for each observation $i$ is give by its mean. 
-Moreover}\DIFaddend , this model \DIFdelbegin \DIFdel{was parametrised as contrast to the control group.
-The response variable is linked to the predictors via a log-function }\DIFdelend \DIFaddbegin \DIFadd{assumes that mean and variance are equal.
-The mean is linked exponentially the predictors (treatments) }\DIFaddend to avoid negative \DIFdelbegin \DIFdel{fitted values }\DIFdelend \DIFaddbegin \DIFadd{means }\DIFaddend (eqn. \ref{eqn:pois}). 
+\DIFdelbegin \DIFdel{Again, this model was parametrised as contrast to the control group.
+The response variable is linked to the predictors via a log-function }\DIFdelend \DIFaddbegin \DIFadd{This model assumes poisson distributed abundances with mean $\lambda_i \ge 0$.
+The expected value for each observation $i$ is given by its mean. 
+Moreover, this model assumes that mean and variance are equal.
+We are modelling the mean as a function of treatment membership.
+However, }\DIFaddend to avoid negative \DIFdelbegin \DIFdel{fitted values }\DIFdelend \DIFaddbegin \DIFadd{values of the mean this is done on a log scale.
+Therefore, $\beta$ describes the differences between treatments also on a log scale }\DIFaddend (eqn. \ref{eqn:pois}).
 \DIFdelbegin \DIFdel{The Poisson distribution assumes that }\DIFdelend \DIFaddbegin 
 
 \DIFadd{The assumption of equal }\DIFaddend mean and variance \DIFdelbegin \DIFdel{are equal - an assumption that }\DIFdelend is rarely met with ecological data, which is typically characterized by greater variance than the mean (overdispersion).
 To overcome this problem a quasi-Poisson \DIFdelbegin \DIFdel{distribution }\DIFdelend \DIFaddbegin \DIFadd{model ($GLM_{qp}$) }\DIFaddend could be used\DIFdelbegin \DIFdel{which introduces an additional overdispersion parameter ($\Theta$) ($GLM_{qp}$, }\DIFdelend \DIFaddbegin \DIFadd{, which assumes that variance is a linear function of the mean (}\DIFaddend eqn. \ref{eqn:quasi})\DIFdelbegin \DIFdel{.
-}\DIFdelend \DIFaddbegin \DIFadd{:
-}\DIFaddend 
+}%DIFDELCMD < 
 
-\begin{align}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \DIFadd{:
+}\DIFaddend \begin{align}
   \DIFdelbegin \DIFdel{y_i }%DIFDELCMD < &%%%
 \DIFdel{\sim P(\lambda_i, \Theta) }%DIFDELCMD < \label{eqn:quasi} \\
 %DIFDELCMD <   %%%
@@ -208,28 +222,39 @@ To overcome this problem a quasi-Poisson \DIFdelbegin \DIFdel{distribution }\DIF
 \DIFaddbegin \DIFadd{Here, $\Theta$ is used to account for additional variation and is known as overdispersion parameter.
 }\DIFaddend The quasi-Poisson model \DIFdelbegin \DIFdel{yields to parameter estimates equal to the Poisson model }\DIFdelend \DIFaddbegin \DIFadd{is a post hoc method, meaning that first a Poisson model is estimated }\DIFaddend (eqn. \ref{eqn:pois}) \DIFdelbegin \DIFdel{, but with standard errors }\DIFdelend \DIFaddbegin \DIFadd{and than the standard errors are }\DIFaddend scaled by the degree of overdispersion.
 
-Another possibility to deal with overdispersion is to fit a negative binomial distribution ($GLM_{nb}$, eqn. \ref{eqn:negbin}).
+Another possibility to deal with overdispersion is to fit a negative binomial distribution ($GLM_{nb}$, eqn. \ref{eqn:negbin})\DIFdelbegin \DIFdel{.
+}%DIFDELCMD < 
 
-\begin{align}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \DIFadd{:
+}\DIFaddend \begin{align}
   y_i &\sim NB(\DIFdelbegin \DIFdel{\lambda}\DIFdelend \DIFaddbegin \DIFadd{\mu_i}\DIFaddend , \kappa) \DIFdelbegin %DIFDELCMD < \label{eqn:negbin}  %%%
 \DIFdelend \DIFaddbegin \nonumber  \DIFaddend \\
   \DIFdelbegin \DIFdel{var}\DIFdelend \DIFaddbegin \DIFadd{E}\DIFaddend (y_i) \DIFaddbegin \DIFadd{= \mu_i ~}\DIFaddend &\DIFaddbegin \DIFadd{\text{and}~var(y_i) }\DIFaddend = \DIFdelbegin \DIFdel{\lambda}\DIFdelend \DIFaddbegin \DIFadd{\mu}\DIFaddend _i + \DIFdelbegin \DIFdel{\kappa \lambda_i^2 }\DIFdelend \DIFaddbegin \DIFadd{\mu_i^2 / \kappa }\label{eqn:negbin} \\
-  \DIFadd{\mu_i }&\DIFadd{= e^{\beta Treatment_i}  }\DIFaddend \nonumber 
+  \DIFadd{log(\mu_i) }&\DIFadd{= \beta Treatment_i  }\DIFaddend \nonumber 
 \end{align}
 
-\DIFdelbegin \DIFdel{In both cases the parametrisation and link function is equal to the Poisson GLM (eqn. \ref{eqn:pois}).
+\DIFdelbegin \DIFdel{In both cases the parametrisation and link function is equal to the Poisson GLM (eqn.
+\ref{eqn:pois}).
 }\DIFdelend \DIFaddbegin \DIFadd{This models assumes that abundances are negative binomially distributed, with a mean of $\mu_i \ge 0$ and a variance $\mu_i + \mu_i^2 / \kappa$.
-Like in the Poisson model we use a log-link
+Like in the Poisson model we use a log link between mean and treatments.
 }\DIFaddend Note, that the quasi-Poisson model assumes a linear mean-variance relationship (eqn. \ref{eqn:quasi}), whereas the negative binomial model assumes a quadratic relationship (eqn. \ref{eqn:negbin}).
 
 The above described models are most commonly used in ecology \citep{ver_hoef_quasi-poisson_2007}, although other distributions for count data are possible, like the negative binomial model with a linear mean-variance relationship (also known as NB1) or the poisson inverse gaussian model \citep{hilbe_modeling_2014}.
 
 
 \subsection{Models for binomial data}
-\subsubsection{Linear model for transformed data}
-To accommodate the assumptions for the standard linear model, a special arcsine square root transformation (eqn. \ref{eqn:arcsine}) is suggested for such  data \citep{epa_methods_2002,newman_quantitative_2012}:
+\DIFaddbegin \label{ssec:bin}
+\DIFadd{A binomial variable counts how often an event $x$ occurs in a fixed number of independent trials $N$ (e.g. }\emph{\DIFadd{"5 out of 10 fish survived"}}\DIFadd{), with an equal probability of occurrence $\pi$ between trials.
+The number of counts times an event occurs can also be calculated a proportion $x / N$.
+}
 
-\begin{align}
+\DIFaddend \subsubsection{Linear model for transformed data}
+To accommodate the assumptions for the standard linear model \DIFaddbegin \DIFadd{with such proportions}\DIFaddend , a special arcsine square root transformation (eqn. \ref{eqn:arcsine}) is suggested \DIFdelbegin \DIFdel{for such  data }\DIFdelend \citep{epa_methods_2002,newman_quantitative_2012}:
+\DIFdelbegin %DIFDELCMD < 
+
+%DIFDELCMD < %%%
+\DIFdelend \begin{align}
   y_i^T = 
   \begin{cases}  
     arcsin(1) - arcsin(\sqrt{\frac{1}{4n}}) & \text{, if}\ y_i = 1 \\
@@ -244,18 +269,27 @@ Note, that the parameters of the linear model are not directly interpretable due
 
 
 \subsubsection{Generalised Linear Models}
-Data of type \emph{x out of N} can be modelled by a binomial distribution with parameters N and $\pi$ ($GLM_{bin})$:
+\DIFdelbegin \DIFdel{Data of type }\emph{\DIFdel{x out of N}} %DIFAUXCMD
+\DIFdel{can be modelled by a }\DIFdelend \DIFaddbegin \DIFadd{A more natural way to model such data is the  }\DIFaddend binomial distribution with parameters N and $\pi$ ($GLM_{bin})$:
+\DIFdelbegin %DIFDELCMD < 
 
-\begin{align}
+%DIFDELCMD < %%%
+\DIFdelend \begin{align}
   y_i &\sim Bin(N, \pi_i) \nonumber \\
-  logit~(\pi_i) &= \alpha + \beta x_i \label{eqn:bin} \\
-  var(y_i) &=  \pi_i (1 - \pi_i) / N \nonumber
-\end{align}
+  \DIFdelbegin \DIFdel{logit~(\pi_i) }%DIFDELCMD < &%%%
+\DIFdelend \DIFaddbegin \DIFadd{E(y_i) }\DIFaddend = \DIFdelbegin \DIFdel{\alpha + \beta x_i }%DIFDELCMD < \label{eqn:bin} \\
+%DIFDELCMD <   %%%
+\DIFdelend \DIFaddbegin \DIFadd{\pi_i \times N ~}&\DIFadd{\text{and}~}\DIFaddend var(y_i) \DIFdelbegin %DIFDELCMD < &%%%
+\DIFdelend =  \pi_i (1 - \pi_i) / N \DIFaddbegin \label{eqn:bin} \\
+  \DIFadd{logit~(\pi_i) }&\DIFadd{= \beta Treatment_i }\DIFaddend \nonumber
+  \end{align}
 
-, where N = number of exposed animals and $\pi$ is the probability of survival.
-The variance of the binomial distribution is a quadratic function of the mean (eqn. \ref{eqn:bin}).
-The parameters $\beta$ of this model are directly interpretable as changes in log odds compared to the control group.
-\DIFdelbegin \DIFdel{Note, that there are also quasi-binomial models available if the assumed mean-variance relationship is not met}\DIFdelend \DIFaddbegin 
+\DIFaddbegin \DIFadd{This model assumes that the number of occurences are binomially distributed}\DIFaddend , where N = number of \DIFdelbegin \DIFdel{exposed animals and $\pi$ }\DIFdelend \DIFaddbegin \DIFadd{trials (e.g. exposed animals) and $\pi_i$ }\DIFaddend is the probability of \DIFdelbegin \DIFdel{survival}\DIFdelend \DIFaddbegin \DIFadd{occurrences (fish survived), giving together the expected number of occurrences}\DIFaddend .
+The variance of the binomial distribution is a quadratic function of the mean\DIFaddbegin \DIFadd{.
+We are modelling the probability of occurrence as function of treatment membership and to ensure that $0 < \pi_i < 1$ we do this on a logit scale }\DIFaddend (eqn. \ref{eqn:bin}). 
+\DIFdelbegin \DIFdel{The }\DIFdelend \DIFaddbegin \DIFadd{However, the }\DIFaddend parameters $\beta$ of this model are directly interpretable as changes in log odds \DIFdelbegin \DIFdel{compared to the control group.
+Note, that there are also quasi-binomial models available if the assumed mean-variance relationship is not met}\DIFdelend \DIFaddbegin \DIFadd{between treatments.
+}
 
 \DIFadd{Similarly to counts, binomial data may also show exceeding variability. 
 Methods to deal with overdispersed binomial data are either quasi methods (see above) or Generalized Linear Mixed models (GLMM).
@@ -311,9 +345,10 @@ Mean abundance was kept equal between all groups in Type 1 error simulations.
 \DIFdelbegin %DIFDELCMD < 
 
 %DIFDELCMD < %%%
-\DIFdel{We generated 100 }\DIFdelend \DIFaddbegin \DIFadd{We generated 1000 }\DIFaddend data sets for each combination of N and $\mu_\text{\tiny C}$ and analysed these using the models outlined previously.
-\DIFdelbegin \DIFdel{We did not fit Poisson models because we simulated data with overdispersion.
-}\DIFdelend 
+\DIFdel{We generated 100 }\DIFdelend \DIFaddbegin \DIFadd{We generated 1000 }\DIFaddend data sets for each combination of N and $\mu_\text{\tiny C}$ and analysed these using the models outlined \DIFdelbegin \DIFdel{previously.
+We did not fit Poisson models because we simulated data with overdispersion.
+}\DIFdelend \DIFaddbegin \DIFadd{in section \ref{ssec:counts}.
+}\DIFaddend 
 
 
 \subsubsection{Binomial data}
@@ -322,13 +357,17 @@ We simulated data from a commonly used design as \DIFdelbegin \DIFdel{in }%DIFDE
 Proportions were drawn from a Bin(10, $\pi$) distribution, with varying probability of survival ($\pi$ = \{0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95\}) and varying number of replicates (N = \{3, 6, 9\}).
 For Type 1 error estimation, $\pi$ was held constant between groups.
 For power estimation $\pi$ in C and T1 was fixed at 0.95 and was set to values between 0.6 and 0.95 for the treatments T2 - T5. 
-For each combination we simulated \DIFdelbegin \DIFdel{250 }\DIFdelend \DIFaddbegin \DIFadd{1000 }\DIFaddend data sets. 
+For each combination we simulated \DIFdelbegin \DIFdel{250 data sets }\DIFdelend \DIFaddbegin \DIFadd{1000 data sets and analysed these using the models outlined in section \ref{ssec:bin}}\DIFaddend .
 
 \subsection{Data Analysis}
 We analysed the case study and the simulated data using the outlined methods.
 We compared the methods and models in terms of Type 1 error (\DIFdelbegin \DIFdel{maintain a significance level of 0.05 }\DIFdelend \DIFaddbegin \DIFadd{detection of an effect }\DIFaddend when there is \DIFdelbegin \DIFdel{no effect}\DIFdelend \DIFaddbegin \DIFadd{none}\DIFaddend ) and power (\DIFaddbegin \DIFadd{ability to }\DIFaddend detect an effect when it is present).
-All \DIFdelbegin \DIFdel{computations }\DIFdelend \DIFaddbegin \DIFadd{simulations }\DIFaddend were done in R (Version 3.1.2) \citep{r_core_team_r:_2014} on a \DIFdelbegin \DIFdel{Linux machine}\DIFdelend \DIFaddbegin \DIFadd{Amazon EC2 virtual Linux server (64bit, 15GB RAM, 8 cores, 2.8 GHz)}\DIFaddend .
-Source code for the simulations and analysis of the case study is available online at \url{https://github.com/EDiLD/usetheglm}.
+\DIFdelbegin \DIFdel{All computations }\DIFdelend \DIFaddbegin 
+
+\DIFadd{All simulations }\DIFaddend were done in R (Version 3.1.2) \citep{r_core_team_r:_2014} on \DIFdelbegin \DIFdel{a Linux machine}\DIFdelend \DIFaddbegin \DIFadd{an Amazon EC2 virtual Linux server (64bit, 15GB RAM, 8 cores, 2.8 GHz)}\DIFaddend .
+Source code \DIFdelbegin \DIFdel{for }\DIFdelend \DIFaddbegin \DIFadd{to reproduce }\DIFaddend the simulations and \DIFdelbegin \DIFdel{analysis of the case study }\DIFdelend \DIFaddbegin \DIFadd{paper }\DIFaddend is available online at \url{https://github.com/EDiLD/usetheglm}.
+\DIFaddbegin \DIFadd{Moreover, Supplement 2 provides worked examples of the data of }\citet{brock_minimum_2015} \DIFadd{and }\citet{weber_short-term_1989}\DIFadd{.
+}\DIFaddend 
 
 
 
@@ -412,8 +451,10 @@ KW was more conservative than LM and $GLM_{bin}$ }\DIFdelend (Figure \ref{fig:p_
 
 \begin{figure*}
   \centering
-  \includegraphics[width = 129mm]{p_glob_p.pdf}
-  \caption{
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width = 129mm]{p_glob_p.pdf}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width = 126mm]{p_glob_p.pdf}
+  \DIFaddendFL \caption{
   Binomial data simulations: 
   Power (top) and Type 1 error (bottom) for the test of a treatment effect. 
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
@@ -431,16 +472,23 @@ $WT$ }\DIFaddend had no power for n = 3 and showed less power in the other simul
 $LM$ maintained a Type 1 error level of 0.05 in all simulations. 
 $GLM_{bin}$ was conservative at small effect sizes ($p_E > 0.8$) and WT was generally conservative showing lowered Type 1 error rates (}\DIFdelend \DIFaddbegin \DIFadd{(}\DIFaddend Figure \ref{fig:p_loec_p}).
 
-\begin{figure}
-  \centering
-  \includegraphics[width = 84mm]{p_loec_p.pdf}
-  \caption{
+\DIFdelbegin %DIFDELCMD < \begin{figure}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \begin{figure*}
+  \DIFaddendFL \centering
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width = 84mm]{p_loec_p.pdf}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width = 126mm]{p_loec_p.pdf}
+  \DIFaddendFL \caption{
   Binomial data simulations: 
   Power (top) and Type 1 error (bottom) for the test for determination of LOEC. 
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_loec_p}
-\end{figure}
+\DIFdelbeginFL %DIFDELCMD < \end{figure}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \end{figure*}
+\DIFaddend 
 
 
 %% ----------------------------------------------------------------------------
@@ -460,8 +508,9 @@ In contrast, we used \DIFdelbegin \DIFdel{a }\DIFdelend one-sided \DIFdelbegin \
 
 
 %% ---- Guide GLMs
-Moreover, the case study illustrates the potential effects of overdispersion that is not accounted for: standard error will be underestimated and significance overestimated (Figure \ref{fig:example}).
-However, in factorial designs the mean-variance relationship can be easily checked by plotting mean versus variance of the treatment groups (see supplemental material).
+Moreover, the case study illustrates the potential effects of overdispersion that is not accounted for: standard \DIFdelbegin \DIFdel{error }\DIFdelend \DIFaddbegin \DIFadd{errors }\DIFaddend will be underestimated and significance overestimated (\DIFdelbegin \DIFdel{Figure }\DIFdelend \DIFaddbegin \DIFadd{Figures }\DIFaddend \ref{fig:example}).
+\DIFaddbegin \DIFadd{This is also shown by our simulations (Figures \ref{fig:p_glob_c}, \ref{fig:p_loec_c}) where $GLM_p$ showed increased type 1 error rates because of overdispersed simulated data.
+}\DIFaddend However, in factorial designs the mean-variance relationship can be easily checked by plotting mean versus variance of the treatment groups (see \DIFdelbegin \DIFdel{supplemental material}\DIFdelend \DIFaddbegin \DIFadd{Supplement 2}\DIFaddend ).
 In the introduction we pointed out that there is little advice how to choose between the plenty of possible transformations - how do GLMs simplify this problem?
 The distribution modelled can be chosen by the nature of the data giving a statistically sound model reflecting its properties (e.g. \DIFdelbegin \DIFdel{bonds}\DIFdelend \DIFaddbegin \DIFadd{bounds}\DIFaddend , integer or continuous data etc.).
 Knowing what type of data is modelled (see Methods section), the model selection process can be completely guided by the data and diagnostic plots. Therefore, choosing an appropriate model is more sound and straightforward than choosing between possible transformations.
@@ -508,11 +557,15 @@ $GLM_{qp}$ assumes a simpler, linear mean-variance relationship, which might exp
 
 %% --- binomial data
 Binomial data \DIFdelbegin \DIFdel{is }\DIFdelend \DIFaddbegin \DIFadd{are }\DIFaddend often collected in lab trials, where increasing the sample size is easy to accomplish. 
-We found notable differences in power to detect a treatment effect up to a sample size of 9.
-Similarly, \citet{warton_arcsine_2011} also found that \DIFdelbegin \DIFdel{GLM }\DIFdelend \DIFaddbegin \DIFadd{GLMs }\DIFaddend have higher power than arcsine transformed linear models.
-Nevertheless, for deriving LOECs the \DIFdelbegin \DIFdel{transformation }\DIFdelend \DIFaddbegin \DIFadd{$LM$ }\DIFaddend performed better at low sample sizes (n = 3) (Figure \ref{fig:p_loec_p}). 
+We found notable differences in power to detect a treatment effect \DIFdelbegin \DIFdel{up to a sample size of 9.
+}\DIFdelend \DIFaddbegin \DIFadd{for all simulated sample sizes.
+}\DIFaddend Similarly, \citet{warton_arcsine_2011} also found that \DIFdelbegin \DIFdel{GLM }\DIFdelend \DIFaddbegin \DIFadd{GLMs }\DIFaddend have higher power than arcsine transformed linear models.
+\DIFaddbegin \DIFadd{Though we did not simulated overdispersed binomial data, this should be checked and accounted for.
+In such situations a GLMM may offer an appealing alternative }\citep{warton_arcsine_2011}\DIFadd{.
+}\DIFaddend Nevertheless, for deriving LOECs the \DIFdelbegin \DIFdel{transformation }\DIFdelend \DIFaddbegin \DIFadd{$LM$ }\DIFaddend performed better at low sample sizes (n = 3) (Figure \ref{fig:p_loec_p}). 
 
-We recommend that non-normal data should be analysed by GLMs and not by transformations or non-parametric methods.
+\DIFaddbegin \DIFadd{GLMs can be fitted with many statistical software packages and a lot of textbooks are available to introduce ecotoxicologists to these models (e.g. }\citealt{zuur_beginners_2013} \DIFadd{or }\citealt{quinn_experimental_2009}\DIFadd{).
+}\DIFaddend We recommend that \DIFdelbegin \DIFdel{non-normal data }\DIFdelend \DIFaddbegin \DIFadd{counts or proportions from counts }\DIFaddend should be analysed by GLMs and not by transformations or non-parametric methods.
 To improve the power to detect effects, GLMs should become a standard method in ecotoxicology and incorporated into respective guidelines.
 
 

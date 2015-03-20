@@ -53,7 +53,7 @@
 
 %% ----------------------------------------------------------------------------
 \title{Ecotoxicology is not normal.}
-\subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
+\subtitle{A comparison of statistical approaches for analysis of count and proportion data in ecotoxicology.}
 \author{Eduard Szöcs, Ralf B. Schäfer}
 \date{\today}
 

@@ -74,18 +74,16 @@ Note, that changes in titles, citations and figures were not highlighted.
 \newpage
 \section{ToDo:}
 \begin{enumerate}
-	\item Now also added poisson GLM. incorporate into text!
 	\item recompile/update/enhance supplements
 	\item Holm also for case-study. Recalculate and rewrite 3-brock.R -> remove those, keep only supplement.
-	\item Comment 62 umsetzen.
 	\item abstract: 
-	\item checkpoint package?!
 \end{enumerate}
 
 
 % ======================================================= %
 \section{Response to Reviewer 1}
 \vspace{-2em}
+
 %done
 \comment{The purpose of the manuscript is highly commendable. Unfortunately, the
 present manuscript has some major shortcomings: The simulation results,
@@ -102,7 +100,7 @@ Therefore, we submitted to ESPR, though, it might be interesting also to a great
 response in ecotoxicology”. Also in view of the fact that the results are
 not very clearly favouring the generalized linear models (GLMs).}
 \response{We agree and changed the subtitle to \\
-\emph{"A comparison of statistical approaches for analysis of non-normally distributed data in ecotoxicology"}. 
+\emph{"A comparison of statistical approaches for analysis of count and proportion data in ecotoxicology"}. 
 }
 
 %done
@@ -173,9 +171,10 @@ in the presence of overdispersion.}
 %done
 \comment{p. 3, right column, line 28: How is multiple testing taken care of? This
 may also affect the simulation results.}
-\response{We adjusted multiple testing using the method of \citet{holm_simple_1979}. We added this information to the manuscript.}
+\response{We adjusted multiple testing using the method of \citet{holm_simple_1979}. We added this information to the manuscript. 
+For the submission we did not use Holm's method for the binomial data simulations. However, we unified this with the rerun of simulations (see comment 14) \todo{discussion}.}
 
-%declined
+%done
 \comment{p. 4, left column, line 2: The simulations will not be very informative
 for such small sample sizes (3–9) as all methods will have low power.
 Suggestion: Do also consider larger sample sizes: 12, 25, 50, 100. Not
@@ -253,13 +252,14 @@ a strong case for the use of GLMs; and a more balanced abstract would
 be appropriate.}
 \response{}
 
+%done
 \comment{p. 7, Simulations: A suggestion: remove all diverging discussion of
 LOEC/NOEC, GLMs for multivariate data, GLMMs, sample size cal-
 culation and concentrate on discussing the simulation results. Or, alter-
 natively, discuss in much more detail that GLMMs may actually offer a
 difference approach for handling over-dispersion in binomial and count
 data (instead of considering completely different designs).}
-\response{}
+\response{We agree and pointed GLMM as an alternative to deal with overdispersion in the methods section and discussion.}
 
 
 
@@ -270,7 +270,7 @@ data (instead of considering completely different designs).}
 
 \comment{One point to consider in a resubmission is that GLMs aren't for use for all non-normal data - some qualifications are needed of when to use GLMs.  Distributionally, GLMs replace the assumption of normality with the assumption that data come from the exponential family, which does not cover all situations.  More critically, GLMs replace the assumption of equal variance with an assumption that the mean-variance relationship follows a pre-specified pattern, and violation of this assumption has similar impacts to violations of the equal-variance assumption in a linear model would have.  Particular situations where GLMs are useful are binary data (known to be a quadratic mean-variance), count data (especially count data with lots of low counts, which typically cannot be transformed to normality effectively), and proportions constructed from counts.  These are the examples highlighted in the text, and are of clear relevance in ecotoxicology, but the argument does not extend much
 more broadly than these examples - it is not a case of "your data aren't normal so you should use GLMs".  It is more accurate to say "if you have binary, counts or proportions from counts you should use GLMs".  I think this requires a modest adjustment to the phrasing of the abstract and introduction to better qualify the situations where GLMs are appropriate.  e.g. where O'Hara and Kotze and Warton \& Hui are mentioned, this should be qualified to refer to counts and proportions (of counts) respectively.  I  don't think the title needs changing, sufficient qualification elsewhere of the type of non-normality if interest should do the trick.}
-\response{We agree and revised out manuscript accordingly. We changed the subtitle (see comment 2). \todo{abstract, text}}
+\response{We agree and revised our manuscript accordingly. We changed the subtitle (see also comment 2) and the abstract \todo{abstract fertig machen} (see also comment 21). The main text is now more specific to counts and proportions from counts.}
 
 %done
 \comment{In the first paragraph, "positive" is used where "non-negative" is needed (i.e. zero is a possible value), also change bonded to bounded}
@@ -280,19 +280,21 @@ more broadly than these examples - it is not a case of "your data aren't normal 
 \comment{Page 2, second column - the parameterisation isn't equal to the Poisson model - the mean model is the same, I think that is what was meant.}
 \response{We edited this section (see also comment 6) and corrected this.} 
 
-
+%done
 \comment{Page 2, second column - also, strictly speaking, not all the methods mentioned here are GLMs.  Negative binomial regression ("NB2") is a GLM if the overdispersion parameter is fixed, otherwise it is a generalisation of GLM.  Similarly, quasi-Poisson isn't really a GLM, but a related method.}
-\response{\todo{GLM rausnehmen?!}}
+\response{We agree and mention that quasi-Poisson is a related post hoc method. See also comment 7.}
 
+%done
 \comment{Section 2.2 - a description of what is meant by binomial data would be helpful at the start of this section.  Perhaps for completeness a description of what is meant by counts would help at the start of section 2.1}
-\response{}
+\response{We added a brief description of a binomial random variable to the start of section 2.2.}
 
 %done
 \comment{Section 2.2.2 - it would be useful to also mention GLMMs with a random intercept term.  Often with this sort of data there are extra sources of variation from one sample to the next that are not explained by the binomial assumption, and this is the most natural way to account for it.}
 \response{We added a reference to GLMM and \citep{warton_arcsine_2011} to this section.}
 
+%done
 \comment{Sections 2.1, 2.2: references to relevant articles or texts would be useful for GLMs, where the reader can find more details at a level appropriate for readership (e.g. a Zuur text?  Quinn \& Keough?).  Also point readers to supp 2 for code and a worked example.}
-\response{}
+\response{We are thankful for point us to the missing reference to supplement 2. We added this to the methods section and pointed to introductory textbooks at the end of the manuscript. }
 
 %done
 \comment{page 3, line 58, the parametric bootstrap}
@@ -414,7 +416,7 @@ to figure captions 2 and 3.}
 
 \comment{Page 6
 Fig.5 LM for 0.8 has a high Type I error. Does it deviate significantly from 0.05? [same question for the high Type I for GLM\_nb in fig 2]. Use confidence interval for binomial p = 0.05 n = 100.}
-\response{}
+\response{We refined our simulations (see comment 14, )}
 
 \comment{Case study : 
 You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.182 already causes the difference. (it probably does not). The important difference is the use of the Willems test! Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone! See the report of the Williams test below.}
@@ -424,10 +426,11 @@ You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.
 \comment{Page 7 L35 Move ref to Warton to after data.}
 \response{We changed accordingly.}
 
+%done
 \comment{L45 Add a reference to (ter Braak \& Šmilauer 2014) who advocate the use of the transformation approach in a multivariate (dimension reduction) context.}
-\response{}
+\response{We agree and added reference to ter Braak \& Šmilauer 2014.}
 
-%decline
+%done
 \comment{Line 1 right (like GLMs) -\textgreater (like GLMs and the Williams test)}
 \response{We did not investigate the differences between multiple comparison procedures (MCP). 
 We used Dunnett constrast for in all simulations, because only these allow individual comparisons between treatments and the control. 
@@ -438,13 +441,15 @@ For a comparison of MCP see \citet{jaki_statistical_2013}, who recommend a combi
 \comment{Line 10-40 Again: discuss Type I error first. Then no mention of GLM\_nb in power.}
 \response{We agree and changed accordingly. See also comment 52.}
 
-%todo
+%done
 \comment{Line 18 right. Add after "non-normal data' the point the importance of proper accounting for under and overdispersion when using GLM. What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion.}
 \response{We rerun our simulations and also included the Poisson GLM. 
-The results for Poisson GLM are now also display in Figures 2+3 and we discuss the consequences of failing to account for overdisperion. \todo{changes to text}}
+The results for Poisson GLM are now also display in Figures 2+3 and we discuss the consequences of failing to account for overdisperion.}
 
+%done
 \comment{Line 41 right size of 9 -\textgreater size of 6-9 (?)}
-\response{}
+\response{We rerun our simulations and changed this to \\
+\emph{for all simulated sample sizes}.}
 
 %done
 \comment{Line 44 right the transformation -\textgreater the LM}
