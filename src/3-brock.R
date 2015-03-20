@@ -93,7 +93,7 @@ drop1(modqpois, test = 'F')
 
 ## Inference, LOEC
 # # one-sided Dunnett test
-summary(glht(modlm, linfct = mcp(Concentration = 'Dunnett'),  
+summary(glht(modqpois, linfct = mcp(Concentration = 'Dunnett'),  
              alternative = 'less'), test = adjusted('holm'))
 
 ## predicted value on response scale
@@ -120,6 +120,11 @@ summary(modnb)
 modnb0 <- glm.nb(Abundance ~ 1, data = df)
 anova(modnb, modnb0, test = 'Chisq')
 
+### parametric bootstrap
+set.seed(1234)
+myPBmodcomp(modnb, modnb0, data = df, npb = 500)
+
+
 
 ## Inference, LOEC
 # # one-sided Dunnett test
@@ -132,12 +137,6 @@ modnb_p <- predict(modnb, newdata = data.frame(Concentration = unique(df$Concent
 modnb_fit <- modnb$family$linkinv(modnb_p$fit)
 modnb_lwr <- modnb$family$linkinv(modnb_p$fit - 1.96 * modnb_p$se.fit)
 modnb_upr <- modnb$family$linkinv(modnb_p$fit + 1.96 * modnb_p$se.fit)
-
-
-### -----------------------------
-### Negative binomial GLM with parametric bootstrap
-set.seed(1234)
-myPBmodcomp(modnb, modnb0, data = df, npb = 500)
 
 
 ### -----------------------------
