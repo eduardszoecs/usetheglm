@@ -1,7 +1,7 @@
 \documentclass[twocolumn, natbib]{svjour3}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL submission/report/report.tex   Fri Feb 13 15:20:06 2015
-%DIF ADD revision/report/report.tex     Wed Mar 18 20:34:32 2015
+%DIF ADD revision/report/report.tex     Fri Mar 20 12:19:51 2015
 \usepackage{graphicx}%GRaphiken
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}%Tabellen!
@@ -33,7 +33,7 @@
 %DIF 15c26
 %DIF < \subtitle{How the use of proper statistical models can increase statistical power in ecotoxicological experiments.}
 %DIF -------
-\subtitle{A comparison of statistical approaches for analysis of non-normally distributed data in ecotoxicology.} %DIF > 
+\subtitle{A comparison of statistical approaches for analysis of count and proportion data in ecotoxicology.} %DIF > 
 %DIF -------
 \author{Eduard Szöcs \and Ralf B. Schäfer}
 \institute{Eduard Szöcs \envelope  and Ralf B. Schäfer \at
@@ -56,11 +56,12 @@ Tel.: +49 06341 280 31552 \\
 \RequirePackage{color}\definecolor{RED}{rgb}{1,0,0}\definecolor{BLUE}{rgb}{0,0,1} %DIF PREAMBLE
 \providecommand{\DIFadd}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
 \providecommand{\DIFdel}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
-%DIF SAFE PREAMBLE %DIF PREAMBLE
-\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
-\providecommand{\DIFaddend}{} %DIF PREAMBLE
-\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
-\providecommand{\DIFdelend}{} %DIF PREAMBLE
+%DIF COLOR PREAMBLE %DIF PREAMBLE
+\RequirePackage{color} %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{\protect\color{blue}} %DIF PREAMBLE
+\providecommand{\DIFaddend}{\protect\color{black}} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{\protect\color{red}} %DIF PREAMBLE
+\providecommand{\DIFdelend}{\protect\color{black}} %DIF PREAMBLE
 %DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
 \providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
 \providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
@@ -80,17 +81,22 @@ Tel.: +49 06341 280 31552 \\
 However, such data is rare normally distributed.
 }\DIFaddend To meet the assumptions of normality and heteroscedasticity, the standard procedure has been to either transform the data or use non-parametric methods if this fails.
 \DIFaddbegin \DIFadd{Generalised Linear Models (GLM) allow to model directly distributions fitting to such data.
-}\DIFaddend Here, we compare the \DIFdelbegin \DIFdel{statistical power }\DIFdelend \DIFaddbegin \DIFadd{performance }\DIFaddend of analyses using transformed data\DIFdelbegin \DIFdel{or }\DIFdelend \DIFaddbegin \DIFadd{, }\DIFaddend non-parametric methods \DIFdelbegin \DIFdel{to analyses using appropriate distributional assumptions, }%DIFDELCMD < \allowbreak %%%
-\DIFdel{namely Generalised Linear Models (GLM)}\DIFdelend \DIFaddbegin \DIFadd{and GLMs}\DIFaddend .
+}\DIFaddend Here, we compare the \DIFdelbegin \DIFdel{statistical power of analyses using transformed dataor non-parametric methods to analyses using appropriate distributional assumptions, }%DIFDELCMD < \allowbreak %%%
+\DIFdel{namely Generalised Linear Models (GLM) }\DIFdelend \DIFaddbegin \DIFadd{performance of methods assuming normality of transformed data, methods assuming appropriate distributions (Poisson, negativ binomial, binomial) and non-parametric methods}\DIFaddend .
 
-We simulated data mimicking ecotoxicological experiments of two common data types (counts and proportions \DIFaddbegin \DIFadd{from counts}\DIFaddend ). 
-We compare the performance of methods in terms of statistical power and type 1 error.
+We simulated data mimicking \DIFaddbegin \DIFadd{low replicated }\DIFaddend ecotoxicological experiments of two common data types (counts and proportions \DIFaddbegin \DIFadd{from counts}\DIFaddend ). 
+We \DIFdelbegin \DIFdel{compare }\DIFdelend \DIFaddbegin \DIFadd{compared }\DIFaddend the performance of \DIFaddbegin \DIFadd{different }\DIFaddend methods in terms of statistical power and type 1 error \DIFaddbegin \DIFadd{for detecting a general treatment effect and determining the lowest observed effect concentration (LOEC)}\DIFaddend .
 In addition, we outlined differences and advantages of GLMs on a real world mesocosm data set.
 
-We found that GLMs provide in most cases a gain in statistical power compared to analysis of transformed data or using non-parametric methods.
-We recommend that non-normal data should be analysed by GLMs and not by transformations or non-parametric methods.
-GLMs should become a standard method in ecotoxicology. \DIFaddbegin \todo{letzter absatz noch überarbeiten...}
- \DIFaddend \keywords{Generalized Linear Models \and Transformations \and Simulation \and Power \and Type 1 error}
+\DIFdelbegin \DIFdel{We found that GLMs provide in most cases a gain in statistical power compared to analysis of transformed data or using }\DIFdelend \DIFaddbegin \DIFadd{For counts, we found that the quasi-Poisson model and the negative binomial model in combination with parametric boostrap had higher statistical power then data transformation.
+For proportions GLMs performed better, except to determine LOEC at extremly low sample sizes.
+The compared }\DIFaddend non-parametric methods \DIFdelbegin \DIFdel{.
+}\DIFdelend \DIFaddbegin \DIFadd{had generally lower power.
+}
+
+\DIFaddend We recommend that \DIFdelbegin \DIFdel{non-normal data }\DIFdelend \DIFaddbegin \DIFadd{counts and proportions from counts }\DIFaddend should be analysed by \DIFdelbegin \DIFdel{GLMs and not by transformations or non-parametric methods.
+}\DIFdelend \DIFaddbegin \DIFadd{making appropriate distributional assumptions and }\DIFaddend GLMs should become a standard method in ecotoxicology.
+ \keywords{Generalized Linear Models \and Transformations \and Simulation \and Power \and Type 1 error}
 \end{abstract}
 
 
@@ -175,7 +181,7 @@ Then we fitted the linear model to the transformed abundances (hereafter $LM$):
 This model assumes a normal distributed \DIFdelbegin \DIFdel{response with constant variance ($\sigma^2$).
 Note, that we parameterised the model as contrast ($\beta x_i$) to the control group ($\alpha$) so that parameters (}\DIFdelend \DIFaddbegin \DIFadd{of the transformed abundances.
 The expected value for each observation $i$ is given by its mean ($\mu_i$) and the variance ($\sigma^2$) is constant between treatments.
-We allow this mean to vary between treatments and }\DIFaddend $\beta$ \DIFdelbegin \DIFdel{) are directly interpretable as changes from the control group }\DIFdelend \DIFaddbegin \DIFadd{are the coefficients related to these changes between treatments }\DIFaddend (eqn. \ref{eqn:normal}).
+We allow this mean to vary between treatments and }\DIFaddend $\beta$ \DIFdelbegin \DIFdel{) are directly interpretable as changes from the control group }\DIFdelend \DIFaddbegin \DIFadd{are the coefficients related to these changes in transformed abundances between treatments }\DIFaddend (eqn. \ref{eqn:normal}).
 
 
 \subsubsection{Generalised Linear Models}
@@ -376,7 +382,7 @@ Source code \DIFdelbegin \DIFdel{for }\DIFdelend \DIFaddbegin \DIFadd{to reprodu
 \label{sec:results}
 %% --------------------------------
 \subsection{Case study}
-The data set showed considerable overdispersion ($\Theta = 22.41$, eqn. \ref{eqn:quasi}).
+The data set showed considerable \DIFdelbegin \DIFdel{overdispersion }\DIFdelend \DIFaddbegin \DIFadd{higher variance then expected by the Poisson model }\DIFaddend ($\Theta = 22.41$, eqn. \ref{eqn:quasi}). 
 Therefore, the Poisson model did not fit to this data and lead to underestimated standard errors and confidence intervals, as well as overestimated statistical significance (Figure \ref{fig:example}).
 In this case, inferences on the Poisson model are not valid and we do not further discuss its results.
 The normal (F = 2.57, p = 0.084) and quasi-Poisson model (F = 2.90, p = 0.061), as well as the Kruskal test (p =  0.145) did not show a statistically significant treatment effects.
@@ -409,7 +415,7 @@ KW was conservative at low sample sizes (Figure \ref{fig:p_glob_c}).
   \DIFaddbeginFL \DIFaddFL{Only type 1 errors \textless 25\% are displayed. 
   $GLM_p$ showed type 1 errors \textgreater 20\% in all simulation scenarios.
   Power levels for models with inflated type I error are shown for completeness.
-  }\DIFaddendFL For n = \DIFaddbeginFL \DIFaddFL{\{}\DIFaddendFL 3\DIFaddbeginFL \DIFaddFL{, 6\} }\DIFaddendFL and $\mu_C$ = \{2, 4\} less than \DIFdelbeginFL \DIFdelFL{80}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85}\DIFaddendFL \% of $GLM_{nb}$ and $GLM_{npb}$ models did converge.
+  }\DIFaddendFL For n = \DIFaddbeginFL \DIFaddFL{\{}\DIFaddendFL 3\DIFaddbeginFL \DIFaddFL{, 6}\} \DIFaddendFL and $\mu_C$ = \{2, 4\} less than \DIFdelbeginFL \DIFdelFL{80}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85}\DIFaddendFL \% of $GLM_{nb}$ and $GLM_{npb}$ models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_glob_c}
@@ -431,7 +437,7 @@ At low sample sizes $GLM_{nb}$ showed an increased Type 1 error and WT was sligh
   \DIFaddendFL \caption{Count data simulations: \DIFdelbeginFL \DIFdelFL{Power }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type 1 error }\DIFaddendFL (top) and \DIFdelbeginFL \DIFdelFL{Type 1 error }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Power }\DIFaddendFL (bottom) for determination of LOEC.
   For \DIFaddbeginFL \DIFaddFL{clarity only type 1 errors \textless 25\% are displayed.
   Power levels for models with inflated type I error are shown for completeness.
-  For }\DIFaddendFL n = \DIFaddbeginFL \DIFaddFL{\{}\DIFaddendFL 3\DIFaddbeginFL \DIFaddFL{, 6\} }\DIFaddendFL and $\mu_C$ = \{2, 4\} less than \DIFdelbeginFL \DIFdelFL{80}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85}\DIFaddendFL \% of $GLM_{nb}$ \DIFdelbeginFL \DIFdelFL{and $GLM_{npb}$ }\DIFdelendFL models did converge.
+  For }\DIFaddendFL n = \DIFaddbeginFL \DIFaddFL{\{}\DIFaddendFL 3\DIFaddbeginFL \DIFaddFL{, 6}\} \DIFaddendFL and $\mu_C$ = \{2, 4\} less than \DIFdelbeginFL \DIFdelFL{80}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{85}\DIFaddendFL \% of $GLM_{nb}$ \DIFdelbeginFL \DIFdelFL{and $GLM_{npb}$ }\DIFdelendFL models did converge.
   Dashed horizontal line denotes the nominal Type 1 error rate at $\alpha = 0.05$.
   }
   \label{fig:p_loec_c}
@@ -499,6 +505,7 @@ $GLM_{bin}$ was conservative at small effect sizes ($p_E > 0.8$) and WT was gene
 The outlined case study demonstrates that the choice of the statistical model and procedure can have substantial impact on ecotoxicological inferences and endpoints like the LOEC.
 \DIFaddbegin \DIFadd{Therefore, ecotoxicologists should not base their inferences solely on statistical significance tests, but also on parameter estimates, their uncertainty and importance }\citep{gelman_difference_2006}\DIFadd{.
 Nevertheless, }\citet{ohara_not_2010} \DIFadd{showed that $LM$ using a log transformation gave unreliable and biased parameter estimates, whereas GLMs performed well with little bias.
+Bias occurs also when back-transforming means to the original scale, which explains the lower predicted means by $LM$ in Figure \ref{fig:example} }\citep{rothery_cautionary_1988} \DIFadd{and should be corrected for }\citep{newman_regression_1993}\DIFadd{.
 }
 
 \DIFaddend This is further highlighted by the fact that for the same model (linear model of transformed data), \citet{brock_minimum_2015} reported a 10-fold lower LOEC (\mbox{0.3 mg/L}) then found in our study (3 mg/L, Figure \ref{fig:example}).
@@ -529,8 +536,10 @@ This suggests that population level NOECs reported from mesocosm experiments sho
 %% --- Multivariate + GLMM -------
 Mesocosm studies allow also inferences on community level. 
 For community analyses \emph{GLM for multivariate data} \DIFaddbegin \citep{warton_distance-based_2012} \DIFaddend have been proposed as alternative to Principal Response Curves (PRC) and yielded to similar inferences, but better indication of responsive taxa \DIFdelbegin %DIFDELCMD < \citep{warton_distance-based_2012,szocs_analysing_2015}%%%
-\DIFdelend \DIFaddbegin \citep{szocs_analysing_2015}\DIFaddend . 
-Although our simulations covered only simple experimental designs at the population level, findings may also extend to more complex situations. 
+\DIFdel{. 
+}\DIFdelend \DIFaddbegin \citep{szocs_analysing_2015}\DIFadd{. 
+However, }\citet{ter_braak_topics_2014} \DIFadd{argue to use data transformations with community data because of their easy- and robustness.
+}\DIFaddend Although our simulations covered only simple experimental designs at the population level, findings may also extend to more complex situations. 
 Nested or repeated designs with non-normal data could be analysed using Generalised Linear Mixed Models (GLMM) and may have advantages with respect to power \citep{stroup_rethinking_2014}.
 
 %% --- Alternatives -------
@@ -565,8 +574,9 @@ In such situations a GLMM may offer an appealing alternative }\citep{warton_arcs
 }\DIFaddend Nevertheless, for deriving LOECs the \DIFdelbegin \DIFdel{transformation }\DIFdelend \DIFaddbegin \DIFadd{$LM$ }\DIFaddend performed better at low sample sizes (n = 3) (Figure \ref{fig:p_loec_p}). 
 
 \DIFaddbegin \DIFadd{GLMs can be fitted with many statistical software packages and a lot of textbooks are available to introduce ecotoxicologists to these models (e.g. }\citealt{zuur_beginners_2013} \DIFadd{or }\citealt{quinn_experimental_2009}\DIFadd{).
-}\DIFaddend We recommend that \DIFdelbegin \DIFdel{non-normal data }\DIFdelend \DIFaddbegin \DIFadd{counts or proportions from counts }\DIFaddend should be analysed by GLMs and not by transformations or non-parametric methods.
-To improve the power to detect effects, GLMs should become a standard method in ecotoxicology and incorporated into respective guidelines.
+}\DIFaddend We recommend that \DIFdelbegin \DIFdel{non-normal data should be analysed by GLMs and not by transformations or non-parametric methods.
+To improve the power to detect effects, }\DIFdelend \DIFaddbegin \DIFadd{ecotoxicologists should change their models instead of their data.
+}\DIFaddend GLMs should become a standard method in ecotoxicology and incorporated into respective guidelines.
 
 
 \section{Compliance with Ethical Standards}

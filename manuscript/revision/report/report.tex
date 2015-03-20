@@ -48,15 +48,17 @@ Counts and proportions from counts are data types of encountered by ecotoxicolog
 However, such data is rare normally distributed.
 To meet the assumptions of normality and heteroscedasticity, the standard procedure has been to either transform the data or use non-parametric methods if this fails.
 Generalised Linear Models (GLM) allow to model directly distributions fitting to such data.
-Here, we compare the performance of analyses using transformed data, non-parametric methods and GLMs.
+Here, we compare the performance of methods assuming normality of transformed data, methods assuming appropriate distributions (Poisson, negativ binomial, binomial) and non-parametric methods.
 
-We simulated data mimicking ecotoxicological experiments of two common data types (counts and proportions from counts). 
-We compare the performance of methods in terms of statistical power and type 1 error.
+We simulated data mimicking low replicated ecotoxicological experiments of two common data types (counts and proportions from counts). 
+We compared the performance of different methods in terms of statistical power and type 1 error for detecting a general treatment effect and determining the lowest observed effect concentration (LOEC).
 In addition, we outlined differences and advantages of GLMs on a real world mesocosm data set.
 
-We found that GLMs provide in most cases a gain in statistical power compared to analysis of transformed data or using non-parametric methods.
-We recommend that non-normal data should be analysed by GLMs and not by transformations or non-parametric methods.
-GLMs should become a standard method in ecotoxicology. \todo{letzter absatz noch überarbeiten...}
+For counts, we found that the quasi-Poisson model and the negative binomial model in combination with parametric boostrap had higher statistical power then data transformation.
+For proportions GLMs performed better, except to determine LOEC at extremly low sample sizes.
+The compared non-parametric methods had generally lower power.
+
+We recommend that counts and proportions from counts should be analysed by making appropriate distributional assumptions and GLMs should become a standard method in ecotoxicology.
  \keywords{Generalized Linear Models \and Transformations \and Simulation \and Power \and Type 1 error}
 \end{abstract}
 
@@ -270,7 +272,7 @@ Moreover, Supplement 2 provides worked examples of the data of \citet{brock_mini
 \label{sec:results}
 %% --------------------------------
 \subsection{Case study}
-The data set showed considerable overdispersion ($\Theta = 22.41$, eqn. \ref{eqn:quasi}).
+The data set showed considerable higher variance then expected by the Poisson model ($\Theta = 22.41$, eqn. \ref{eqn:quasi}). 
 Therefore, the Poisson model did not fit to this data and lead to underestimated standard errors and confidence intervals, as well as overestimated statistical significance (Figure \ref{fig:example}).
 In this case, inferences on the Poisson model are not valid and we do not further discuss its results.
 The normal (F = 2.57, p = 0.084) and quasi-Poisson model (F = 2.90, p = 0.061), as well as the Kruskal test (p =  0.145) did not show a statistically significant treatment effects.
@@ -368,6 +370,7 @@ $WT$ had no power for n = 3 and showed less power in the other simulation runs (
 The outlined case study demonstrates that the choice of the statistical model and procedure can have substantial impact on ecotoxicological inferences and endpoints like the LOEC.
 Therefore, ecotoxicologists should not base their inferences solely on statistical significance tests, but also on parameter estimates, their uncertainty and importance \citep{gelman_difference_2006}.
 Nevertheless, \citet{ohara_not_2010} showed that $LM$ using a log transformation gave unreliable and biased parameter estimates, whereas GLMs performed well with little bias.
+Bias occurs also when back-transforming means to the original scale, which explains the lower predicted means by $LM$ in Figure \ref{fig:example} \citep{rothery_cautionary_1988} and should be corrected for \citep{newman_regression_1993}.
 
 This is further highlighted by the fact that for the same model (linear model of transformed data), \citet{brock_minimum_2015} reported a 10-fold lower LOEC (\mbox{0.3 mg/L}) then found in our study (3 mg/L, Figure \ref{fig:example}).
 The reasons are be manifold: \citep{brock_minimum_2015} used a $log(2~y + 1)$ transformation, whereas we used a $log(A~y + 1)$ transformation, where A = 2 / 11 = 0.182 \citep{van_den_brink_impact_2000}.
@@ -430,8 +433,8 @@ In such situations a GLMM may offer an appealing alternative \citep{warton_arcsi
 Nevertheless, for deriving LOECs the $LM$ performed better at low sample sizes (n = 3) (Figure \ref{fig:p_loec_p}). 
 
 GLMs can be fitted with many statistical software packages and a lot of textbooks are available to introduce ecotoxicologists to these models (e.g. \citealt{zuur_beginners_2013} or \citealt{quinn_experimental_2009}).
-We recommend that counts or proportions from counts in ecotoxicologal experiments should be analysed by GLMs and not by transformations or non-parametric methods.
-To improve the power to detect effects, GLMs should become a standard method in ecotoxicology and incorporated into respective guidelines.
+We recommend that ecotoxicologists should change their models instead of their data.
+GLMs should become a standard method in ecotoxicology and incorporated into respective guidelines.
 
 
 \section{Compliance with Ethical Standards}
