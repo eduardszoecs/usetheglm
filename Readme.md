@@ -24,8 +24,7 @@ R code has been written hierarchically, that is scripts must be run in a specifi
 * `~/0-functions.R`					: Custom functions needed for the simulations
 * `~/1-simulations.R`   : Run simulations
 * `~/2-results.R`				: Compile results
-* `~/3-brock.R`					: Script for motivating example (counts)
-* `~/3-weber.R`					: Script for motivating example (binomial)
+* `~/3-brock.R`					: Script for the case study
 
 
 ### How to reproduce the results

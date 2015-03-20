@@ -38,7 +38,8 @@ drop1(modlm, test = 'F')
 
 ## Inference, LOEC
 # one-sided Dunnett test
-summary(glht(modlm, linfct = mcp(Concentration = 'Dunnett'),  alternative = 'less'))
+summary(glht(modlm, linfct = mcp(Concentration = 'Dunnett'),  
+             alternative = 'less'), test = adjusted('holm'))
 
 ## predicted mean values with back transformation
 modlm_p <- predict(modlm, newdata = data.frame(Concentration = unique(df$Concentration)), 
@@ -66,7 +67,8 @@ drop1(modpois, test = 'Chisq')
 
 ## Inference, LOEC
 ## one-sided Dunnett test
-summary(glht(modpois, linfct = mcp(Concentration = 'Dunnett'), alternative = 'less'))
+summary(glht(modpois, linfct = mcp(Concentration = 'Dunnett'), 
+             alternative = 'less'), test = adjusted('holm'))
 
 ## predicted value on response scale
 modpois_p <- predict(modpois, newdata = data.frame(Concentration = unique(df$Concentration)), 
@@ -80,7 +82,7 @@ modpois_upr <- modpois$family$linkinv(modpois_p$fit + 1.96 * modpois_p$se.fit)
 ### quasi-Poisson GLM
 modqpois <- glm(Abundance ~ Concentration, data = df, family = quasipoisson)
 summary(modqpois)
-# # same as
+# # disp same as
 # summary(modpois)
 # disp <- sum(resid(modpois, type = 'pearson')^2) / modpois$df.residual
 # sqrt(diag(vcov(modpois))) * sqrt(disp)
@@ -91,7 +93,8 @@ drop1(modqpois, test = 'F')
 
 ## Inference, LOEC
 # # one-sided Dunnett test
-summary(glht(modlm, linfct = mcp(Concentration = 'Dunnett'),  alternative = 'less'))
+summary(glht(modlm, linfct = mcp(Concentration = 'Dunnett'),  
+             alternative = 'less'), test = adjusted('holm'))
 
 ## predicted value on response scale
 modqpois_p <- predict(modqpois, newdata = data.frame(Concentration = unique(df$Concentration)), 
@@ -120,7 +123,8 @@ anova(modnb, modnb0, test = 'Chisq')
 
 ## Inference, LOEC
 # # one-sided Dunnett test
-summary(glht(modnb, linfct = mcp(Concentration = 'Dunnett'),  alternative = 'less'))
+summary(glht(modnb, linfct = mcp(Concentration = 'Dunnett'),  
+             alternative = 'less'), test = adjusted('holm'))
 
 ## predicted value on response scale
 modnb_p <- predict(modnb, newdata = data.frame(Concentration = unique(df$Concentration)), 
@@ -169,9 +173,11 @@ moddf <- data.frame(conc = rep(unique(df$Concentration), 4),
                     fit = c(modlm_fit, modpois_fit, modqpois_fit, modnb_fit),
                     upr = c(modlm_upr, modpois_upr, modqpois_upr, modnb_upr),
                     lwr = c(modlm_lwr, modpois_lwr, modqpois_lwr, modnb_lwr),
-                    mod = rep(c('Normal', 'Poisson', 'quasi-Poisson', 'Negative binomial'), each = 6), 
+                    mod = rep(c('Normal', 'Poisson', 'quasi-Poisson', 
+                                'Negative binomial'), each = 6), 
                     strindsAsFactor = FALSE)
-moddf$mod <- factor(moddf$mod, levels = c('Normal', 'Poisson', 'quasi-Poisson', 'Negative binomial'))
+moddf$mod <- factor(moddf$mod, levels = c('Normal', 'Poisson', 'quasi-Poisson', 
+                                          'Negative binomial'))
 
 p <- ggplot() +
   # raw data
@@ -188,14 +194,19 @@ p <- ggplot() +
                 width = 0.1, lwd = 1) + 
   # loec_bars
   # normal
-  geom_path(aes(x = c(5-0.15, 5+0.55), y = c(220,220)), linetype = 'solid', size = 2) + 
+  geom_path(aes(x = c(5-0.15, 5+0.55), y = c(220,220)), 
+            linetype = 'solid', size = 2) + 
   # pois
-  geom_path(aes(x = c(2-0.15, 6+0.55), y = c(220-5,220-5)), linetype = '1111', size = 2) + 
+  geom_path(aes(x = c(2-0.15, 6+0.55), y = c(220-5,220-5)), 
+            linetype = '1111', size = 2) + 
   # qpois 
-  geom_path(aes(x = c(5-0.15, 5+0.55), y = c(220-2*5,220-2*5)), linetype = 'dashed', size = 2) +
+  geom_path(aes(x = c(5-0.15, 5+0.55), y = c(220-2*5,220-2*5)), 
+            linetype = 'dashed', size = 2) +
   # neg bin
-  geom_path(aes(x = c(3-0.15, 3+0.55), y = c(220-3*5,220-3*5)), linetype = 'dotdash', size = 2) + 
-  geom_path(aes(x = c(5-0.15, 6+0.55), y = c(220-3*5,220-3*5)), linetype = 'dotdash', size = 2) + 
+  geom_path(aes(x = c(3-0.15, 3+0.55), y = c(220-3*5,220-3*5)), 
+            linetype = 'dotdash', size = 2) + 
+  geom_path(aes(x = c(5-0.15, 6+0.55), y = c(220-3*5,220-3*5)), 
+            linetype = 'dotdash', size = 2) + 
   scale_linetype_manual(values=c('solid', '1111', 'dashed', 'dotdash')) + 
   mytheme +
   guides(linetype=guide_legend(title='Model')) +
