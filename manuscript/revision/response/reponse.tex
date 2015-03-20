@@ -75,8 +75,6 @@ Note, that changes in titles, citations and figures were not highlighted.
 \section{ToDo:}
 \begin{enumerate}
 	\item recompile/update/enhance supplements
-	\item Holm also for case-study. Recalculate and rewrite 3-brock.R -> remove those, keep only supplement.
-	\item abstract: 
 \end{enumerate}
 
 
@@ -173,7 +171,7 @@ in the presence of overdispersion.}
 \comment{p. 3, right column, line 28: How is multiple testing taken care of? This
 may also affect the simulation results.}
 \response{We adjusted multiple testing using the method of \citet{holm_simple_1979}. We added this information to the manuscript. 
-For the submission we did not use Holm's method for the binomial data simulations. However, we unified this with the rerun of simulations (see comment 14) \todo{discussion}.}
+For the submission we did not use Holm's method for the binomial data simulations. However, we unified this with the rerun of simulations (see comment 14).}
 
 %done
 \comment{p. 4, left column, line 2: The simulations will not be very informative
@@ -316,8 +314,10 @@ more broadly than these examples - it is not a case of "your data aren't normal 
 \comment{page 7 first column, line 7: bounds not bonds}
 \response{Thanks for pointing to this typo.}
 
+%done
 \comment{Section 4.1 the case study discussion was a little confusing.  So is the point that you can get different results by linear models according to transformation, but that GLMs can resolve the problem of choice of transformation?  (by replacing it with a decision about mean-variance relationship?)  I think a stronger point is that the GLM is usually a better fit to count data, no transformation can make data Gaussian when it has lots of zeros and small counts, but GLM is designed for such data.  If diagnostic tools support this argument for your case study they could be included.}
-\response{\todo{todo}}
+\response{Yes, we find it much easier to choose appropriate distributions than from infinitely possibilities of transformations. We agree, that GLMs give predictions in sound with the data. But note, that \citet{warton_many_2005} found that "\emph{a Gaussian model based on transformed abundances fitted
+data surprisingly well}" (see also comment 59). }
 
 %done
 \comment{page 7 column 1 line 27: it is not so much unreliable and biased - they are estimating a different parameter (in an unbiased fashion) - they estimate the mean of log(Ax+1) data, and a problem is that this has no natural interpretation in terms of the original data.  It is fair to make the point that it is biased as an estimate of the mean response, but it would be helpful to explain why and how the estimators have problematic interpretations.}
@@ -334,6 +334,7 @@ page 7 column 2 line 42: GLMs have (or GLM has)}
 A related point is that the linear model had the advantage that it seemed to be better at maintaining nominal significance levels at small sample sizes, which should be mentioned.  As the authors say however it did not have as good power (and also loses something in interpretability and biased estimation of means).  Hence while the GLM has a number of advantages, combining it with param bootstrap at small sample sizes might be worth considering to address the Type I error issue.}
 \response{We agree and pointed to parametric bootstrap for situations of low sample sizes and/or estimates on the boundary of parameter space. See also comment 31}
 
+
 \comment{Supplement 2 is a useful addition, and it might be worth giving it a little more emphasis in the text to ensure ecotoxicologists wanting to try out new analyses give it a look.  A couple of suggestions though:
 - there is no parametric bootstrap code there at the moment.  This would be easy enough to do by using the mvabund package, calling manyglm (even on a univariate response) then anova(..., resamp="monte.carlo")  will do a parametric bootstrap.
 - you can construct residual plots for GLMs on this package, using the plot function on a fitted manyglm object.}
@@ -344,6 +345,7 @@ A related point is that the linear model had the advantage that it seemed to be 
 \section{Response to Reviewer 3}
 \vspace{-2em}
 
+%done
 \comment{With its simulations in an ecotox. context, the paper is a fine contribution to make researchers aware of the possibilities and advantages of a generalized linear models (GLM). What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion. The paper and abstract can still be made more useful by given not just the recommendation for GLM but also to give advice and warnings of proper usage. For example, (almost) never use loglinear/Poisson regression without adjustment for overdispersion, be aware that a nicer looking model like the negative binomial may give inflated type I error, a case that is overcome in this paper by bootstrapping. The same applies to binomial/logit regression unless the experiment really consist of independent observations for each 0/1 result (and is not just a count with a predetermined maximum). In this light it is strange that the logistic/binomial case is treated differently from
 the loglinear/Poisson case! Should this not be repaired or at least given more warning. \\
 (1) Also, if the authors stick to the binomial/logistic without overdispersion, the normal model could be made powerful in the simulations by treating the error variance as known, because it is a known constant for the arcsine transformation. \\
@@ -352,8 +354,9 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 \response{We rerun our simulations and now include also the poisson GLM with overdispersed data. This clearly shows the effect of not accounting for overdispersion and is discussed now. \\
 We sticked with the binomial simulations without overdispersion, because we don't know if overdispersion is a common phenomena with ecotoxcicological data.
 However, we point the reader to overdispersion and methods to account for it. \\
-Our simulations mimicked the data of the case study and we clarified this.
-\todo{Williams}
+Our simulations mimicked the data of the case study and we clarified this (see also comment 48). \\
+Williams type contrast are also available in a GLM framework. The choice of which contrasts to use really depends on the assumptions one wants to make and which questions to answer. 
+However, it does not affect our comparisons between methods.
 }
 
 %done
@@ -363,8 +366,6 @@ Our simulations mimicked the data of the case study and we clarified this.
 %done
 \comment{Line 58 right add ref to (Warton 2005).}
 \response{This reference fits very well to our paper and we added it.}
-\todo{Take this paper also into discussion.} 
-\todo{See also the emphasized discussion on failing to account for overdispersion.}
 
 %done
 \comment{Page 2 Line 40 : , for y>0 should for y>= 0 and  be on the next line without an indent after formula (if it is not new paragraph).}
@@ -408,7 +409,7 @@ Parameter estimates (and their uncertainty) give much more information - on whic
 
 %done
 \comment{Line 4 right : the backtransformed mean gives a median on the original scale, a value that is more interesting than the mean (generally for skew data),  and for skew right always smaller than the mean.}
-\response{We agree and added a discussion of backtransformation bias. See also comments 4 and 44.}
+\response{We agree and added a discussion of back-transformation bias. See also comments 4 and 44.}
 
 %done
 \comment{Section 3.2
@@ -435,9 +436,12 @@ to figure captions 2 and 3.}
 Fig.5 LM for 0.8 has a high Type I error. Does it deviate significantly from 0.05? [same question for the high Type I for GLM\_nb in fig 2]. Use confidence interval for binomial p = 0.05 n = 100.}
 \response{We refined our simulations (see comment 14, )}
 
+%done
 \comment{Case study : 
 You can check whether the difference between log(2y+1) and log(Ay+1) with A = 0.182 already causes the difference. (it probably does not). The important difference is the use of the Willems test! Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone! See the report of the Williams test below.}
-\response{}
+\response{The reviewer is correct that the Williams test has higher power (if the assumptions are met). 
+Williams type contrast are also available in a GLM framework and the choice of contrast to use really depends on the assumptions one wants to make and which questions to answer. 
+This explains the difference between the results of Brock 2015 and us, but it does not affect our comparisons between methods.}
 
 %done
 \comment{Page 7 L35 Move ref to Warton to after data.}
