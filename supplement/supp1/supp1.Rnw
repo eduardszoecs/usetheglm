@@ -1,17 +1,13 @@
 \documentclass{scrartcl}
-
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}%GRaphiken
-\usepackage{tabularx}%Tabellen!
-\usepackage[english]{babel}% Zeilentrennung besser
-\usepackage{url}% Urls besser
-\usepackage{textcomp}% Sonderzeichen
-\usepackage{amsmath}%maths / equations
-\usepackage{helvet}% Schrift Helvetica
-% \usepackage[helvet]{sfmath}% Helvet also in Math modes
-% \renewcommand\familydefault{\sfdefault}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage[english]{babel}
+\usepackage{url}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{helvet}
 \usepackage{sansmath} % sans in math
-\usepackage{float}
 \usepackage{todonotes}
 \usepackage[
 	left=3cm,
@@ -20,36 +16,21 @@
 	bottom=1cm
 	,
 	includeheadfoot
-	]{geometry}														% Satzspiegel
+	]{geometry}													
 \usepackage[
-	round,	%(defaultage in the main file and \input ) for round parentheses;
-	%square,	% for square brackets;
-	%curly,	% for curly braces;
-	%angle,	% for angle brackets;
-	colon,	% (default) to separate multiple citations with colons;
-	%comma,	% to use commas as separaters;
-	authoryear,% (default) for author-year citations;
-	%numbers,	% for numerical citations;
-	%super,	% for superscripted numerical citations, as in Nature;
-	sort,		% orders multiple citations into the sequence in which they appear in the list of 				references;
-	%sort&compress,    % as sort but in addition multiple numerical citations
-                   % are compressed if possible (as 3-6, 15);
-	%longnamesfirst,  % makes the first citation of any reference the equivalent of
-                   % the starred variant (full author list) and subsequent citations
-                   %normal (abbreviated list);
-	%sectionbib,      % redefines \thebibliography to issue \section* instead of \chapter*;
-                   % valid only for classes with a \chapter command;
-                   % to be used with the chapterbib package;
-	%nonamebreak,     % keeps all the authors names in a citation on one line;
-                   %causes overfull hboxes but helps with some hyperref problems.
-]{natbib}											    			% Literaturverzeichnis
-\usepackage{scrhack}   % kills \float@addtolists!  warning
+	round,
+	colon,	
+	authoryear,
+	sort,		
+]{natbib}											    		
+\usepackage{scrhack}   %
 \usepackage[pdfpagelabels,plainpages=false, pageanchor=false]{hyperref}	
 
+% rm TOC title
+\deftocheading{toc}{}%
 
-%% andere Einstellungen
-\linespread{1.5}% 1.5 Zeilenabstand			
-\graphicspath{{fig/}}                     % path to graphics
+\linespread{1.5}% 
+\graphicspath{{fig/}}    
 
 %% ----------------------------------------------------------------------------
 \title{Ecotoxicology is not normal.}
@@ -61,16 +42,19 @@
 % ----------------------------------------------------------------------------
 \begin{document}
 \maketitle
-\section{Supplement 1 - Additional Figures / Tables}
+\thispagestyle{empty}
+\section*{Supplement 1 - Additional Figures / Tables}
+\tableofcontents
+\newpage
 
-\subsection{Count data simulations}
+\section{Count data simulations}
 \input{tab/conv.tex}
 \input{tab/pow_glob_c.tex}
 \input{tab/pow_loec_c.tex}
 \input{tab/t1_glob_c.tex}
 \input{tab/t1_loec_c.tex}
 
-\subsection{Binomial data simulations}
+\section{Binomial data simulations}
 \input{tab/pow_glob_p.tex}
 \input{tab/pow_loec_p.tex}
 \input{tab/t1_glob_p.tex}
