@@ -57,7 +57,7 @@ print(xtable(ldf,
              caption = 'Count data simulations - Power to detect a treatment effect. N = sample sizes, 
              $\\mu_C$ = mean abundance in control, LM = Linear model after transformation, 
              $GLM_{nb}$ = negative binomial model, $GLM_{qp}$ = quasi-Poisson model, $GLM_{qp}$ = Poisson model,
-            np = pairwise Wilcoxon test.', label = 'tab:pow_loec_c'),
+            np = pairwise Wilcoxon test.', label = 'tab:pow_glob_c'),
       file = file.path(suppdir, "supp1", "tab", "pow_glob_c.tex"), 
       table.placement = 'H', caption.placement = 'top', size = 'footnotesize',
       include.rownames = FALSE, sanitize.text.function=function(x){x})
@@ -131,10 +131,11 @@ if(exp_plot)
 
 ### ------------------------
 # max power for N = 3, excluding glm_nb
-max(pow_glob_c[pow_glob_c$N == 3 & !pow_glob_c$variable %in% 'glm_nb', 'power'])
+max(pow_glob_c[pow_glob_c$N == 3 & !pow_glob_c$variable %in% c('glm_nb', 'glm_p'), 'power'])
 diffdf <- dcast(pow_glob_c, muc + N ~ variable, value.var = 'power')
 diffdf$diff_lm_qp <- diffdf$lm - diffdf$glm_qp
 diffdf
+
 
 
 
@@ -247,7 +248,7 @@ if(exp_plot)
 
 ### ------------------------
 ### Misc
-max(pow_loec_c[pow_loec_c$N == 3 & !pow_loec_c$variable %in% c('glm_nb'), 'power'])
+max(pow_loec_c[pow_loec_c$N == 3 & !pow_loec_c$variable %in% c('glm_nb', 'glm_p'), 'power'])
 
 # compare power
 merged <- merge(pow_glob_c[ , c(1,2,4, 5)], 

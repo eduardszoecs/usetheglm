@@ -64,18 +64,14 @@ We revised the manuscript according to comments of the three reviewers and are r
 
 In the remainder of this document, we describe the changes that we have made to the paper for resubmission. 
 To assist the assessment of our changes we have submitted two versions of the revised manuscript: one with highlighted changes and another without any highlighting. 
-Note, that changes in titles, citations and figures were not highlighted.
+Note, that we did not highlight changes in citations and figures.
 
 \vspace{2em}
 \hfill Kind regards,
 
 \hfill Eduard Szöcs and Ralf B. Schäfer
-
 \newpage
-\section{ToDo:}
-\begin{enumerate}
-	\item recompile/update/enhance supplements
-\end{enumerate}
+
 
 
 % ======================================================= %
@@ -89,9 +85,9 @@ which constitute the key contribution, are far from being as unequivocal as
 the title may lead one to think. Also, it is disturbing to see a fairly technical
 (and for ESPR non-standard) formulation of statistical models and yet the
 authors seem to lack some understanding of the models in some cases.}
-\response{We changed the subtitle (see also comment 2) and update the notation of the models used (see also comments 6, 7, 8, 10, 25, and 43).
-The simulations scenarios are close-knit to experiments and data often encountered in ecotoxicology which are characterised by small sample sizes and a factorial design (see also comment 13). 
-Therefore, we submitted to ESPR, though, it might be interesting also to a greater audience.}
+\response{We changed the subtitle (see also comment 2) and updated the notation of the models used (see also comments 6, 7, 8, 10, 25, and 43).
+The simulation scenarios are tailored to experiments and data often encountered in ecotoxicology, which are characterised by small sample sizes and a factorial design (see also comment 13). 
+Therefore, we submitted to ESPR, though, it might be interesting also to a greater audience of non-ecotoxicologists.}
 
 %done
 \comment{About the title: Please consider a more informative title such as ”Comparison of statistical approaches for analysis of non-normally distributed
@@ -107,7 +103,7 @@ sion is interesting but not really relevant to the aim of the manuscript.
 Consider skipping this part. However, you’re right that for small sam-
 ple sizes it is extremely important to choose the most efficient statistical
 analysis and the better the model describes the data the more efficient.}
-\response{We shortened this section. However, we sticked with a short introduction to LOEC/NOEC as inference on parameters is also part of our results.}
+\response{We shortened this section. However, we kept a short introduction to LOEC/NOEC as inference on parameters is also part of our results.}
 
 %done
 \comment{p. 2, left column, lines 56–59: You aren’t mentioning the issue with
@@ -117,7 +113,7 @@ on a transformed scale aren’t directly interpretable as claimed by the
 authors. A more detailed explanation or at least discussion on how
 to back-transform is warranted (this is an issue regardless of whether
 GLMs or models for transformed responses are used!).}
-\response{We agree and included transformation bias in our discussion.}
+\response{We agree and include transformation bias in our discussion.}
 
 %done
 \comment{p. 2, right column, line 1: The real advantage of using a generalized
@@ -133,7 +129,7 @@ linked to the linear predictors, it is the mean of the response variable
 (McCullagh \& Nelder, 1989). This is a basic fact of generalized linear
 models as you also show in Eqn. (3). Please explain Eqn. (3) in more
 detail (explain the parameters).}
-\response{The reviewer is correct and we rephrased this complete section.}
+\response{We agree and rephrased this complete section.}
 
 %done
 \comment{p. 2, right column, lines 25–27: There exists no quasi-Poisson distri-
@@ -142,7 +138,7 @@ terminology. Please consult McCullagh \& Nelder (1989) to understand
 that over-dispersion is dealt with by means of an ad hoc scaling of the
 standard errors that takes place after having fitted the ordinary Poisson
 GLM. So Eqn. (4) doesn’t make sense.}
-\response{The reviewer is correct that the quasi-Poisson model does not correspond to any distribution. We rephrased this section.}
+\response{We agree and rephrased this complete section.}
 
 %done
 \comment{p. 2, right column, Eqn. (5): Have you explained the parameters in
@@ -170,8 +166,8 @@ in the presence of overdispersion.}
 %done
 \comment{p. 3, right column, line 28: How is multiple testing taken care of? This
 may also affect the simulation results.}
-\response{We adjusted multiple testing using the method of \citet{holm_simple_1979}. We added this information to the manuscript. 
-For the submission we did not use Holm's method for the binomial data simulations. However, we unified this with the rerun of simulations (see comment 14).}
+\response{We adjusted for multiple testing using the method of \citet{holm_simple_1979}. We added this information to the manuscript. 
+For the first submission we did not use Holm's method for the binomial data simulations. However, we unified this with the rerun of simulations (see comment 14).}
 
 %done
 \comment{p. 4, left column, line 2: The simulations will not be very informative
@@ -182,7 +178,7 @@ then instead keep the $\mu_C$ small: 2, 4, 8, 16 to get more ties.}
 \response{Our simulation design aimed to mimic data sets frequently encountered in ecotoxicology. 
 Sample sizes between 3 and 9 are very common in regulatory ecotoxicology. 
 For example, mesocosm experiments rarely exceed four replicates per treatment due to logistic constraints \citep{szocs_analysing_2015}. 
-Similarly the \emph{Daphia magna} standard test \citep{oecd_test_2004} requires only a minimum of four replicates.
+Similarly the \emph{Daphnia magna} standard test \citep{oecd_test_2004} is usually conducted with four to five replicates.
 We believe that the current simulation design is relevant for ecotoxicologists and did not simulate larger sample sizes.
 Moreover, we provide a fully reproducible source code at \url{https://github.com/EDiLD/usetheglm}, enabling other researchers to easily adapt our simulation design to specific needs.
 }
@@ -251,7 +247,7 @@ assumptions being made). However, your results for the parametric
 models are all quite similar and as it stands the paper does not present
 a strong case for the use of GLMs; and a more balanced abstract would
 be appropriate.}
-\response{We revised the }
+\response{We agree and revised the abstract.}
 
 %done
 \comment{p. 7, Simulations: A suggestion: remove all diverging discussion of
@@ -260,7 +256,7 @@ culation and concentrate on discussing the simulation results. Or, alter-
 natively, discuss in much more detail that GLMMs may actually offer a
 difference approach for handling over-dispersion in binomial and count
 data (instead of considering completely different designs).}
-\response{We agree and pointed GLMM as an alternative to deal with overdispersion in the methods section and discussion.}
+\response{We agree and pointed to GLMM as an alternative to deal with overdispersion in the methods section and discussion.}
 
 
 
@@ -296,7 +292,7 @@ more broadly than these examples - it is not a case of "your data aren't normal 
 
 %done
 \comment{Sections 2.1, 2.2: references to relevant articles or texts would be useful for GLMs, where the reader can find more details at a level appropriate for readership (e.g. a Zuur text?  Quinn \& Keough?).  Also point readers to supp 2 for code and a worked example.}
-\response{We are thankful for point us to the missing reference to supplement 2. We added this to the methods section and pointed to introductory textbooks at the end of the manuscript. }
+\response{We are thankful for pointing us to the missing reference to supplement 2. We added this to the methods section and pointed to introductory textbooks at the end of the manuscript. }
 
 %done
 \comment{page 3, line 58, the parametric bootstrap}
@@ -316,7 +312,9 @@ more broadly than these examples - it is not a case of "your data aren't normal 
 
 %done
 \comment{Section 4.1 the case study discussion was a little confusing.  So is the point that you can get different results by linear models according to transformation, but that GLMs can resolve the problem of choice of transformation?  (by replacing it with a decision about mean-variance relationship?)  I think a stronger point is that the GLM is usually a better fit to count data, no transformation can make data Gaussian when it has lots of zeros and small counts, but GLM is designed for such data.  If diagnostic tools support this argument for your case study they could be included.}
-\response{Yes, we find it much easier to choose appropriate distributions than from infinitely possibilities of transformations. We agree, that GLMs give predictions in sound with the data. But note, that \citet{warton_many_2005} found that "\emph{a Gaussian model based on transformed abundances fitted
+\response{Yes, we find it much easier to choose appropriate distributions than from the virtually infinite possibilities of transformations. 
+We agree, that GLMs give predictions that better fit to the data. 
+But note, that \citet{warton_many_2005} found that "\emph{a Gaussian model based on transformed abundances fitted
 data surprisingly well}" (see also comment 59). }
 
 %done
@@ -327,18 +325,18 @@ data surprisingly well}" (see also comment 59). }
 \comment{page 7 column 1 line 50: a priori not a priory\\
 page 7 column 2 line 37: data are (data being the plural of datum)\\
 page 7 column 2 line 42: GLMs have (or GLM has)}
-\response{We are thankful for pointing to this errors and changed accordingly.}
+\response{We are thankful for pointing to these errors and changed accordingly.}
 
 %done
 \comment{page 7 column 2 line 44: the higher power in Fig 5 seemed to be through the GLMs being more conservative, rather than due to greater efficiency.  This issue could likely be fixed using a parametric bootstrap, as was done previously in figure 2.
 A related point is that the linear model had the advantage that it seemed to be better at maintaining nominal significance levels at small sample sizes, which should be mentioned.  As the authors say however it did not have as good power (and also loses something in interpretability and biased estimation of means).  Hence while the GLM has a number of advantages, combining it with param bootstrap at small sample sizes might be worth considering to address the Type I error issue.}
-\response{We agree and pointed to parametric bootstrap for situations of low sample sizes and/or estimates on the boundary of parameter space. See also comment 31}
+\response{We agree and pointed to parametric bootstrap for situations of low sample sizes or estimates on the boundary of parameter space. See also comment 31}
 
 
 \comment{Supplement 2 is a useful addition, and it might be worth giving it a little more emphasis in the text to ensure ecotoxicologists wanting to try out new analyses give it a look.  A couple of suggestions though:
 - there is no parametric bootstrap code there at the moment.  This would be easy enough to do by using the mvabund package, calling manyglm (even on a univariate response) then anova(..., resamp="monte.carlo")  will do a parametric bootstrap.
 - you can construct residual plots for GLMs on this package, using the plot function on a fitted manyglm object.}
-\response{\todo{todo}}
+\response{We are thankful for this comment. We refined Supplement 2 to incorporate all described models and methods and point the reader to it in the methods section.}
 
 
 % ======================================================= %	
@@ -352,11 +350,12 @@ the loglinear/Poisson case! Should this not be repaired or at least given more w
 (2) Also, the simulation now use slight overdispersion whereas the example /typical data has large overdispersion. Add simulations with large overdispersion. The current ones can go to supplementary. \\
 (3) Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone.  See the example. Discuss this ambiguity. You can perhaps use a bootstrap test based on (GLM?) monotonic regression or similar. I know some cues/leads in this direction.}
 \response{We rerun our simulations and now include also the poisson GLM with overdispersed data. This clearly shows the effect of not accounting for overdispersion and is discussed now. \\
-We sticked with the binomial simulations without overdispersion, because we don't know if overdispersion is a common phenomena with ecotoxcicological data.
+We stick to the binomial simulations without overdispersion, because we don't know if overdispersion is a common phenomena with ecotoxcicological data.
 However, we point the reader to overdispersion and methods to account for it. \\
 Our simulations mimicked the data of the case study and we clarified this (see also comment 48). \\
-Williams type contrast are also available in a GLM framework. The choice of which contrasts to use really depends on the assumptions one wants to make and which questions to answer. 
+Williams type contrasts are also available in a GLM framework. The choice of which contrasts to use really depends on the assumptions one wants to make and which questions to answer. 
 However, it does not affect our comparisons between methods.
+We stress this in the revised MS.
 }
 
 %done
@@ -365,7 +364,7 @@ However, it does not affect our comparisons between methods.
 
 %done
 \comment{Line 58 right add ref to (Warton 2005).}
-\response{This reference fits very well to our paper and we added it.}
+\response{This reference fits very well and we added it.}
 
 %done
 \comment{Page 2 Line 40 : , for y>0 should for y>= 0 and  be on the next line without an indent after formula (if it is not new paragraph).}
@@ -382,12 +381,12 @@ However, it does not affect our comparisons between methods.
 
 %done
 \comment{Page 3 line 17 n= 4.10 = 40 what does the mean here/ what is the purpose?}
-\response{We are sorry for this error. It was a remnant of a early version of the manuscript - removed.}
+\response{We are sorry for this error. It was a remnant of an earlier version of the manuscript - removed.}
 
 %done
 \comment{Line 41 : give more attention to the condition for the binomial: independent observations of each of the successes (k) out of the number of experiments (n).
 And: thus give attention to overdispersion in this case as well, particularly as you found nasty things for the LR of  NB.}
-\response{We now point the reader to overdispersed binomial data, though our simulation design does not cover these cases.}
+\response{We now point the reader to overdispersed binomial data, though our simulation design does not cover this case.}
 
 %done
 \comment{Line 28 right. Ref for Dunnett contrasts.}
@@ -422,7 +421,7 @@ Always start with the Type I error results because the power results are without
 
 %done
 \comment{L32 right. ", but this." Although you should reorder the results, I mention that the "but this" should at least be "This could fortunately be …"[and we could not have known for sure (apart from the general warnings about LR) without the simulations] This inflated error for GLM\_nb must receive more attention. It is an interesting result of this study: you must to bootstrap when using NB.}
-\response{We reordered and edited the respective results and discussion sections and emphasize more on this.}
+\response{We reordered and edited the respective results and discussion sections and emphasized this.}
 
 %done
 \comment{Page 5
@@ -454,7 +453,7 @@ This explains the difference between the results of Brock 2015 and us, but it do
 %done
 \comment{Line 1 right (like GLMs) -\textgreater (like GLMs and the Williams test)}
 \response{We did not investigate the differences between multiple comparison procedures (MCP). 
-We used Dunnett constrast for in all simulations, because only these allow individual comparisons between treatments and the control. 
+We used Dunnett constrasts in all simulations, because only these allow individual comparisons between treatments and the control. 
 For a comparison of MCP see \citet{jaki_statistical_2013}, who recommend a combination of both, Dunnett and Williams constrasts.
 }
 
@@ -465,7 +464,7 @@ For a comparison of MCP see \citet{jaki_statistical_2013}, who recommend a combi
 %done
 \comment{Line 18 right. Add after "non-normal data' the point the importance of proper accounting for under and overdispersion when using GLM. What is lacking is pointing to the disaster of using GLM in an improper way, notably without adjustment for overdispersion.}
 \response{We rerun our simulations and also included the Poisson GLM. 
-The results for Poisson GLM are now also display in Figures 2+3 and we discuss the consequences of failing to account for overdisperion.}
+The results for Poisson GLM are now also displayed in Figures 2+3 and we discuss the consequences of failing to account for overdisperion.}
 
 %done
 \comment{Line 41 right size of 9 -\textgreater size of 6-9 (?)}
