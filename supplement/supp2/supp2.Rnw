@@ -1,14 +1,12 @@
 \documentclass{scrartcl}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}%GRaphiken
-\usepackage{tabularx}%Tabellen!
-\usepackage[english]{babel}% Zeilentrennung besser
-\usepackage{url}% Urls besser
-\usepackage{textcomp}% Sonderzeichen
-\usepackage{amsmath}%maths / equations
-\usepackage{helvet}% Schrift Helvetica
-% \usepackage[helvet]{sfmath}% Helvet also in Math modes
-% \renewcommand\familydefault{\sfdefault}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage[english]{babel}
+\usepackage{url}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{helvet}
 \usepackage{sansmath} % sans in math
 \usepackage{todonotes}
 \usepackage[
@@ -18,36 +16,28 @@
 	bottom=1cm
 	,
 	includeheadfoot
-	]{geometry}														% Satzspiegel
+	]{geometry}													
 \usepackage[
-	round,	%(defaultage in the main file and \input ) for round parentheses;
-	%square,	% for square brackets;
-	%curly,	% for curly braces;
-	%angle,	% for angle brackets;
-	colon,	% (default) to separate multiple citations with colons;
-	%comma,	% to use commas as separaters;
-	authoryear,% (default) for author-year citations;
-	%numbers,	% for numerical citations;
-	%super,	% for superscripted numerical citations, as in Nature;
-	sort,		% orders multiple citations into the sequence in which they appear in the list of 				references;
-	%sort&compress,    % as sort but in addition multiple numerical citations
-                   % are compressed if possible (as 3-6, 15);
-	%longnamesfirst,  % makes the first citation of any reference the equivalent of
-                   % the starred variant (full author list) and subsequent citations
-                   %normal (abbreviated list);
-	%sectionbib,      % redefines \thebibliography to issue \section* instead of \chapter*;
-                   % valid only for classes with a \chapter command;
-                   % to be used with the chapterbib package;
-	%nonamebreak,     % keeps all the authors names in a citation on one line;
-                   %causes overfull hboxes but helps with some hyperref problems.
-]{natbib}											    			% Literaturverzeichnis
-\usepackage{scrhack}   % kills \float@addtolists!  warning
+	round,
+	colon,	
+	authoryear,
+	sort,		
+]{natbib}											    		
+\usepackage{scrhack}   %
 \usepackage[pdfpagelabels,plainpages=false, pageanchor=false]{hyperref}	
 
+% rm TOC title
+\deftocheading{toc}{}%
 
-%% andere Einstellungen
-\linespread{1}% 1.5 Zeilenabstand			
-\graphicspath{{fig/}}                     % path to graphics
+\linespread{1}% 
+\graphicspath{{fig/}}                     
+
+% linespread = 1 for code chunks
+\usepackage{setspace}
+\ifdefined\knitrout
+  \renewenvironment{knitrout}{\begin{spacing}{1}}{\end{spacing}}
+\else
+\fi
 
 %% ----------------------------------------------------------------------------
 \title{Ecotoxicology is not normal.}
@@ -58,30 +48,37 @@
 
 % ----------------------------------------------------------------------------
 \begin{document}
-\maketitle
+<<r, echo=FALSE, message=TRUE>>=
+require(knitr)
+opts_chunk$set(fig.align="center")
+@
 
-\setcounter{section}{1}
-\section{Supplement 2 - R examples}
-\subsection{Count data example}
-\subsubsection{Introduction}
+\maketitle
+\thispagestyle{empty}
+\section*{Supplement 2 - Worked R examples}
+\tableofcontents
+
+\newpage
+\section{Count data example}
+\subsection{Introduction}
 In this example we will analyse data from \citep{brock_minimum_2015}.
 The data are count of mayfly larvae in Macroinvertebrate Artificial Substrate Samplers in 18 mesocosms at one sampling day.
 There are 5 treatments and one control group.
 
-First we load the data and bring it to the long format and remove NA values.
+First, we load the data, bring it to the long format and remove NA values.
 <<count_load, message=FALSE>>=
-df <- read.table(header = TRUE, text = 'Control  T0.1 T0.3  T1  T3  T10
-175 29  27  36  26  20
-65  114 78  11  13  37
-154 72  27  105 33  NA
-83  NA  NA  NA  NA  NA
-')
+df <- read.table(header = TRUE, 
+                 text = 'Control  T0.1 T0.3  T1  T3  T10
+                          175 29  27  36  26  20
+                          65  114 78  11  13  37
+                          154 72  27  105 33  NA
+                          83  NA  NA  NA  NA  NA')
 require(reshape2)
 dfm <- melt(df, value.name = 'abu', variable.name = 'treatment')
 dfm <- dfm[!is.na(dfm['abu']), ]
 head(dfm)
 @
-This give a table with two columns - one indicating the treatment and one with the measured abundances.
+This results in a table with two columns - one indicating the treatment and one with the measured abundances.
 
   
 Let's have a first look at the data:
@@ -92,15 +89,19 @@ boxplot(abu ~ treatment, data = dfm, xlab = 'Treatment',
 We clearly see a treatment related response. 
 Moreover, we may note that variances are increasing with increasing abundances.
 
-\subsubsection{Transforming data}
+
+
+\subsection{Assuming a normal distribution of transformed abundances}
+\subsubsection{Data transformation}
 Next we transform the data using a ln(Ax + 1) transformation.
 A is chosen so that the term Ax equals two for the lowest non-zero abundance.
-We add these transformed abundances as column to our table.
+We add these transformed abundances as extra column to our table.
 
 <<count_trans>>=
 A <- 2 / min(dfm$abu[dfm$abu != 0])
 A
 dfm$abu_t <- log(A * dfm$abu + 1)
+head(dfm)
 @
 
 
@@ -112,12 +113,17 @@ boxplot(abu_t ~ treatment, data = dfm,
 @
 
 
-\subsubsection{Assuming a normal distribution of transformed abundances}
-We start with analysing this data assuming a normal distribution of the transformed abundances with constant variance.
-This can be easily done using the \texttt{lm()} function:
+\subsubsection{Model fitting}
+The model from eqn. 2 can be easily fitted using the \texttt{lm()} function:
 
 <<>>=
 modlm <- lm(abu_t ~ treatment, data = dfm)
+@
+
+The residuals vs. fitted values diagnostic plot show no problematic pattern, though it might be difficult to decide with such a small sample size
+<<plot_modlm, out.width='0.5\\textwidth'>>=
+plot(residuals(modlm) ~ fitted(modlm))
+abline(h = 0, lty = 'dotted')
 @
 
 The \texttt{summary()} gives the estimated parameters with standard errors and Wald t tests:
@@ -125,45 +131,57 @@ The \texttt{summary()} gives the estimated parameters with standard errors and W
 summary(modlm)
 @
 
+\subsubsection{Inference on general treatment effect}
 Or, if you want to have the ANOVA table with an F-test:
 <<>>=
 summary.aov(modlm)
 @
 
 From this output we might infer that we cannot detect any treatment effect (F = 2.566, p = 0.084).
-Let's move on to the LOEC determination. This can be easily done using the multcomp package \citep{hothorn_simultaneous_2008}:
-Here we perform a one-sided (\texttt{alternative='less'}) Dunnett (\texttt{mcp(treatment='Dunnett')}) test.
+
+\subsubsection{Inference on LOEC}
+Let's move on to the LOEC determination.
+This can be easily done using the multcomp package \citep{hothorn_simultaneous_2008}:
+
+Here we perform a one-sided (\texttt{alternative = 'less'}) using Dunnett contrasts of treatment (\texttt{mcp(treatment='Dunnett')}).
+Moreover, we adjust for multiple testing using Holm's method (\texttt{test = adjusted('holm')}):
 <<message=FALSE>>=
 require(multcomp)
-# one-sided Dunnett test
-summary(glht(modlm, linfct = mcp(treatment = 'Dunnett'),  alternative = 'less'))
+summary(glht(modlm, linfct = mcp(treatment = 'Dunnett'),  alternative = 'less'),
+        test = adjusted('holm'))
 @
 
 This indicates that only treatment 3 shows a statistically significant from control and is the determined LOEC.
+The column \texttt{'Estimate'} gives the estimated difference in means between treatments and control and \texttt{'Std. Error'} the standard errors of these estimated parameters.
+
+
+To make Williams type comparisons simply change \texttt{'Dunnett'} to \texttt{'Williams'}:
+<<>>=
+summary(glht(modlm, linfct = mcp(treatment = 'Williams'),  
+             alternative = 'less'),
+        test = adjusted('holm'))
+@
+
+Note, this multiple contrats test is different from the original Williams test \citep{williams_comparison_1972}, because of different variance estimators \citep{bretz_powerful_1999}.
 
 
 
 
-\subsubsection{Assuming a Poisson distribution of abundances}
-
-Instead transforming the data, we could assume a Poisson distribution and fit a GLM to this data.
-This can be done using the \texttt{glm()} function:
+\subsection{Assuming a Poisson distribution of abundances}
+\subsubsection{Model fitting}
+We are dealing with count data, so a Poisson GLM might be a good choice.
+GLMs can be fitted using the \texttt{glm()} function and here we fit the model from eqn. 3:
 <<>>=
 modpois <- glm(abu ~ treatment, data = dfm, family = poisson(link = 'log'))
 @
 
-, \texttt{family = poisson(link = 'log')} specifies that we want to fit a poisson model using a log link between response and predictors.
+Here \texttt{family = poisson(link = 'log')} specifies that we want to fit a poisson model using a log link between response and predictors.
 
 The \texttt{summary} gives the estimated parameters, standard errors and Wald Z tests:
 <<>>=
-summary(modpois)
+(sum_pois <- summary(modpois))
 @
 
-To perform a LR-Test we can used \texttt{drop1()}:
-<<>>=
-drop1(modpois, test = 'Chisq')
-@
-which indicates a strong treatment effect.
 
 But is a poisson distribution appropriate here? 
 A property of the poisson distribution is that its variance is equal to the mean. 
@@ -176,31 +194,41 @@ musd <- ddply(dfm, .(treatment), summarise,
               mu = mean(abu),
               var = var(abu))
 musd
-# plot
-plot(var ~ mu, data = musd, xlab = 'mean', ylab = 'variance', main = 'Mean-variance relationships')
+# plot mean vs var
+plot(var ~ mu, data = musd, 
+     xlab = 'mean', ylab = 'variance', main = 'Mean-variance relationships')
 # poisson
 abline(a = 0, b = 1, col = 'darkblue', lwd = 2)
 # quasi-Poisson
 abline(a = 0, b = 22.41, col = 'darkgreen', lwd = 2)
-# Negative binomial
-curve(x + (x^2 / 3.91), from = 24, to = 119.25, add = TRUE, col = 'darkred', lwd = 2)
-legend('topleft', c('NB(k = 3.91)', 'Poisson', 'Quasi-Poisson(t = 22.4)'), 
+# negative binomial
+curve(x + (x^2 / 3.91), from = 24, to = 119.25, add = TRUE, 
+      col = 'darkred', lwd = 2)
+legend('topleft', 
+       legend = c('NB(k = 3.91)', 'Poisson', 'Quasi-Poisson(t = 22.4)'), 
        col = c('darkred', 'darkblue', 'darkgreen'), 
        lty = c(1,1, 1), 
        lwd = c(2,2, 2))
 @
 
-I also added the assumed mean-variance relationships of the Poisson, quasi-Poisson and negative binomial models.
+I also added the assumed mean-variance relationships of the Poisson, quasi-Poisson and negative binomial models (see below).
 We clearly see that the variance increases much more than would be expected under the poisson distribution (the data is overdispersed).
 Moreover, we could check overdispersion from the \texttt{summary}:
 If the ratio of residual deviance to degrees of freedom is \textgreater 1 the data is overdispersed.
-
-
-\subsubsection{Assuming a quasi-Poisson distribution of abundances}
-The plot suggests that the variance may increasing stronger then the mean and quasi-Poisson or negative binomial models might be more appropriate for this data.
-Fitting a quasi-Poisson GLM is straight forward:
 <<>>=
-modqpois <- glm(abu ~ treatment, data = dfm, family = quasipoisson)
+sum_pois$deviance / sum_pois$df.residual
+@
+
+
+
+
+\subsection{Apply quasi-Poisson to deal with overdispersion}
+The plot above suggests that the variance may increasing stronger than the mean and a quasi-Poisson or negative binomial model might be more appropriate for this data.
+
+\subsubsection{Model fitting}
+Fitting a quasi-Poisson model (eqn. 4) is straight forward:
+<<>>=
+modqpois <- glm(abu ~ treatment, data = dfm, family = 'quasipoisson')
 @
 
 The summary gives the estimated parameters:
@@ -208,24 +236,29 @@ The summary gives the estimated parameters:
 summary(modqpois)
 @
 
-with the dispersion parameter $\Theta = 22.41055$. 
+, with the dispersion parameter $\Theta = 22.41055$. 
 Note, that the parameter estimates are the same as from the Poisson model, only the standard errors are scaled/wider.
 
+\subsubsection{Inference on general treatment effect}
 An F-test can be performed using \texttt{drop1()}:
 <<>>=
 drop1(modqpois, test = 'F')
 @
-, which also indicates no treatment effect.
+Here we would reject that there is treatment effect (at alpha = 0.05).
 
+\subsubsection{Inference on LOEC}
 The LOEC can be determined with \texttt{multcomp}:
 <<>>=
-summary(glht(modqpois, linfct = mcp(treatment = 'Dunnett'),  alternative = 'less'))
+summary(glht(modqpois, linfct = mcp(treatment = 'Dunnett'),  
+             alternative = 'less'),
+        test = adjusted('holm'))
 @
+, which determines 3 mg/L as LOEC.
 
 
-
-\subsubsection{Assuming a negative binomial distribution of abundances}
-To fit a negative binomial GLM we could use \texttt{glm.nb()} from the MASS package \citep{venables_modern_2002}:
+\subsection{Assuming a negative binomial distribution of abundances}
+\subsubsection{Model fitting}
+To fit a negative binomial GLM (eqn. 5) we could use \texttt{glm.nb()} from the MASS package \citep{venables_modern_2002}:
 <<mod_count_mass, message=FALSE>>=
 require(MASS)
 modnb <- glm.nb(abu ~ treatment, data = dfm)
@@ -235,8 +268,10 @@ The estimated parameters:
 <<>>=
 summary(modnb)
 @
-, with $\kappa = 1 / 3.905898$ (glm.nb uses a slightly other parametrisation).
+, with $\kappa = 3.905898$ (glm.nb uses a slightly other parametrisation).
 
+
+\subsubsection{Inference on general treatment effect (LR-test)}
 For an LR-Test we need to first fit a reduced model:
 <<>>=
 modnb.null <- glm.nb(abu ~ 1, data = dfm)
@@ -249,16 +284,141 @@ anova(modnb, modnb.null, test = 'Chisq')
 @
 , which suggests a treatment related effect on abundances.
 
-Similar for LOEC:
+
+\subsubsection{Inference on general treatment effect (parametric bootstrap)}
+
+To test the LR statistic using paramtric bootstrap, we use two custom functions:
+
+The first function \texttt{myPBrefdist} generates a boostrap sample and return the LR statistic for this sample:
 <<>>=
-summary(glht(modnb, linfct = mcp(treatment = 'Dunnett'),  alternative = 'less'))
+#' PB of LR statistic
+#' @param m1 Full model
+#' @param m0 reduced model
+#' @param  data data used in the models
+#' @return LR of boostrap
+# generate reference distribution
+myPBrefdist <- function(m1, m0, data){
+  # simulate from null
+  x0 <- simulate(m0)
+  # refit with new data
+  newdata0 <- data
+  newdata0[ , as.character(formula(m0)[[2]])] <- x0
+  m1r <-  try(update(m1, .~., data = newdata0), silent = TRUE)
+  m0r <- try(update(m0, .~., data = newdata0), silent = TRUE)
+  # check convergence (otherwise return NA for LR)
+  if(inherits(m0r, "try-error") | inherits(m1r, "try-error")){
+    LR <- 'convergence error'
+  } else {
+    if(!is.null(m0r[['th.warn']]) | !is.null(m1r[['th.warn']])){
+      LR <- 'convergence error'
+    } else {
+      LR <- -2 * (logLik(m0r) - logLik(m1r))
+    }
+  }
+  return(LR)
+}
 @
-which suggests a LOEC at the 0.3 treatment.
+
+The second one (\texttt{myPBmodcomp}) repeats \texttt{myPBrefdist} many time and returns a p-value:
+<<>>=
+#' generate LR distribution and return p value
+#' @param m1 Full model
+#' @param m0 reduced model
+#' @param data data used in m1 and m0
+#' @param npb number of bootstrap samples
+#' @return p-value of boostrapped LR values
+myPBmodcomp <- function(m1, m0, data, npb){
+  ## calculate reference distribution
+  LR <- replicate(npb, myPBrefdist(m1 = m1, m0 = m0, data = data), 
+                  simplify = TRUE)
+  LR <- as.numeric(LR)
+  nconv_LR <- sum(!is.na(LR))
+  ## original stats
+  LRo <- c(-2 * (logLik(m0) - logLik(m1)))
+  ## p-value from parametric bootstrap
+  p.pb <- mean(c(LR, LRo) >= LRo, na.rm = TRUE)
+  return(list(nconv_LR = nconv_LR, p.pb = p.pb))
+}
+@
+
+
+Sounds complicated, but we can easily apply this to the negativ binomial model using:
+<<warning=FALSE>>=
+set.seed(1234)
+myPBmodcomp(modnb, modnb.null, data = dfm, npb = 500)
+@
+Here, we specify to generate 500 bootstrap samples (\texttt{npb = 500}).
+Of these 500 samples, 499 converged (\texttt{nconv\_LR}) (one did not and throws some errors) and gives a p-value of 0.042.
 
 
 
-\subsection{Binomial data example}
-\subsubsection{Introduction}
+\subsubsection{Inference on LOEC}
+This is similar to the other parametric models:
+<<>>=
+summary(glht(modnb, linfct = mcp(treatment = 'Dunnett'),  alternative = 'less'),
+        test = adjusted('holm'))
+@
+which suggests a LOEC at the 0.3 mg/l treatment.
+
+
+\subsection{Non-parametric methods}
+\subsubsection{Kruskal-Wallis Test}
+We can use the Kruskal-Wallies test to check if there is a difference between treatments:
+
+<<>>=
+kruskal.test(abu ~ treatment, data = dfm)
+@
+
+\subsubsection{Pairwise Wilcoxon test}
+To determine the LOEC we could use a Pairwise Wilcoxon test.
+The built-in \texttt{pairwise.wilcox.test()} compares by default all levels (Tukey-contrasts).
+We are only interested in a subset of these comparisons (Dunnett-contrast).
+
+Therefore, we use a custom function, which is a wrapper around \texttt{wilcox.exact()} from the exactRankTests package:
+
+<<warning=FALSE>>=
+#' pairwise wilcox.test with dunnett contrasrs
+#' @param y numeric; vector of data values
+#' @param g factor; grouping vector
+#' @param dunnett logical; if TRUE dunnett contrast, otherwise Tukey-contrasts
+#' @param padj character; method for p-adjustment, see ?p.adjust.
+#' @param ... other arguments passed to wilcox.exact {exactRankTests}
+pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm', ...){
+  if(!require(exactRankTests)){
+    stop('Install exactRankTests package')
+  }
+  tc <- t(combn(nlevels(g), 2))
+  # take only dunnett comparisons
+  if(dunnett){
+    tc <- tc[tc[ , 1] == 1, ]
+  }
+  pval <- numeric(nrow(tc))
+  # use wilcox.exact (for tied data)
+  for(i in seq_len(nrow(tc))){
+    pval[i] <- wilcox.exact(y[as.numeric(g) == tc[i, 2]], 
+                            y[as.numeric(g) == tc[i, 1]], exact = TRUE, 
+                            ...)$p.value
+  }
+  
+  # adjust p-values
+  pval <- p.adjust(pval, padj)
+  names(pval) = paste(levels(g)[tc[,1]], levels(g)[tc[,2]], sep = ' vs. ')
+  return(pval)
+}
+@
+
+Here, we use one-sided Dunnett contrasts and adjust p-values using Holm's method:
+<<message=FALSE>>=
+pairwise_wilcox(y = dfm$abu, g = dfm$treatment, 
+                dunnett = TRUE, p.adj = 'holm', alternative = 'less')
+@
+This indicates no treatment effect at no level of concentration.
+
+
+
+
+\section{Binomial data example}
+\subsection{Introduction}
 Here we will show how to analyse binomial data (\emph{x out of n}). 
 Data is provided in \citet{newman_quantitative_2012} (example 5.1, page 223) and \citet{epa_methods_2002}.
 Ten fathead minnow (\textit{Pimephales promelas}) larvals were exposed to sodium pentachlorophenol (NaPCP) and proportions of the total number alive at the end of the exposure reported.
@@ -283,6 +443,10 @@ require(reshape2)
 dfm <- melt(df, id.vars = 'conc', value.name = 'y', variable.name = 'tank')
 # conc as factor
 dfm$conc <- factor(dfm$conc)
+@
+
+So after data cleaning the data looks like
+<<>>=
 head(dfm)
 @
 
@@ -296,8 +460,8 @@ boxplot(y ~ conc, data = dfm,
 This plot indicates a strong effect at the highest concentration.
 
 
-\subsubsection{Transforming data}
-Next we arcsine transform the proportions:
+\subsection{Assuming a normal distribution of transformed proportions}
+First, we arcsine transform (eqn. 6) the proportions:
 <<bin_trans>>=
 dfm$y_asin <- ifelse(dfm$y == 1, 
                      asin(1) - asin(sqrt(1/40)),
@@ -308,15 +472,14 @@ dfm$y_asin <- ifelse(dfm$y == 1,
                      )
 @
 
-
 <<bin_trans_plot, out.width='0.5\\textwidth'>>=
 boxplot(y_asin ~ conc, data = dfm,
         xlab = 'Concentration', ylab = 'Proportion surv.', 
         main = 'Transformed data', col = 'grey75')
 @
 
-\subsubsection{Assuming a normal distribution of transformed proportions}
-Like in the count data example we fit the model using \texttt{lm()}:
+
+Then, like in the count data example we fit the model using \texttt{lm()}:
 <<>>=
 modlm <- lm(y_asin ~ conc, data = dfm)
 @
@@ -333,18 +496,19 @@ drop1(modlm, test = 'F')
 
 And the LOEC is at the highest concentration:
 <<>>=
-summary(glht(modlm, linfct = mcp(conc = 'Dunnett'), alternative = 'less'))
+summary(glht(modlm, linfct = mcp(conc = 'Dunnett'), alternative = 'less'),
+        test = adjusted('holm'))
 @
 
 
-\subsubsection{Assuming a binomial distribution}
-The binomial model with a logit link between predictors and response can be fitted using the \texttt{glm()} function:
+\subsection{Assuming a binomial distribution}
+The binomial model with a logit link (eqn. 7) between predictors and response can be fitted using the \texttt{glm()} function:
 <<>>=
 modglm <- glm(y ~ conc , data = dfm, family = binomial(link = 'logit'), 
               weights = rep(10, nrow(dfm)))
 @
 
-Here the weights arguments, indicates how many fish where exposed in each treatment (=10).
+Here the weights arguments, indicates how many fish where exposed in each treatment (N=10, eqn .7).
 
 The summary gives the estimated parameters:
 <<>>=
@@ -358,12 +522,9 @@ drop1(modglm, test = 'Chisq')
 
 Also with the binomial model the LOEC is at the highest concentration:
 <<>>=
-summary(glht(modglm, linfct = mcp(conc = 'Dunnett'), alternative = 'less'))
+summary(glht(modglm, linfct = mcp(conc = 'Dunnett'), alternative = 'less'),
+        test = adjusted('holm'))
 @
-
-
-
-
 
 
 

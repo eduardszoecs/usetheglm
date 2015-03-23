@@ -49,15 +49,13 @@
 
 \usepackage{alltt}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}%GRaphiken
-\usepackage{tabularx}%Tabellen!
-\usepackage[english]{babel}% Zeilentrennung besser
-\usepackage{url}% Urls besser
-\usepackage{textcomp}% Sonderzeichen
-\usepackage{amsmath}%maths / equations
-\usepackage{helvet}% Schrift Helvetica
-% \usepackage[helvet]{sfmath}% Helvet also in Math modes
-% \renewcommand\familydefault{\sfdefault}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage[english]{babel}
+\usepackage{url}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{helvet}
 \usepackage{sansmath} % sans in math
 \usepackage{todonotes}
 \usepackage[
@@ -67,36 +65,28 @@
 	bottom=1cm
 	,
 	includeheadfoot
-	]{geometry}														% Satzspiegel
+	]{geometry}													
 \usepackage[
-	round,	%(defaultage in the main file and \input ) for round parentheses;
-	%square,	% for square brackets;
-	%curly,	% for curly braces;
-	%angle,	% for angle brackets;
-	colon,	% (default) to separate multiple citations with colons;
-	%comma,	% to use commas as separaters;
-	authoryear,% (default) for author-year citations;
-	%numbers,	% for numerical citations;
-	%super,	% for superscripted numerical citations, as in Nature;
-	sort,		% orders multiple citations into the sequence in which they appear in the list of 				references;
-	%sort&compress,    % as sort but in addition multiple numerical citations
-                   % are compressed if possible (as 3-6, 15);
-	%longnamesfirst,  % makes the first citation of any reference the equivalent of
-                   % the starred variant (full author list) and subsequent citations
-                   %normal (abbreviated list);
-	%sectionbib,      % redefines \thebibliography to issue \section* instead of \chapter*;
-                   % valid only for classes with a \chapter command;
-                   % to be used with the chapterbib package;
-	%nonamebreak,     % keeps all the authors names in a citation on one line;
-                   %causes overfull hboxes but helps with some hyperref problems.
-]{natbib}											    			% Literaturverzeichnis
-\usepackage{scrhack}   % kills \float@addtolists!  warning
+	round,
+	colon,	
+	authoryear,
+	sort,		
+]{natbib}											    		
+\usepackage{scrhack}   %
 \usepackage[pdfpagelabels,plainpages=false, pageanchor=false]{hyperref}	
 
+% rm TOC title
+\deftocheading{toc}{}%
 
-%% andere Einstellungen
-\linespread{1}% 1.5 Zeilenabstand			
-\graphicspath{{fig/}}                     % path to graphics
+\linespread{1}% 
+\graphicspath{{fig/}}                     
+
+% linespread = 1 for code chunks
+\usepackage{setspace}
+\ifdefined\knitrout
+  \renewenvironment{knitrout}{\begin{spacing}{1}}{\end{spacing}}
+\else
+\fi
 
 %% ----------------------------------------------------------------------------
 \title{Ecotoxicology is not normal.}
@@ -108,26 +98,30 @@
 % ----------------------------------------------------------------------------
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
-\maketitle
 
-\setcounter{section}{1}
-\section{Supplement 2 - R examples}
-\subsection{Count data example}
-\subsubsection{Introduction}
+
+\maketitle
+\thispagestyle{empty}
+\section*{Supplement 2 - Worked R examples}
+\tableofcontents
+
+\newpage
+\section{Count data example}
+\subsection{Introduction}
 In this example we will analyse data from \citep{brock_minimum_2015}.
 The data are count of mayfly larvae in Macroinvertebrate Artificial Substrate Samplers in 18 mesocosms at one sampling day.
 There are 5 treatments and one control group.
 
-First we load the data and bring it to the long format and remove NA values.
+First, we load the data, bring it to the long format and remove NA values.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{df} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlkwc{header} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{text} \hlstd{=} \hlstr{'Control  T0.1 T0.3  T1  T3  T10
-175 29  27  36  26  20
-65  114 78  11  13  37
-154 72  27  105 33  NA
-83  NA  NA  NA  NA  NA
-'}\hlstd{)}
+\hlstd{df} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlkwc{header} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+                 \hlkwc{text} \hlstd{=} \hlstr{'Control  T0.1 T0.3  T1  T3  T10
+                          175 29  27  36  26  20
+                          65  114 78  11  13  37
+                          154 72  27  105 33  NA
+                          83  NA  NA  NA  NA  NA'}\hlstd{)}
 \hlkwd{require}\hlstd{(reshape2)}
 \hlstd{dfm} \hlkwb{<-} \hlkwd{melt}\hlstd{(df,} \hlkwc{value.name} \hlstd{=} \hlstr{'abu'}\hlstd{,} \hlkwc{variable.name} \hlstd{=} \hlstr{'treatment'}\hlstd{)}
 \hlstd{dfm} \hlkwb{<-} \hlstd{dfm[}\hlopt{!}\hlkwd{is.na}\hlstd{(dfm[}\hlstr{'abu'}\hlstd{]), ]}
@@ -144,7 +138,7 @@ First we load the data and bring it to the long format and remove NA values.
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-This give a table with two columns - one indicating the treatment and one with the measured abundances.
+This results in a table with two columns - one indicating the treatment and one with the measured abundances.
 
   
 Let's have a first look at the data:
@@ -155,16 +149,24 @@ Let's have a first look at the data:
         \hlkwc{ylab} \hlstd{=} \hlstr{'Count'}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'grey75'}\hlstd{,} \hlkwc{main} \hlstd{=} \hlstr{'Raw abundances'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\includegraphics[width=0.5\textwidth]{figure/count_raw_plot-1} 
+
+{\centering \includegraphics[width=0.5\textwidth]{figure/count_raw_plot-1} 
+
+}
+
+
 
 \end{knitrout}
 We clearly see a treatment related response. 
 Moreover, we may note that variances are increasing with increasing abundances.
 
-\subsubsection{Transforming data}
+
+
+\subsection{Assuming a normal distribution of transformed abundances}
+\subsubsection{Data transformation}
 Next we transform the data using a ln(Ax + 1) transformation.
 A is chosen so that the term Ax equals two for the lowest non-zero abundance.
-We add these transformed abundances as column to our table.
+We add these transformed abundances as extra column to our table.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -177,7 +179,17 @@ We add these transformed abundances as column to our table.
 \end{verbatim}
 \begin{alltt}
 \hlstd{dfm}\hlopt{$}\hlstd{abu_t} \hlkwb{<-} \hlkwd{log}\hlstd{(A} \hlopt{*} \hlstd{dfm}\hlopt{$}\hlstd{abu} \hlopt{+} \hlnum{1}\hlstd{)}
+\hlkwd{head}\hlstd{(dfm)}
 \end{alltt}
+\begin{verbatim}
+##   treatment abu    abu_t
+## 1   Control 175 3.490983
+## 2   Control  65 2.550865
+## 3   Control 154 3.367296
+## 4   Control  83 2.778254
+## 5      T0.1  29 1.836211
+## 6      T0.1 114 3.078568
+\end{verbatim}
 \end{kframe}
 \end{knitrout}
 
@@ -191,14 +203,18 @@ It looks like the transformation does a good job in equalizing the variances:
         \hlkwc{col} \hlstd{=} \hlstr{'grey75'}\hlstd{,} \hlkwc{main} \hlstd{=} \hlstr{'Transformed abundances'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\includegraphics[width=0.5\textwidth]{figure/plot_count_trans-1} 
+
+{\centering \includegraphics[width=0.5\textwidth]{figure/plot_count_trans-1} 
+
+}
+
+
 
 \end{knitrout}
 
 
-\subsubsection{Assuming a normal distribution of transformed abundances}
-We start with analysing this data assuming a normal distribution of the transformed abundances with constant variance.
-This can be easily done using the \texttt{lm()} function:
+\subsubsection{Model fitting}
+The model from eqn. 2 can be easily fitted using the \texttt{lm()} function:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -206,6 +222,23 @@ This can be easily done using the \texttt{lm()} function:
 \hlstd{modlm} \hlkwb{<-} \hlkwd{lm}\hlstd{(abu_t} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm)}
 \end{alltt}
 \end{kframe}
+\end{knitrout}
+
+The residuals vs. fitted values diagnostic plot show no problematic pattern, though it might be difficult to decide with such a small sample size
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{plot}\hlstd{(}\hlkwd{residuals}\hlstd{(modlm)} \hlopt{~} \hlkwd{fitted}\hlstd{(modlm))}
+\hlkwd{abline}\hlstd{(}\hlkwc{h} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{lty} \hlstd{=} \hlstr{'dotted'}\hlstd{)}
+\end{alltt}
+\end{kframe}
+
+{\centering \includegraphics[width=0.5\textwidth]{figure/plot_modlm-1} 
+
+}
+
+
+
 \end{knitrout}
 
 The \texttt{summary()} gives the estimated parameters with standard errors and Wald t tests:
@@ -241,6 +274,7 @@ The \texttt{summary()} gives the estimated parameters with standard errors and W
 \end{kframe}
 \end{knitrout}
 
+\subsubsection{Inference on general treatment effect}
 Or, if you want to have the ANOVA table with an F-test:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -258,14 +292,19 @@ Or, if you want to have the ANOVA table with an F-test:
 \end{knitrout}
 
 From this output we might infer that we cannot detect any treatment effect (F = 2.566, p = 0.084).
-Let's move on to the LOEC determination. This can be easily done using the multcomp package \citep{hothorn_simultaneous_2008}:
-Here we perform a one-sided (\texttt{alternative='less'}) Dunnett (\texttt{mcp(treatment='Dunnett')}) test.
+
+\subsubsection{Inference on LOEC}
+Let's move on to the LOEC determination.
+This can be easily done using the multcomp package \citep{hothorn_simultaneous_2008}:
+
+Here we perform a one-sided (\texttt{alternative = 'less'}) using Dunnett contrasts of treatment (\texttt{mcp(treatment='Dunnett')}).
+Moreover, we adjust for multiple testing using Holm's method (\texttt{test = adjusted('holm')}):
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{require}\hlstd{(multcomp)}
-\hlcom{# one-sided Dunnett test}
-\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modlm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),}  \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{))}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modlm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),}  \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{),}
+        \hlkwc{test} \hlstd{=} \hlkwd{adjusted}\hlstd{(}\hlstr{'holm'}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
 ## 
@@ -278,27 +317,62 @@ Here we perform a one-sided (\texttt{alternative='less'}) Dunnett (\texttt{mcp(t
 ## 
 ## Linear Hypotheses:
 ##                     Estimate Std. Error t value Pr(<t)  
-## T0.1 - Control >= 0  -0.5267     0.4536  -1.161 0.3841  
-## T0.3 - Control >= 0  -0.9558     0.4536  -2.107 0.1030  
-## T1 - Control >= 0    -1.0069     0.4536  -2.220 0.0859 .
-## T3 - Control >= 0    -1.4121     0.4536  -3.113 0.0182 *
-## T10 - Control >= 0   -1.2575     0.5144  -2.445 0.0588 .
+## T0.1 - Control >= 0  -0.5267     0.4536  -1.161 0.1341  
+## T0.3 - Control >= 0  -0.9558     0.4536  -2.107 0.0697 .
+## T1 - Control >= 0    -1.0069     0.4536  -2.220 0.0697 .
+## T3 - Control >= 0    -1.4121     0.4536  -3.113 0.0224 *
+## T10 - Control >= 0   -1.2575     0.5144  -2.445 0.0618 .
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## (Adjusted p values reported -- single-step method)
+## (Adjusted p values reported -- holm method)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
 This indicates that only treatment 3 shows a statistically significant from control and is the determined LOEC.
+The column \texttt{'Estimate'} gives the estimated difference in means between treatments and control and \texttt{'Std. Error'} the standard errors of these estimated parameters.
+
+
+To make Williams type comparisons simply change \texttt{'Dunnett'} to \texttt{'Williams'}:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modlm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Williams'}\hlstd{),}
+             \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{),}
+        \hlkwc{test} \hlstd{=} \hlkwd{adjusted}\hlstd{(}\hlstr{'holm'}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	 Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Williams Contrasts
+## 
+## 
+## Fit: lm(formula = abu_t ~ treatment, data = dfm)
+## 
+## Linear Hypotheses:
+##          Estimate Std. Error t value Pr(<t)  
+## C 1 >= 0  -1.2575     0.5144  -2.445 0.0154 *
+## C 2 >= 0  -1.3503     0.3984  -3.389 0.0134 *
+## C 3 >= 0  -1.2215     0.3637  -3.359 0.0134 *
+## C 4 >= 0  -1.1491     0.3468  -3.313 0.0134 *
+## C 5 >= 0  -1.0157     0.3367  -3.016 0.0134 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## (Adjusted p values reported -- holm method)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Note, this multiple contrats test is different from the original Williams test \citep{williams_comparison_1972}, because of different variance estimators \citep{bretz_powerful_1999}.
 
 
 
 
-\subsubsection{Assuming a Poisson distribution of abundances}
-
-Instead transforming the data, we could assume a Poisson distribution and fit a GLM to this data.
-This can be done using the \texttt{glm()} function:
+\subsection{Assuming a Poisson distribution of abundances}
+\subsubsection{Model fitting}
+We are dealing with count data, so a Poisson GLM might be a good choice.
+GLMs can be fitted using the \texttt{glm()} function and here we fit the model from eqn. 3:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -307,13 +381,13 @@ This can be done using the \texttt{glm()} function:
 \end{kframe}
 \end{knitrout}
 
-, \texttt{family = poisson(link = 'log')} specifies that we want to fit a poisson model using a log link between response and predictors.
+Here \texttt{family = poisson(link = 'log')} specifies that we want to fit a poisson model using a log link between response and predictors.
 
 The \texttt{summary} gives the estimated parameters, standard errors and Wald Z tests:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(modpois)}
+\hlstd{(sum_pois} \hlkwb{<-} \hlkwd{summary}\hlstd{(modpois))}
 \end{alltt}
 \begin{verbatim}
 ## 
@@ -347,26 +421,6 @@ The \texttt{summary} gives the estimated parameters, standard errors and Wald Z 
 \end{kframe}
 \end{knitrout}
 
-To perform a LR-Test we can used \texttt{drop1()}:
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{drop1}\hlstd{(modpois,} \hlkwc{test} \hlstd{=} \hlstr{'Chisq'}\hlstd{)}
-\end{alltt}
-\begin{verbatim}
-## Single term deletions
-## 
-## Model:
-## abu ~ treatment
-##           Df Deviance    AIC    LRT  Pr(>Chi)    
-## <none>         273.77 387.63                     
-## treatment  5   604.79 708.64 331.02 < 2.2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-which indicates a strong treatment effect.
 
 But is a poisson distribution appropriate here? 
 A property of the poisson distribution is that its variance is equal to the mean. 
@@ -392,37 +446,59 @@ A simple diagnostic would be to plot group variances vs. group means:
 ## 6       T10  28.50000  144.500
 \end{verbatim}
 \begin{alltt}
-\hlcom{# plot}
-\hlkwd{plot}\hlstd{(var} \hlopt{~} \hlstd{mu,} \hlkwc{data} \hlstd{= musd,} \hlkwc{xlab} \hlstd{=} \hlstr{'mean'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'variance'}\hlstd{,} \hlkwc{main} \hlstd{=} \hlstr{'Mean-variance relationships'}\hlstd{)}
+\hlcom{# plot mean vs var}
+\hlkwd{plot}\hlstd{(var} \hlopt{~} \hlstd{mu,} \hlkwc{data} \hlstd{= musd,}
+     \hlkwc{xlab} \hlstd{=} \hlstr{'mean'}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{'variance'}\hlstd{,} \hlkwc{main} \hlstd{=} \hlstr{'Mean-variance relationships'}\hlstd{)}
 \hlcom{# poisson}
 \hlkwd{abline}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{b} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'darkblue'}\hlstd{,} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{)}
 \hlcom{# quasi-Poisson}
 \hlkwd{abline}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{b} \hlstd{=} \hlnum{22.41}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'darkgreen'}\hlstd{,} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{)}
-\hlcom{# Negative binomial}
-\hlkwd{curve}\hlstd{(x} \hlopt{+} \hlstd{(x}\hlopt{^}\hlnum{2} \hlopt{/} \hlnum{3.91}\hlstd{),} \hlkwc{from} \hlstd{=} \hlnum{24}\hlstd{,} \hlkwc{to} \hlstd{=} \hlnum{119.25}\hlstd{,} \hlkwc{add} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'darkred'}\hlstd{,} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{)}
-\hlkwd{legend}\hlstd{(}\hlstr{'topleft'}\hlstd{,} \hlkwd{c}\hlstd{(}\hlstr{'NB(k = 3.91)'}\hlstd{,} \hlstr{'Poisson'}\hlstd{,} \hlstr{'Quasi-Poisson(t = 22.4)'}\hlstd{),}
+\hlcom{# negative binomial}
+\hlkwd{curve}\hlstd{(x} \hlopt{+} \hlstd{(x}\hlopt{^}\hlnum{2} \hlopt{/} \hlnum{3.91}\hlstd{),} \hlkwc{from} \hlstd{=} \hlnum{24}\hlstd{,} \hlkwc{to} \hlstd{=} \hlnum{119.25}\hlstd{,} \hlkwc{add} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+      \hlkwc{col} \hlstd{=} \hlstr{'darkred'}\hlstd{,} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlkwd{legend}\hlstd{(}\hlstr{'topleft'}\hlstd{,}
+       \hlkwc{legend} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{'NB(k = 3.91)'}\hlstd{,} \hlstr{'Poisson'}\hlstd{,} \hlstr{'Quasi-Poisson(t = 22.4)'}\hlstd{),}
        \hlkwc{col} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{'darkred'}\hlstd{,} \hlstr{'darkblue'}\hlstd{,} \hlstr{'darkgreen'}\hlstd{),}
        \hlkwc{lty} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{1}\hlstd{,} \hlnum{1}\hlstd{),}
        \hlkwc{lwd} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{2}\hlstd{,} \hlnum{2}\hlstd{))}
 \end{alltt}
 \end{kframe}
-\includegraphics[width=0.5\textwidth]{figure/mod_count_meanvar-1} 
+
+{\centering \includegraphics[width=0.5\textwidth]{figure/mod_count_meanvar-1} 
+
+}
+
+
 
 \end{knitrout}
 
-I also added the assumed mean-variance relationships of the Poisson, quasi-Poisson and negative binomial models.
+I also added the assumed mean-variance relationships of the Poisson, quasi-Poisson and negative binomial models (see below).
 We clearly see that the variance increases much more than would be expected under the poisson distribution (the data is overdispersed).
 Moreover, we could check overdispersion from the \texttt{summary}:
 If the ratio of residual deviance to degrees of freedom is \textgreater 1 the data is overdispersed.
-
-
-\subsubsection{Assuming a quasi-Poisson distribution of abundances}
-The plot suggests that the variance may increasing stronger then the mean and quasi-Poisson or negative binomial models might be more appropriate for this data.
-Fitting a quasi-Poisson GLM is straight forward:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{modqpois} \hlkwb{<-} \hlkwd{glm}\hlstd{(abu} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm,} \hlkwc{family} \hlstd{= quasipoisson)}
+\hlstd{sum_pois}\hlopt{$}\hlstd{deviance} \hlopt{/} \hlstd{sum_pois}\hlopt{$}\hlstd{df.residual}
+\end{alltt}
+\begin{verbatim}
+## [1] 22.81412
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+
+
+\subsection{Apply quasi-Poisson to deal with overdispersion}
+The plot above suggests that the variance may increasing stronger than the mean and a quasi-Poisson or negative binomial model might be more appropriate for this data.
+
+\subsubsection{Model fitting}
+Fitting a quasi-Poisson model (eqn. 4) is straight forward:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{modqpois} \hlkwb{<-} \hlkwd{glm}\hlstd{(abu} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm,} \hlkwc{family} \hlstd{=} \hlstr{'quasipoisson'}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -436,7 +512,7 @@ The summary gives the estimated parameters:
 \begin{verbatim}
 ## 
 ## Call:
-## glm(formula = abu ~ treatment, family = quasipoisson, data = dfm)
+## glm(formula = abu ~ treatment, family = "quasipoisson", data = dfm)
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
@@ -464,9 +540,10 @@ The summary gives the estimated parameters:
 \end{kframe}
 \end{knitrout}
 
-with the dispersion parameter $\Theta = 22.41055$. 
+, with the dispersion parameter $\Theta = 22.41055$. 
 Note, that the parameter estimates are the same as from the Poisson model, only the standard errors are scaled/wider.
 
+\subsubsection{Inference on general treatment effect}
 An F-test can be performed using \texttt{drop1()}:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -486,13 +563,16 @@ An F-test can be performed using \texttt{drop1()}:
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-, which also indicates no treatment effect.
+Here we would reject that there is treatment effect (at alpha = 0.05).
 
+\subsubsection{Inference on LOEC}
 The LOEC can be determined with \texttt{multcomp}:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modqpois,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),}  \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{))}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modqpois,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),}
+             \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{),}
+        \hlkwc{test} \hlstd{=} \hlkwd{adjusted}\hlstd{(}\hlstr{'holm'}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
 ## 
@@ -501,26 +581,27 @@ The LOEC can be determined with \texttt{multcomp}:
 ## Multiple Comparisons of Means: Dunnett Contrasts
 ## 
 ## 
-## Fit: glm(formula = abu ~ treatment, family = quasipoisson, data = dfm)
+## Fit: glm(formula = abu ~ treatment, family = "quasipoisson", data = dfm)
 ## 
 ## Linear Hypotheses:
 ##                     Estimate Std. Error z value Pr(<z)  
-## T0.1 - Control >= 0  -0.5092     0.3889  -1.309 0.3515  
-## T0.3 - Control >= 0  -0.9970     0.4656  -2.142 0.0737 .
-## T1 - Control >= 0    -0.8560     0.4409  -1.941 0.1154  
-## T3 - Control >= 0    -1.6032     0.5985  -2.679 0.0179 *
-## T10 - Control >= 0   -1.4313     0.6634  -2.157 0.0710 .
+## T0.1 - Control >= 0  -0.5092     0.3889  -1.309 0.0952 .
+## T0.3 - Control >= 0  -0.9970     0.4656  -2.142 0.0619 .
+## T1 - Control >= 0    -0.8560     0.4409  -1.941 0.0619 .
+## T3 - Control >= 0    -1.6032     0.5985  -2.679 0.0185 *
+## T10 - Control >= 0   -1.4313     0.6634  -2.157 0.0619 .
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## (Adjusted p values reported -- single-step method)
+## (Adjusted p values reported -- holm method)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
+, which determines 3 mg/L as LOEC.
 
 
-
-\subsubsection{Assuming a negative binomial distribution of abundances}
-To fit a negative binomial GLM we could use \texttt{glm.nb()} from the MASS package \citep{venables_modern_2002}:
+\subsection{Assuming a negative binomial distribution of abundances}
+\subsubsection{Model fitting}
+To fit a negative binomial GLM (eqn. 5) we could use \texttt{glm.nb()} from the MASS package \citep{venables_modern_2002}:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -573,8 +654,10 @@ The estimated parameters:
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-, with $\kappa = 1 / 3.905898$ (glm.nb uses a slightly other parametrisation).
+, with $\kappa = 3.905898$ (glm.nb uses a slightly other parametrisation).
 
+
+\subsubsection{Inference on general treatment effect (LR-test)}
 For an LR-Test we need to first fit a reduced model:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -606,11 +689,100 @@ Then we can compare these two models with a LR-Test:
 \end{knitrout}
 , which suggests a treatment related effect on abundances.
 
-Similar for LOEC:
+
+\subsubsection{Inference on general treatment effect (parametric bootstrap)}
+
+To test the LR statistic using paramtric bootstrap, we use two custom functions:
+
+The first function \texttt{myPBrefdist} generates a boostrap sample and return the LR statistic for this sample:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modnb,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),}  \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{))}
+\hlcom{#' PB of LR statistic}
+\hlcom{#' @param m1 Full model}
+\hlcom{#' @param m0 reduced model}
+\hlcom{#' @param  data data used in the models}
+\hlcom{#' @return LR of boostrap}
+\hlcom{# generate reference distribution}
+\hlstd{myPBrefdist} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{m1}\hlstd{,} \hlkwc{m0}\hlstd{,} \hlkwc{data}\hlstd{)\{}
+  \hlcom{# simulate from null}
+  \hlstd{x0} \hlkwb{<-} \hlkwd{simulate}\hlstd{(m0)}
+  \hlcom{# refit with new data}
+  \hlstd{newdata0} \hlkwb{<-} \hlstd{data}
+  \hlstd{newdata0[ ,} \hlkwd{as.character}\hlstd{(}\hlkwd{formula}\hlstd{(m0)[[}\hlnum{2}\hlstd{]])]} \hlkwb{<-} \hlstd{x0}
+  \hlstd{m1r} \hlkwb{<-}  \hlkwd{try}\hlstd{(}\hlkwd{update}\hlstd{(m1, .}\hlopt{~}\hlstd{.,} \hlkwc{data} \hlstd{= newdata0),} \hlkwc{silent} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+  \hlstd{m0r} \hlkwb{<-} \hlkwd{try}\hlstd{(}\hlkwd{update}\hlstd{(m0, .}\hlopt{~}\hlstd{.,} \hlkwc{data} \hlstd{= newdata0),} \hlkwc{silent} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+  \hlcom{# check convergence (otherwise return NA for LR)}
+  \hlkwa{if}\hlstd{(}\hlkwd{inherits}\hlstd{(m0r,} \hlstr{"try-error"}\hlstd{)} \hlopt{|} \hlkwd{inherits}\hlstd{(m1r,} \hlstr{"try-error"}\hlstd{))\{}
+    \hlstd{LR} \hlkwb{<-} \hlstr{'convergence error'}
+  \hlstd{\}} \hlkwa{else} \hlstd{\{}
+    \hlkwa{if}\hlstd{(}\hlopt{!}\hlkwd{is.null}\hlstd{(m0r[[}\hlstr{'th.warn'}\hlstd{]])} \hlopt{| !}\hlkwd{is.null}\hlstd{(m1r[[}\hlstr{'th.warn'}\hlstd{]]))\{}
+      \hlstd{LR} \hlkwb{<-} \hlstr{'convergence error'}
+    \hlstd{\}} \hlkwa{else} \hlstd{\{}
+      \hlstd{LR} \hlkwb{<-} \hlopt{-}\hlnum{2} \hlopt{*} \hlstd{(}\hlkwd{logLik}\hlstd{(m0r)} \hlopt{-} \hlkwd{logLik}\hlstd{(m1r))}
+    \hlstd{\}}
+  \hlstd{\}}
+  \hlkwd{return}\hlstd{(LR)}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+The second one (\texttt{myPBmodcomp}) repeats \texttt{myPBrefdist} many time and returns a p-value:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#' generate LR distribution and return p value}
+\hlcom{#' @param m1 Full model}
+\hlcom{#' @param m0 reduced model}
+\hlcom{#' @param data data used in m1 and m0}
+\hlcom{#' @param npb number of bootstrap samples}
+\hlcom{#' @return p-value of boostrapped LR values}
+\hlstd{myPBmodcomp} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{m1}\hlstd{,} \hlkwc{m0}\hlstd{,} \hlkwc{data}\hlstd{,} \hlkwc{npb}\hlstd{)\{}
+  \hlcom{## calculate reference distribution}
+  \hlstd{LR} \hlkwb{<-} \hlkwd{replicate}\hlstd{(npb,} \hlkwd{myPBrefdist}\hlstd{(}\hlkwc{m1} \hlstd{= m1,} \hlkwc{m0} \hlstd{= m0,} \hlkwc{data} \hlstd{= data),}
+                  \hlkwc{simplify} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+  \hlstd{LR} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(LR)}
+  \hlstd{nconv_LR} \hlkwb{<-} \hlkwd{sum}\hlstd{(}\hlopt{!}\hlkwd{is.na}\hlstd{(LR))}
+  \hlcom{## original stats}
+  \hlstd{LRo} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{2} \hlopt{*} \hlstd{(}\hlkwd{logLik}\hlstd{(m0)} \hlopt{-} \hlkwd{logLik}\hlstd{(m1)))}
+  \hlcom{## p-value from parametric bootstrap}
+  \hlstd{p.pb} \hlkwb{<-} \hlkwd{mean}\hlstd{(}\hlkwd{c}\hlstd{(LR, LRo)} \hlopt{>=} \hlstd{LRo,} \hlkwc{na.rm} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+  \hlkwd{return}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{nconv_LR} \hlstd{= nconv_LR,} \hlkwc{p.pb} \hlstd{= p.pb))}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+Sounds complicated, but we can easily apply this to the negativ binomial model using:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{set.seed}\hlstd{(}\hlnum{1234}\hlstd{)}
+\hlkwd{myPBmodcomp}\hlstd{(modnb, modnb.null,} \hlkwc{data} \hlstd{= dfm,} \hlkwc{npb} \hlstd{=} \hlnum{500}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## $nconv_LR
+## [1] 499
+## 
+## $p.pb
+## [1] 0.042
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Here, we specify to generate 500 bootstrap samples (\texttt{npb = 500}).
+Of these 500 samples, 499 converged (\texttt{nconv\_LR}) (one did not and throws some errors) and gives a p-value of 0.042.
+
+
+
+\subsubsection{Inference on LOEC}
+This is similar to the other parametric models:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modnb,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),}  \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{),}
+        \hlkwc{test} \hlstd{=} \hlkwd{adjusted}\hlstd{(}\hlstr{'holm'}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
 ## 
@@ -623,24 +795,104 @@ Similar for LOEC:
 ##     link = log)
 ## 
 ## Linear Hypotheses:
-##                     Estimate Std. Error z value  Pr(<z)    
-## T0.1 - Control >= 0  -0.5092     0.3951  -1.289 0.31520    
-## T0.3 - Control >= 0  -0.9970     0.3988  -2.500 0.02743 *  
-## T1 - Control >= 0    -0.8560     0.3975  -2.153 0.06496 .  
-## T3 - Control >= 0    -1.6032     0.4066  -3.943 < 0.001 ***
-## T10 - Control >= 0   -1.4313     0.4601  -3.111 0.00454 ** 
+##                     Estimate Std. Error z value   Pr(<z)    
+## T0.1 - Control >= 0  -0.5092     0.3951  -1.289 0.098731 .  
+## T0.3 - Control >= 0  -0.9970     0.3988  -2.500 0.018615 *  
+## T1 - Control >= 0    -0.8560     0.3975  -2.153 0.031300 *  
+## T3 - Control >= 0    -1.6032     0.4066  -3.943 0.000201 ***
+## T10 - Control >= 0   -1.4313     0.4601  -3.111 0.003727 ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## (Adjusted p values reported -- single-step method)
+## (Adjusted p values reported -- holm method)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-which suggests a LOEC at the 0.3 treatment.
+which suggests a LOEC at the 0.3 mg/l treatment.
+
+
+\subsection{Non-parametric methods}
+\subsubsection{Kruskal-Wallis Test}
+We can use the Kruskal-Wallies test to check if there is a difference between treatments:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{kruskal.test}\hlstd{(abu} \hlopt{~} \hlstd{treatment,} \hlkwc{data} \hlstd{= dfm)}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  abu by treatment
+## Kruskal-Wallis chi-squared = 8.219, df = 5, p-value = 0.1446
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+\subsubsection{Pairwise Wilcoxon test}
+To determine the LOEC we could use a Pairwise Wilcoxon test.
+The built-in \texttt{pairwise.wilcox.test()} compares by default all levels (Tukey-contrasts).
+We are only interested in a subset of these comparisons (Dunnett-contrast).
+
+Therefore, we use a custom function, which is a wrapper around \texttt{wilcox.exact()} from the exactRankTests package:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#' pairwise wilcox.test with dunnett contrasrs}
+\hlcom{#' @param y numeric; vector of data values}
+\hlcom{#' @param g factor; grouping vector}
+\hlcom{#' @param dunnett logical; if TRUE dunnett contrast, otherwise Tukey-contrasts}
+\hlcom{#' @param padj character; method for p-adjustment, see ?p.adjust.}
+\hlcom{#' @param ... other arguments passed to wilcox.exact \{exactRankTests\}}
+\hlstd{pairwise_wilcox} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{y}\hlstd{,} \hlkwc{g}\hlstd{,} \hlkwc{dunnett} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{padj} \hlstd{=} \hlstr{'holm'}\hlstd{,} \hlkwc{...}\hlstd{)\{}
+  \hlkwa{if}\hlstd{(}\hlopt{!}\hlkwd{require}\hlstd{(exactRankTests))\{}
+    \hlkwd{stop}\hlstd{(}\hlstr{'Install exactRankTests package'}\hlstd{)}
+  \hlstd{\}}
+  \hlstd{tc} \hlkwb{<-} \hlkwd{t}\hlstd{(}\hlkwd{combn}\hlstd{(}\hlkwd{nlevels}\hlstd{(g),} \hlnum{2}\hlstd{))}
+  \hlcom{# take only dunnett comparisons}
+  \hlkwa{if}\hlstd{(dunnett)\{}
+    \hlstd{tc} \hlkwb{<-} \hlstd{tc[tc[ ,} \hlnum{1}\hlstd{]} \hlopt{==} \hlnum{1}\hlstd{, ]}
+  \hlstd{\}}
+  \hlstd{pval} \hlkwb{<-} \hlkwd{numeric}\hlstd{(}\hlkwd{nrow}\hlstd{(tc))}
+  \hlcom{# use wilcox.exact (for tied data)}
+  \hlkwa{for}\hlstd{(i} \hlkwa{in} \hlkwd{seq_len}\hlstd{(}\hlkwd{nrow}\hlstd{(tc)))\{}
+    \hlstd{pval[i]} \hlkwb{<-} \hlkwd{wilcox.exact}\hlstd{(y[}\hlkwd{as.numeric}\hlstd{(g)} \hlopt{==} \hlstd{tc[i,} \hlnum{2}\hlstd{]],}
+                            \hlstd{y[}\hlkwd{as.numeric}\hlstd{(g)} \hlopt{==} \hlstd{tc[i,} \hlnum{1}\hlstd{]],} \hlkwc{exact} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+                            \hlstd{...)}\hlopt{$}\hlstd{p.value}
+  \hlstd{\}}
+
+  \hlcom{# adjust p-values}
+  \hlstd{pval} \hlkwb{<-} \hlkwd{p.adjust}\hlstd{(pval, padj)}
+  \hlkwd{names}\hlstd{(pval)} \hlkwb{=} \hlkwd{paste}\hlstd{(}\hlkwd{levels}\hlstd{(g)[tc[,}\hlnum{1}\hlstd{]],} \hlkwd{levels}\hlstd{(g)[tc[,}\hlnum{2}\hlstd{]],} \hlkwc{sep} \hlstd{=} \hlstr{' vs. '}\hlstd{)}
+  \hlkwd{return}\hlstd{(pval)}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Here, we use one-sided Dunnett contrasts and adjust p-values using Holm's method:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{pairwise_wilcox}\hlstd{(}\hlkwc{y} \hlstd{= dfm}\hlopt{$}\hlstd{abu,} \hlkwc{g} \hlstd{= dfm}\hlopt{$}\hlstd{treatment,}
+                \hlkwc{dunnett} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{p.adj} \hlstd{=} \hlstr{'holm'}\hlstd{,} \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Control vs. T0.1 Control vs. T0.3   Control vs. T1   Control vs. T3 
+##        0.2285714        0.2285714        0.2285714        0.1428571 
+##  Control vs. T10 
+##        0.2285714
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+This indicates no treatment effect at no level of concentration.
 
 
 
-\subsection{Binomial data example}
-\subsubsection{Introduction}
+
+\section{Binomial data example}
+\subsection{Introduction}
 Here we will show how to analyse binomial data (\emph{x out of n}). 
 Data is provided in \citet{newman_quantitative_2012} (example 5.1, page 223) and \citet{epa_methods_2002}.
 Ten fathead minnow (\textit{Pimephales promelas}) larvals were exposed to sodium pentachlorophenol (NaPCP) and proportions of the total number alive at the end of the exposure reported.
@@ -680,6 +932,14 @@ The we do some house-keeping, reformat the data and convert concentration to a f
 \hlstd{dfm} \hlkwb{<-} \hlkwd{melt}\hlstd{(df,} \hlkwc{id.vars} \hlstd{=} \hlstr{'conc'}\hlstd{,} \hlkwc{value.name} \hlstd{=} \hlstr{'y'}\hlstd{,} \hlkwc{variable.name} \hlstd{=} \hlstr{'tank'}\hlstd{)}
 \hlcom{# conc as factor}
 \hlstd{dfm}\hlopt{$}\hlstd{conc} \hlkwb{<-} \hlkwd{factor}\hlstd{(dfm}\hlopt{$}\hlstd{conc)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+So after data cleaning the data looks like
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
 \hlkwd{head}\hlstd{(dfm)}
 \end{alltt}
 \begin{verbatim}
@@ -703,14 +963,19 @@ Let's have a first look at the data:
         \hlkwc{main} \hlstd{=} \hlstr{'Raw data'}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'grey75'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\includegraphics[width=0.5\textwidth]{figure/bin_raw_plot-1} 
+
+{\centering \includegraphics[width=0.5\textwidth]{figure/bin_raw_plot-1} 
+
+}
+
+
 
 \end{knitrout}
 This plot indicates a strong effect at the highest concentration.
 
 
-\subsubsection{Transforming data}
-Next we arcsine transform the proportions:
+\subsection{Assuming a normal distribution of transformed proportions}
+First, we arcsine transform (eqn. 6) the proportions:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -725,7 +990,6 @@ Next we arcsine transform the proportions:
 \end{kframe}
 \end{knitrout}
 
-
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -734,12 +998,17 @@ Next we arcsine transform the proportions:
         \hlkwc{main} \hlstd{=} \hlstr{'Transformed data'}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{'grey75'}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\includegraphics[width=0.5\textwidth]{figure/bin_trans_plot-1} 
+
+{\centering \includegraphics[width=0.5\textwidth]{figure/bin_trans_plot-1} 
+
+}
+
+
 
 \end{knitrout}
 
-\subsubsection{Assuming a normal distribution of transformed proportions}
-Like in the count data example we fit the model using \texttt{lm()}:
+
+Then, like in the count data example we fit the model using \texttt{lm()}:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -805,7 +1074,8 @@ And the LOEC is at the highest concentration:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modlm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{conc} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),} \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{))}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modlm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{conc} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),} \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{),}
+        \hlkwc{test} \hlstd{=} \hlkwd{adjusted}\hlstd{(}\hlstr{'holm'}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
 ## 
@@ -817,22 +1087,22 @@ And the LOEC is at the highest concentration:
 ## Fit: lm(formula = y_asin ~ conc, data = dfm)
 ## 
 ## Linear Hypotheses:
-##              Estimate Std. Error t value Pr(<t)    
-## 32 - 0 >= 0  -0.14717    0.10880  -1.353 0.2785    
-## 64 - 0 >= 0   0.04074    0.10880   0.374 0.9202    
-## 128 - 0 >= 0 -0.07622    0.10880  -0.701 0.5577    
-## 256 - 0 >= 0 -0.22113    0.10880  -2.032 0.0986 .  
-## 512 - 0 >= 0 -0.72735    0.10880  -6.685 <0.001 ***
+##              Estimate Std. Error t value   Pr(<t)    
+## 32 - 0 >= 0  -0.14717    0.10880  -1.353    0.289    
+## 64 - 0 >= 0   0.04074    0.10880   0.374    0.644    
+## 128 - 0 >= 0 -0.07622    0.10880  -0.701    0.493    
+## 256 - 0 >= 0 -0.22113    0.10880  -2.032    0.114    
+## 512 - 0 >= 0 -0.72735    0.10880  -6.685 7.14e-06 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## (Adjusted p values reported -- single-step method)
+## (Adjusted p values reported -- holm method)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
 
-\subsubsection{Assuming a binomial distribution}
-The binomial model with a logit link between predictors and response can be fitted using the \texttt{glm()} function:
+\subsection{Assuming a binomial distribution}
+The binomial model with a logit link (eqn. 7) between predictors and response can be fitted using the \texttt{glm()} function:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -842,7 +1112,7 @@ The binomial model with a logit link between predictors and response can be fitt
 \end{kframe}
 \end{knitrout}
 
-Here the weights arguments, indicates how many fish where exposed in each treatment (=10).
+Here the weights arguments, indicates how many fish where exposed in each treatment (N=10, eqn .7).
 
 The summary gives the estimated parameters:
 \begin{knitrout}
@@ -906,7 +1176,8 @@ Also with the binomial model the LOEC is at the highest concentration:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modglm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{conc} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),} \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{))}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modglm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{conc} \hlstd{=} \hlstr{'Dunnett'}\hlstd{),} \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{),}
+        \hlkwc{test} \hlstd{=} \hlkwd{adjusted}\hlstd{(}\hlstr{'holm'}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
 ## 
@@ -919,22 +1190,18 @@ Also with the binomial model the LOEC is at the highest concentration:
 ##     weights = rep(10, nrow(dfm)))
 ## 
 ## Linear Hypotheses:
-##              Estimate Std. Error z value Pr(<z)    
-## 32 - 0 >= 0   -1.2098     0.8499  -1.423  0.203    
-## 64 - 0 >= 0    0.7191     1.2458   0.577  0.923    
-## 128 - 0 >= 0  -0.7472     0.8967  -0.833  0.432    
-## 256 - 0 >= 0  -1.7077     0.8183  -2.087  0.059 .  
-## 512 - 0 >= 0  -3.6753     0.8002  -4.593 <0.001 ***
+##              Estimate Std. Error z value   Pr(<z)    
+## 32 - 0 >= 0   -1.2098     0.8499  -1.423   0.2319    
+## 64 - 0 >= 0    0.7191     1.2458   0.577   0.7181    
+## 128 - 0 >= 0  -0.7472     0.8967  -0.833   0.4047    
+## 256 - 0 >= 0  -1.7077     0.8183  -2.087   0.0738 .  
+## 512 - 0 >= 0  -3.6753     0.8002  -4.593 1.09e-05 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## (Adjusted p values reported -- single-step method)
+## (Adjusted p values reported -- holm method)
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-
-
-
-
 
 
 

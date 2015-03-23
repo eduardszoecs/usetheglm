@@ -76,8 +76,7 @@
 \usepackage[pdfpagelabels,plainpages=false, pageanchor=false]{hyperref}	
 
 % rm TOC title
-\let\LaTeXStandardContentsName\contentsname
-\renewcommand{\contentsname}{\phantom{\LaTeXStandardContentsName}}%
+\deftocheading{toc}{}%
 
 \linespread{1.5}% 
 \graphicspath{{fig/}}    
@@ -98,14 +97,12 @@
 \tableofcontents
 \newpage
 
-\section{Count data simulations}
 \input{tab/conv.tex}
 \input{tab/pow_glob_c.tex}
 \input{tab/pow_loec_c.tex}
 \input{tab/t1_glob_c.tex}
 \input{tab/t1_loec_c.tex}
 
-\section{Binomial data simulations}
 \input{tab/pow_glob_p.tex}
 \input{tab/pow_loec_p.tex}
 \input{tab/t1_glob_p.tex}

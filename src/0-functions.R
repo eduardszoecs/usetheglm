@@ -24,7 +24,7 @@ pairwise_wilcox <- function(y, g, dunnett = TRUE, padj = 'holm', alternative = '
                             alternative = alternative)$p.value
   }
   pval <- p.adjust(pval, padj)
-  names(pval) = paste(tc[,1], tc[,2], sep = '-')
+  names(pval) = paste(levels(g)[tc[,1]], levels(g)[tc[,2]], sep = ' vs. ')
   return(pval)
 }
 
@@ -68,7 +68,6 @@ myPBmodcomp <- function(m1, m0, data, npb){
   ## calculate reference distribution
   LR <- replicate(npb, myPBrefdist(m1 = m1, m0 = m0, data = data), 
                   simplify = TRUE)
-  # rm those
   LR <- as.numeric(LR)
   nconv_LR <- sum(!is.na(LR))
   ## original stats

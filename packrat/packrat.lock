@@ -32,6 +32,12 @@ Source: CRAN
 Version: 0.2-11
 Hash: 9d480bf9a178632e1b7d6d6df6aaaf1a
 
+Package: coin
+Source: CRAN
+Version: 1.0-24
+Hash: 89c75272b088f70fe5aa997457be8833
+Requires: modeltools, mvtnorm, survival
+
 Package: colorspace
 Source: CRAN
 Version: 1.2-6
@@ -47,10 +53,19 @@ Source: CRAN
 Version: 0.6.8
 Hash: 89dc4c8734dad5322bb3c5c2af09056f
 
+Package: evaluate
+Source: CRAN
+Version: 0.5.5
+Requires: stringr
+
 Package: exactRankTests
 Source: CRAN
 Version: 0.8-28
 Hash: e99d23c77f8273958428d9e9e6201bbe
+
+Package: formatR
+Source: CRAN
+Version: 1.0
 
 Package: ggplot2
 Source: CRAN
@@ -68,6 +83,15 @@ Source: CRAN
 Version: 0.1.2
 Hash: 0cf4a2b54c02b35dec7e74a8ebed12a0
 
+Package: highr
+Source: CRAN
+Version: 0.4
+
+Package: knitr
+Source: CRAN
+Version: 1.9
+Requires: digest, formatR, highr, stringr, markdown, evaluate
+
 Package: labeling
 Source: CRAN
 Version: 0.3
@@ -77,6 +101,20 @@ Package: lattice
 Source: CRAN
 Version: 0.20-30
 Hash: d635f3e4d93949f095ec8ff37e5aeb04
+
+Package: markdown
+Source: CRAN
+Version: 0.7.4
+Requires: mime
+
+Package: mime
+Source: CRAN
+Version: 0.2
+
+Package: modeltools
+Source: CRAN
+Version: 0.2-21
+Hash: cf8ddb5ff06dedec20776365da8e288a
 
 Package: multcomp
 Source: CRAN
