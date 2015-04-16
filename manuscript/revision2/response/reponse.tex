@@ -1,0 +1,219 @@
+% ======================================================= %
+% Document: TEMPLATE FOR RESPONSES TO REVIEWERS
+% Author: Andrea Ballatore
+% Date: Jan 7, 2013
+% Source: https://raw.githubusercontent.com/ucd-spatial/Datasets/master/tex_response_to_reviewers_template/responses_to_reviewers.tex
+% Modified by Eduard Szöcs, 10.03.2015
+% ======================================================= %
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{color}
+\definecolor{mygray}{gray}{0.6}
+\usepackage[utf8]{inputenc}
+\usepackage[onehalfspacing]{setspace}
+\usepackage[
+	round,	%(defaultage in the main file and \input ) for round parentheses;
+	colon,	% (default) to separate multiple citations with colons;
+	authoryear,% (default) for author-year citations;
+	sort,		% orders multiple citations into the sequence in which they 
+]{natbib}					
+\usepackage[%disable
+	]{todonotes}
+
+\usepackage{anysize}
+\marginsize{2.5cm}{2.5cm}{1.5cm}{2.5cm}
+
+% macros
+% add a counter
+\newcounter{cN}
+\setcounter{cN}{0}
+
+\newcommand{\comment}[1]{
+	\vspace{2em} 
+	\refstepcounter{cN} % incrment counter
+	\noindent \hangindent=0em \textbf{\textcolor{Maroon}{\uline{Comment \thecN}:~}}\emph{"#1"}
+	}
+
+\newcommand{\response}[1]{
+	\\[0.25em] 
+	\hangindent=2.3em \textbf{\textcolor{NavyBlue}{\uline{Response}:~}}#1 
+	}
+
+\usepackage[normalem]{ulem}
+\definecolor{darkred}{rgb}{1,.6,.6}
+\DeclareRobustCommand\problemline{\bgroup\markoverwith{\textcolor{darkred}{\rule[-0.9ex]{4pt}{3pt}}}\ULon}
+\DeclareRobustCommand{\problem}[1]{\problemline{#1}} % soul
+\setcounter{secnumdepth}{-1}
+
+\begin{document}
+% ======================================================= %
+\title{Responses to reviewers\\~\\Ms. No. ESPR-D-15-00741\\submitted to\\Environmental Science and Pollution Research}
+
+\author{Eduard Szöcs and Ralf B. Schäfer}
+
+\maketitle
+% ======================================================= %
+\noindent Dear editor Dr. Schulz  and reviewers,\\
+
+We are thankful for reviewing our manuscript and the comments that helped to improve the paper. 
+We revised the manuscript according to comments of the three reviewers and are re-submitting the manuscript for consideration for publication in Environmental Science and Pollution Research. 
+
+In the remainder of this document, we describe the changes that we have made to the paper for resubmission. 
+To assist the assessment of our changes we have submitted two versions of the revised manuscript: one with highlighted changes and another without any highlighting. 
+Note, that we did not highlight changes in citations and figures.
+
+\todo{Nicht nochmal den selben text! - d.h. ersten Absatz neu.}
+\vspace{2em}
+\hfill Kind regards,
+
+\hfill Eduard Szöcs and Ralf B. Schäfer
+\newpage
+
+
+
+% ======================================================= %
+
+
+
+
+
+% ======================================================= %	
+\section{Response to Reviewer 2}
+\vspace{-2em}
+
+%done
+\comment{One additional point is that Tony Ives has an in press paper at Methods in Ecolgoy and Evolution on a similar topic - arguing that LM more reliably maintains nominal Type I error levels than GLM for count data, and that this is an argument in defence of transform-LM (similar to ter Braak and Smilauer 2014). This should probably get a mention.}
+\response{We incorporated this paper as it gives similar results, but with different conclusions. \todo{noch machen!}}
+
+\comment{p1 col1 l27 allow one to directly model(?)}
+
+\comment{p1 col1 l46 extremely}
+\response{}
+
+\comment{p2 col2 l1 for more than 40}
+\response{}
+
+\comment{p2 col1 l7 Warton 2005 was about counts not proportions.}
+\response{}
+
+\comment{p2 col1 l25 may enhance..., when appropriately used [to reflect the change of emphasis requested to caution about misuse, suggested by reviewers 1 and 3]}
+\response{}
+
+\comment{equation 1: superscript T is not the best choice, this is standard notation for a matrix transpose. y\_new might be worth a shot...}
+\response{}
+
+\comment{equation 2-3: $\beta$\_Treatment\_i is awkward notation.}
+\response{}
+
+\comment{p2 col2 l21 Poisson not poisson}
+\response{}
+
+\comment{Section 2.2.2 Reviewer 3 requested a statement of the underlying assumption that each of the units being counted is iid, which I could not see in this section.  This connects to the topic of overdispersion (which arises when not iid)}
+\response{}
+
+\comment{p4 bottom col1: Type I error and power at what significance level.}
+\response{}
+
+\comment{p4 col2 l18: considerably higher}
+\response{}
+
+\comment{p4 col2 l21: led to}
+\response{}
+
+\comment{p4 col2 l50 the parameteric bootstrap}
+\response{}
+
+\comment{Fig 2: Type I error off the scale is undesirable, the point that Type I error is poor is harder to see when you can't see it.  Maybe use a log-scale for Type I error and power?}
+\response{}
+
+\comment{p5 col1 l47: Type I not Type 1, happens elsewhere too}
+\response{}
+
+\comment{p7 col1 line 60: residual vs fits plots can also be very informative (e.g. Wang et al 2012)}
+\response{}
+
+\comment{p8 col 1 line 7 delete "to"}
+\response{}
+
+\comment{p8 col2 line 1 add space after 2002)}
+\response{}
+
+
+
+% ======================================================= %	
+\section{Response to Reviewer 3}
+\vspace{-2em}
+
+\comment{1.	take the sentence in the abstract: "Generalised Linear Models (GLM) allow directly model distributions fitting such data." which cannot be understood, neither by an ecologists nor by a statistician (see further under Language) and }
+\response{}
+
+\comment{2.	eqs 2-5 \& 7 where the authors cannot get their math right. The paper need a lot of editing both linguistically and statistically.}
+\response{}
+
+\comment{3.	Also the paper fails to indicate the trade-off between model and computational complexity, the potential gain in, for example, power and (loss/gain) in control of the type I error. For example, what is the gain of using the npb (where does this abbreviation come from??) over the much simpler qp method, and of the qp method over LM on transformed data? }
+\response{}
+
+\comment{4.	Some summary measures of gain should be included and }
+\response{}
+
+\comment{5.	an overall conclusion in favour of the qp method should be drawn. }
+\response{}
+
+\comment{6.	The analysis of LOEC is very inconsistent and should be redone/reconsidered. The reason is that authors claim that the Williams test is easily applied in GLM context (p7,44-48,l), but not used at all. So why is the Williams not used in the simulations? It likely gives a much higher increase in power than any of model comparison performed in the paper.}
+\response{}
+
+\comment{The real reason why GLMs are great is beyond the scope of experiments analysed in this paper. The real advantage of GLMs is that they allow separate specification of the distribution of the response variable and of the scale on which effects are additive. Because they are just simple means in the models in the paper and nothing what requires additivity or linearity on some scale, this key advantage falls outside the scope of the paper. Please tell something of this sort in the intro or the discussion!}
+\response{}
+
+\comment{Please also mention that the quasi-likelihood approach to GLMs in which it are not the distribution of the response variable that is key to the method, but the mean-variance relationship (this relates to comments 7 and  26).}
+\response{}
+
+\comment{Language:  There is a tendency of stenography: applying least-squares methods (by the way, a term not used!!) after data transformation is described as data transformation or as transform the data (in the abstract on 44L and 25L). Brevity is nice but it should remain understandable. Another example:"Nevertheless, they are often analysed using methods assuming a normal distribution and variance homogeneity". Who assumes what in this sentence. A method does not assume anything (the user does, and the method is guaranteed to have some properties when the assumptions hold true.) and"They" refers to data which cannot assume anything either. There are many of these misconstructions. }
+\response{}
+
+\comment{My previous comment (in comment 39): "(3) Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone.  See the example. Discuss this ambiguity. You can perhaps use a bootstrap test based on (GLM?) monotonic regression or similar. I know some cues/leads in this direction." has led to (unverified) statements on the Williams test without implementing the test. See general, point 6.}
+\response{}
+
+\comment{P3,49l. Add (y\_i) after number of occurrences, otherwise y\_i undefined (or number of occurrences?!).}
+\response{}
+
+\comment{P3,58L Delete: However. }
+\response{}
+
+\comment{P3,58L where can I see the beta is "parameters"}
+\response{}
+
+\comment{P4,L Rephrase sentences with "kept equal"}
+\response{}
+
+\comment{P4, 55, R. qp is not mention in remarks onType I error. Why not?}
+\response{}
+
+\comment{Legend Fig2. Add inbetween "error are" (GLM\_p and GLM\_nb)}
+\response{}
+
+\comment{Fig.3 Is it explained why npb is not in this figure?}
+\response{}
+
+\comment{P4,20,R And what is the estimated value of k for the case study. Now it cannot be verified that the simulations loosely mimic the case study.}
+\response{}
+
+\comment{P4,29R. Say here or in the discussion that this LR test turned out to be invalid as it has inflated Type I error. }
+\response{}
+
+
+
+
+%% --------------------------------
+\newpage
+\bibliography{refs}
+\bibliographystyle{spbasic}
+
+
+% ======================================================= %
+\end{document}
+% ======================================================= % 

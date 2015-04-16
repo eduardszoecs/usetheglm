@@ -9,7 +9,7 @@ rm(list = ls()[!ls() %in% 'prj'])
 # eg.
 # prj <- "/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/" # on Linux
 # prj <- 'C:\\Users\\Edi\\Documents\\usetheglm' # on Windows
-if(!exists("prj")){
+if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
        e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project'!")
 }
@@ -31,6 +31,9 @@ require(MASS)
 require(multcomp)
 require(exactRankTests)
 require(xtable)
+
+# or get the packages from packrat
+source(file.path(prj, 'packrat/init.R'))
 
 
 #####--------------------------------------------------------------------------
