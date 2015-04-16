@@ -51,7 +51,7 @@
 
 \begin{document}
 % ======================================================= %
-\title{Responses to reviewers\\~\\Ms. No. ESPR-D-15-00741\\submitted to\\Environmental Science and Pollution Research}
+\title{Responses to reviewers\\~\\Ms. No. ESPR-D-15-00741R1\\submitted to\\Environmental Science and Pollution Research}
 
 \author{Eduard Szöcs and Ralf B. Schäfer}
 
@@ -59,14 +59,14 @@
 % ======================================================= %
 \noindent Dear editor Dr. Schulz  and reviewers,\\
 
-We are thankful for reviewing our manuscript and the comments that helped to improve the paper. 
-We revised the manuscript according to comments of the three reviewers and are re-submitting the manuscript for consideration for publication in Environmental Science and Pollution Research. 
+We are thankful for reviewing our manuscript a second time and the comments that helped to improve the paper. 
+We revised the manuscript accordingly and are re-submitting the manuscript for consideration for publication in \emph{Environmental Science and Pollution Research}. 
 
 In the remainder of this document, we describe the changes that we have made to the paper for resubmission. 
-To assist the assessment of our changes we have submitted two versions of the revised manuscript: one with highlighted changes and another without any highlighting. 
+To assist the assessment of our changes we have submitted two versions of the revised manuscript: one with highlighted changes (compared to revision 1) and another without any highlighting. 
 Note, that we did not highlight changes in citations and figures.
 
-\todo{Nicht nochmal den selben text! - d.h. ersten Absatz neu.}
+
 \vspace{2em}
 \hfill Kind regards,
 
@@ -85,62 +85,61 @@ Note, that we did not highlight changes in citations and figures.
 \section{Response to Reviewer 2}
 \vspace{-2em}
 
-%done
+%!todo
 \comment{One additional point is that Tony Ives has an in press paper at Methods in Ecolgoy and Evolution on a similar topic - arguing that LM more reliably maintains nominal Type I error levels than GLM for count data, and that this is an argument in defence of transform-LM (similar to ter Braak and Smilauer 2014). This should probably get a mention.}
 \response{We incorporated this paper as it gives similar results, but with different conclusions. \todo{noch machen!}}
 
+%done
 \comment{p1 col1 l27 allow one to directly model(?)}
+\response{We fixed this sentence. It now reads : \\ \emph{"Generalised Linear Models (GLM) allow directly model such data, without the need for transformation"}.}
 
-\comment{p1 col1 l46 extremely}
-\response{}
+%done
+\comment{p1 col1 l46 extremely; p2 col2 l1 for more than 40; p2 col1 l7 Warton 2005 was about counts not proportions.}
+\response{We fixed these typos.}
 
-\comment{p2 col2 l1 for more than 40}
-\response{}
-
-\comment{p2 col1 l7 Warton 2005 was about counts not proportions.}
-\response{}
-
+%done
 \comment{p2 col1 l25 may enhance..., when appropriately used [to reflect the change of emphasis requested to caution about misuse, suggested by reviewers 1 and 3]}
-\response{}
+\response{We agree and changed accordingly.}
 
+%done
 \comment{equation 1: superscript T is not the best choice, this is standard notation for a matrix transpose. y\_new might be worth a shot...}
-\response{}
+\response{We agree and changed accordingly to $y_{new~i}$.}
 
+%done
 \comment{equation 2-3: $\beta$\_Treatment\_i is awkward notation.}
-\response{}
+\response{We agree and changed notation to $\beta x_i$.}
 
+%done
 \comment{p2 col2 l21 Poisson not poisson}
-\response{}
+\response{We fixed this typo.}
 
 \comment{Section 2.2.2 Reviewer 3 requested a statement of the underlying assumption that each of the units being counted is iid, which I could not see in this section.  This connects to the topic of overdispersion (which arises when not iid)}
 \response{}
 
+%done
 \comment{p4 bottom col1: Type I error and power at what significance level.}
-\response{}
+\response{We added \emph{"at a significance level of $\alpha = 0.05$}". }
 
-\comment{p4 col2 l18: considerably higher}
-\response{}
+%done
+\comment{p4 col2 l18: considerably higher; p4 col2 l21: led to; p4 col2 l50 the parameteric bootstrap}
+\response{We fixed these typos.}
 
-\comment{p4 col2 l21: led to}
-\response{}
-
-\comment{p4 col2 l50 the parameteric bootstrap}
-\response{}
 
 \comment{Fig 2: Type I error off the scale is undesirable, the point that Type I error is poor is harder to see when you can't see it.  Maybe use a log-scale for Type I error and power?}
 \response{}
 
+%done
 \comment{p5 col1 l47: Type I not Type 1, happens elsewhere too}
-\response{}
+\response{We fixed this throughout the manuscript.}
 
+%done
 \comment{p7 col1 line 60: residual vs fits plots can also be very informative (e.g. Wang et al 2012)}
-\response{}
+\response{We added residual vs. fitted values plot.}
 
-\comment{p8 col 1 line 7 delete "to"}
-\response{}
+%done
+\comment{p8 col 1 line 7 delete "to"; p8 col2 line 1 add space after 2002)}
+\response{We fixed both typos.}
 
-\comment{p8 col2 line 1 add space after 2002)}
-\response{}
 
 
 
@@ -148,11 +147,13 @@ Note, that we did not highlight changes in citations and figures.
 \section{Response to Reviewer 3}
 \vspace{-2em}
 
+%done
 \comment{1.	take the sentence in the abstract: "Generalised Linear Models (GLM) allow directly model distributions fitting such data." which cannot be understood, neither by an ecologists nor by a statistician (see further under Language) and }
-\response{}
+\response{We agree and rephrased. See also comment 2.}
 
+%half
 \comment{2.	eqs 2-5 \& 7 where the authors cannot get their math right. The paper need a lot of editing both linguistically and statistically.}
-\response{}
+\response{We edited the equations, see also comments 5 and 6.}
 
 \comment{3.	Also the paper fails to indicate the trade-off between model and computational complexity, the potential gain in, for example, power and (loss/gain) in control of the type I error. For example, what is the gain of using the npb (where does this abbreviation come from??) over the much simpler qp method, and of the qp method over LM on transformed data? }
 \response{}
@@ -169,8 +170,9 @@ Note, that we did not highlight changes in citations and figures.
 \comment{The real reason why GLMs are great is beyond the scope of experiments analysed in this paper. The real advantage of GLMs is that they allow separate specification of the distribution of the response variable and of the scale on which effects are additive. Because they are just simple means in the models in the paper and nothing what requires additivity or linearity on some scale, this key advantage falls outside the scope of the paper. Please tell something of this sort in the intro or the discussion!}
 \response{}
 
+%done
 \comment{Please also mention that the quasi-likelihood approach to GLMs in which it are not the distribution of the response variable that is key to the method, but the mean-variance relationship (this relates to comments 7 and  26).}
-\response{}
+\response{This is already mentioned in eqn. 4 and accompanying text.}
 
 \comment{Language:  There is a tendency of stenography: applying least-squares methods (by the way, a term not used!!) after data transformation is described as data transformation or as transform the data (in the abstract on 44L and 25L). Brevity is nice but it should remain understandable. Another example:"Nevertheless, they are often analysed using methods assuming a normal distribution and variance homogeneity". Who assumes what in this sentence. A method does not assume anything (the user does, and the method is guaranteed to have some properties when the assumptions hold true.) and"They" refers to data which cannot assume anything either. There are many of these misconstructions. }
 \response{}
@@ -178,29 +180,36 @@ Note, that we did not highlight changes in citations and figures.
 \comment{My previous comment (in comment 39): "(3) Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone.  See the example. Discuss this ambiguity. You can perhaps use a bootstrap test based on (GLM?) monotonic regression or similar. I know some cues/leads in this direction." has led to (unverified) statements on the Williams test without implementing the test. See general, point 6.}
 \response{}
 
+%done
 \comment{P3,49l. Add (y\_i) after number of occurrences, otherwise y\_i undefined (or number of occurrences?!).}
-\response{}
+\response{We agree and clarified this section.}
 
+%done
 \comment{P3,58L Delete: However. }
-\response{}
+\response{We agree and changed accordingly.}
 
+%done
 \comment{P3,58L where can I see the beta is "parameters"}
-\response{}
+\response{We fixed this typo and changed to \emph{"coefficients"}.}
 
+%done
 \comment{P4,L Rephrase sentences with "kept equal"}
-\response{}
+\response{We agree and rephrased these two sentences.}
 
+%done
 \comment{P4, 55, R. qp is not mention in remarks onType I error. Why not?}
-\response{}
+\response{We added $LM$ and $GLM_{qp}$ to this section.}
 
+%done
 \comment{Legend Fig2. Add inbetween "error are" (GLM\_p and GLM\_nb)}
-\response{}
+\response{We agree and changed accordingly.}
 
 \comment{Fig.3 Is it explained why npb is not in this figure?}
 \response{}
 
+%done
 \comment{P4,20,R And what is the estimated value of k for the case study. Now it cannot be verified that the simulations loosely mimic the case study.}
-\response{}
+\response{We added the value of $\kappa = 3.91$. }
 
 \comment{P4,29R. Say here or in the discussion that this LR test turned out to be invalid as it has inflated Type I error. }
 \response{}

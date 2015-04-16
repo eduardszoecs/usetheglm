@@ -329,15 +329,45 @@ Moreover, we adjust for multiple testing using Holm's method (\texttt{test = adj
 \end{kframe}
 \end{knitrout}
 
-This indicates that only treatment 3 shows a statistically significant from control and is the determined LOEC.
+Here only treatment 3 mg/L shows a statistically significant from control and is the determined LOEC.
 The column \texttt{'Estimate'} gives the estimated difference in means between treatments and control and \texttt{'Std. Error'} the standard errors of these estimated parameters.
 
 
-To make Williams type comparisons simply change \texttt{'Dunnett'} to \texttt{'Williams'}:
+To determine the LOEC we could also use a Williams type contrast  \citep{bretz_multiple_2010}. 
+
+Here I use a step-up Williams contrast.
+First we need to define a contrast matrix (see also \texttt{?contrMat()}):
+
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modlm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{=} \hlstr{'Williams'}\hlstd{),}
+\hlcom{# observations per treatment}
+\hlstd{n} \hlkwb{<-} \hlkwd{tapply}\hlstd{(dfm}\hlopt{$}\hlstd{abu_t, dfm}\hlopt{$}\hlstd{treatment, length)}
+\hlstd{k} \hlkwb{<-} \hlkwd{length}\hlstd{(n)}
+\hlstd{CM} \hlkwb{<-} \hlkwd{c}\hlstd{()}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{(k} \hlopt{-} \hlnum{1}\hlstd{)) \{}
+  \hlstd{help} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{1}\hlstd{, n[}\hlnum{2}\hlopt{:}\hlstd{(i} \hlopt{+} \hlnum{1}\hlstd{)]} \hlopt{/} \hlkwd{sum}\hlstd{(n[}\hlnum{2}\hlopt{:}\hlstd{(i} \hlopt{+} \hlnum{1}\hlstd{)]),} \hlkwd{rep}\hlstd{(}\hlnum{0} \hlstd{, k} \hlopt{-} \hlstd{i} \hlopt{-} \hlnum{1}\hlstd{))}
+  \hlstd{CM} \hlkwb{<-} \hlkwd{rbind}\hlstd{(CM, help)}
+\hlstd{\}}
+\hlkwd{rownames}\hlstd{(CM)} \hlkwb{<-} \hlkwd{paste}\hlstd{(}\hlstr{"C"}\hlstd{,} \hlnum{1}\hlopt{:}\hlkwd{nrow}\hlstd{(CM))}
+\hlstd{CM}
+\end{alltt}
+\begin{verbatim}
+##             T0.1                                        
+## C 1 -1 1.0000000 0.0000000 0.0000000 0.0000000 0.0000000
+## C 2 -1 0.5000000 0.5000000 0.0000000 0.0000000 0.0000000
+## C 3 -1 0.3333333 0.3333333 0.3333333 0.0000000 0.0000000
+## C 4 -1 0.2500000 0.2500000 0.2500000 0.2500000 0.0000000
+## C 5 -1 0.2142857 0.2142857 0.2142857 0.2142857 0.1428571
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Then we supply this contrast matrix to \texttt{glht()}:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modlm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{= CM),}
              \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{),}
         \hlkwc{test} \hlstd{=} \hlkwd{adjusted}\hlstd{(}\hlstr{'holm'}\hlstd{))}
 \end{alltt}
@@ -345,18 +375,18 @@ To make Williams type comparisons simply change \texttt{'Dunnett'} to \texttt{'W
 ## 
 ## 	 Simultaneous Tests for General Linear Hypotheses
 ## 
-## Multiple Comparisons of Means: Williams Contrasts
+## Multiple Comparisons of Means: User-defined Contrasts
 ## 
 ## 
 ## Fit: lm(formula = abu_t ~ treatment, data = dfm)
 ## 
 ## Linear Hypotheses:
 ##          Estimate Std. Error t value Pr(<t)  
-## C 1 >= 0  -1.2575     0.5144  -2.445 0.0154 *
-## C 2 >= 0  -1.3503     0.3984  -3.389 0.0134 *
-## C 3 >= 0  -1.2215     0.3637  -3.359 0.0134 *
-## C 4 >= 0  -1.1491     0.3468  -3.313 0.0134 *
-## C 5 >= 0  -1.0157     0.3367  -3.016 0.0134 *
+## C 1 >= 0  -0.5267     0.4536  -1.161 0.1341  
+## C 2 >= 0  -0.7413     0.3834  -1.934 0.0771 .
+## C 3 >= 0  -0.8298     0.3569  -2.325 0.0576 .
+## C 4 >= 0  -0.9754     0.3429  -2.845 0.0295 *
+## C 5 >= 0  -1.0157     0.3367  -3.016 0.0268 *
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## (Adjusted p values reported -- holm method)
@@ -364,7 +394,40 @@ To make Williams type comparisons simply change \texttt{'Dunnett'} to \texttt{'W
 \end{kframe}
 \end{knitrout}
 
-Note, this multiple contrats test is different from the original Williams test \citep{williams_comparison_1972}, because of different variance estimators \citep{bretz_powerful_1999}.
+This indicates a LOEC at 3 mg/L.
+
+If we do not adjust for multiple testing (\texttt{test = adjusted('none')}), we end up with the same NOEC  (0.1 mg/L) as \citet{brock_minimum_2015}:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{summary}\hlstd{(}\hlkwd{glht}\hlstd{(modlm,} \hlkwc{linfct} \hlstd{=} \hlkwd{mcp}\hlstd{(}\hlkwc{treatment} \hlstd{= CM),}
+             \hlkwc{alternative} \hlstd{=} \hlstr{'less'}\hlstd{),}
+        \hlkwc{test} \hlstd{=} \hlkwd{adjusted}\hlstd{(}\hlstr{'none'}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	 Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: User-defined Contrasts
+## 
+## 
+## Fit: lm(formula = abu_t ~ treatment, data = dfm)
+## 
+## Linear Hypotheses:
+##          Estimate Std. Error t value  Pr(<t)   
+## C 1 >= 0  -0.5267     0.4536  -1.161 0.13407   
+## C 2 >= 0  -0.7413     0.3834  -1.934 0.03855 * 
+## C 3 >= 0  -0.8298     0.3569  -2.325 0.01921 * 
+## C 4 >= 0  -0.9754     0.3429  -2.845 0.00739 **
+## C 5 >= 0  -1.0157     0.3367  -3.016 0.00537 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## (Adjusted p values reported -- none method)
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Note, this multiple contrast test is different from the original Williams test \citep{williams_comparison_1972} used by \citep{brock_minimum_2015}, because of different variance estimators \citep{bretz_powerful_1999}.
 
 
 
@@ -654,7 +717,7 @@ The estimated parameters:
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
-, with $\kappa = 3.905898$ (glm.nb uses a slightly other parametrisation).
+, with $\kappa = 3.91$.
 
 
 \subsubsection{Inference on general treatment effect (LR-test)}
