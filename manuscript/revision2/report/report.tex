@@ -44,19 +44,20 @@ Tel.: +49 06341 280 31552 \\
 %% ----------------------------------------------------------------------------
 \begin{abstract}
 Counts and proportions are data types often encountered by ecotoxicologists, which are rarely normally distributed.
-To meet the assumptions of normality and heteroscedasticity, the standard procedure has been to either transform the data or use non-parametric methods if this fails.
+To meet the assumptions of the linear model such data are often transformed or non-parametric methods used if this fails.
 Generalised Linear Models (GLM) allow directly model such data, without the need for transformation.
 Here, we compare the performance of parametric methods assuming (1) normality of transformed data, (2) appropriate distributions (Poisson, negativ binomial, binomial) and (3) non-parametric methods.
 
 We simulated typical data mimicking low replicated ecotoxicological experiments of two common data types (counts and proportions from counts). 
 We compared the performance of different methods in terms of statistical power and Type I error for detecting a general treatment effect and determining the lowest observed effect concentration (LOEC).
-In addition, we outlined differences and advantages of GLMs on a real world mesocosm data set.
+In addition, we outlined differences on a real world mesocosm data set.
 
-For counts, we found that the quasi-Poisson model and the negative binomial model in combination with the parametric boostrap had higher statistical power than data transformation.
-For proportions GLMs performed better, except to determine LOEC at extremely low sample sizes.
+For count data we found that the quasi-Poisson model yielded highest power. The negative binomial model resulted in increased Type I errors , which could be fixed using the parametric bootstrap. 
+For proportions binomial GLMs performed better than assuming normality of transformed data, except to determine LOEC at extremely low sample sizes.
 The compared non-parametric methods had generally lower power.
 
-We recommend that counts and proportions from counts should be analysed by GLMs and these methods should become standard in ecotoxicology.
+We recommend that counts in one factorial experiments should be analysed using quasi-Poisson models and proportions from counts by binomial GLMs.
+These methods should become standard in ecotoxicology.
  \keywords{Generalized Linear Models \and Transformations \and Simulation \and Power \and Type I error}
 \end{abstract}
 
