@@ -85,9 +85,9 @@ Note, that we did not highlight changes in citations and figures.
 \section{Response to Reviewer 2}
 \vspace{-2em}
 
-%!todo
+%done
 \comment{One additional point is that Tony Ives has an in press paper at Methods in Ecolgoy and Evolution on a similar topic - arguing that LM more reliably maintains nominal Type I error levels than GLM for count data, and that this is an argument in defence of transform-LM (similar to ter Braak and Smilauer 2014). This should probably get a mention.}
-\response{We incorporated this paper as it gives similar results, but with different conclusions. \todo{noch machen!}}
+\response{We are thankful for pointing to this recently accepted paper. We picked it up in the discussion. See also comments  17-19.}
 
 %done
 \comment{p1 col1 l27 allow one to directly model(?)}
@@ -155,20 +155,31 @@ Note, that we did not highlight changes in citations and figures.
 \comment{2.	eqs 2-5 \& 7 where the authors cannot get their math right. The paper need a lot of editing both linguistically and statistically.}
 \response{We edited the equations, see also comments 5 and 6.}
 
+%done
 \comment{3.	Also the paper fails to indicate the trade-off between model and computational complexity, the potential gain in, for example, power and (loss/gain) in control of the type I error. For example, what is the gain of using the npb (where does this abbreviation come from??) over the much simpler qp method, and of the qp method over LM on transformed data? }
-\response{}
+\response{We agree and compared the gains. See also comment 1 + 19.}
 
+%done
 \comment{4.	Some summary measures of gain should be included and }
-\response{}
+\response{See comments 1, 17, 19.}
 
+%done
 \comment{5.	an overall conclusion in favour of the qp method should be drawn. }
-\response{}
+\response{We agree and after comparison of gains we draw an overall conclusion on $GLM_{qp}$. However, this is only valid for one-factorial designs - as $GLM_{qp}$ showed increased Type I errors in multiple regression \citep{ives_for_2015}. See also comment 1.}
 
+%done
 \comment{6.	The analysis of LOEC is very inconsistent and should be redone/reconsidered. The reason is that authors claim that the Williams test is easily applied in GLM context (p7,44-48,l), but not used at all. So why is the Williams not used in the simulations? It likely gives a much higher increase in power than any of model comparison performed in the paper.}
-\response{}
+\response{We added reference to \citet{hothorn_simultaneous_2008} for a Williams-type multiple contrast test in a GLM framework.
+Moreover, we added justification for the use of Dunnett contrasts. The section now reads: \\
+\emph{"The choice of transformation contributed only little to the differences. 
+If the assumptions of Williams test  are met it has strictly greater power than Dunnett contrasts \citep{jaki_statistical_2013}, which explains the differences in the case study.
+A generalisation of the Williams test as multiple contrast test (MCT) can be used in a GLM framework \citep{hothorn_simultaneous_2008}.
+Nevertheless, such a Williams-type MCT is not a panacea \citep{hothorn_statistical_2014} and our simulated semi-concave dose-response relationship is a situation where it fails and underestimates the LOEC \citep{kuiper_identification_2014}. "}
+}
 
 \comment{The real reason why GLMs are great is beyond the scope of experiments analysed in this paper. The real advantage of GLMs is that they allow separate specification of the distribution of the response variable and of the scale on which effects are additive. Because they are just simple means in the models in the paper and nothing what requires additivity or linearity on some scale, this key advantage falls outside the scope of the paper. Please tell something of this sort in the intro or the discussion!}
 \response{}
+% correct, all glms same parameter estimates for orthogonal categorical predictors. Difference comes from SE estimates! For regression design different!
 
 %done
 \comment{Please also mention that the quasi-likelihood approach to GLMs in which it are not the distribution of the response variable that is key to the method, but the mean-variance relationship (this relates to comments 7 and  26).}
@@ -177,8 +188,9 @@ Note, that we did not highlight changes in citations and figures.
 \comment{Language:  There is a tendency of stenography: applying least-squares methods (by the way, a term not used!!) after data transformation is described as data transformation or as transform the data (in the abstract on 44L and 25L). Brevity is nice but it should remain understandable. Another example:"Nevertheless, they are often analysed using methods assuming a normal distribution and variance homogeneity". Who assumes what in this sentence. A method does not assume anything (the user does, and the method is guaranteed to have some properties when the assumptions hold true.) and"They" refers to data which cannot assume anything either. There are many of these misconstructions. }
 \response{}
 
+%done
 \comment{My previous comment (in comment 39): "(3) Without the use of a GLM equivalent of the Williams test all the advantage of the use of GLM in terms of power are gone.  See the example. Discuss this ambiguity. You can perhaps use a bootstrap test based on (GLM?) monotonic regression or similar. I know some cues/leads in this direction." has led to (unverified) statements on the Williams test without implementing the test. See general, point 6.}
-\response{}
+\response{See response to comment 20.}
 
 %done
 \comment{P3,49l. Add (y\_i) after number of occurrences, otherwise y\_i undefined (or number of occurrences?!).}
@@ -204,22 +216,24 @@ Note, that we did not highlight changes in citations and figures.
 \comment{Legend Fig2. Add inbetween "error are" (GLM\_p and GLM\_nb)}
 \response{We agree and changed accordingly.}
 
+%done
 \comment{Fig.3 Is it explained why npb is not in this figure?}
-\response{}
+\response{As stated in the methods section, we applied the parametric bootstrap only to the LR test.}
 
 %done
 \comment{P4,20,R And what is the estimated value of k for the case study. Now it cannot be verified that the simulations loosely mimic the case study.}
 \response{We added the value of $\kappa = 3.91$. }
 
+%done
 \comment{P4,29R. Say here or in the discussion that this LR test turned out to be invalid as it has inflated Type I error. }
-\response{}
+\response{We agree and added this to the discussion.}
 
 
 
 
 %% --------------------------------
 \newpage
-\bibliography{refs}
+\bibliography{references}
 \bibliographystyle{spbasic}
 
 

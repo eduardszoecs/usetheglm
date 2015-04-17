@@ -8,6 +8,7 @@
 \usepackage{mathptmx}
 \usepackage{url}
 \usepackage{marvosym}
+\usepackage{todonotes}
 \newcommand{\envelope}{(\raisebox{-.5pt}{\scalebox{1.45}{\Letter}}\kern-.1pt) }
 
 % to compare to old
@@ -55,7 +56,7 @@ For counts, we found that the quasi-Poisson model and the negative binomial mode
 For proportions GLMs performed better, except to determine LOEC at extremely low sample sizes.
 The compared non-parametric methods had generally lower power.
 
-We recommend that counts and proportions from counts should be analysed by making appropriate distributional assumptions and GLMs should become a standard method in ecotoxicology.
+We recommend that counts and proportions from counts should be analysed by GLMs and these methods should become standard in ecotoxicology.
  \keywords{Generalized Linear Models \and Transformations \and Simulation \and Power \and Type I error}
 \end{abstract}
 
@@ -373,22 +374,18 @@ The reasons are manifold:
 (i)~\citet{brock_minimum_2015} used a $log(2~y + 1)$ transformation, whereas we used a $log(A~y + 1)$ transformation, where A = 2 / 11 = 0.182 \citep{van_den_brink_impact_2000}.
 (ii)~We adjusted for multiple testing using Holm's (\citeyear{holm_simple_1979}) method.
 (iii)~\citet{brock_minimum_2015} used a one-sided Williams test \citep{williams_comparison_1972}, whereas we used one-sided comparisons to the control (Dunnett contrasts).
-
 The choice of transformation contributed only little to the differences. 
-
-\todo{!!!!hier weitermachen!!!!!!!!}
-
-A much bigger impact had the type of multiple comparison: 
-In contrast to the Williams test, Dunnett contrasts do not assume a monotonic dose-response relationship and allow individual comparisons between treatment groups and the control.
-However, under monotonicity they have less power, which explains the differences \citep{jaki_statistical_2013}.
-Both types of multiple comparisons are available as multiple contrast tests in a GLM framework.
-Therefore, our comparison of methods should be independent from the choice of contrast, which is determined by assumptions and research questions. 
+If the assumptions of Williams test  are met it has strictly greater power than Dunnett contrasts \citep{jaki_statistical_2013}, which explains the differences in the case study.
+A generalisation of the Williams test as multiple contrast test (MCT) can be used in a GLM framework \citep{hothorn_simultaneous_2008}.
+Nevertheless, such a Williams-type MCT is not a panacea \citep{hothorn_statistical_2014} and our simulated semi-concave dose-response relationship is a situation where it fails and underestimates the LOEC \citep{kuiper_identification_2014}. 
  
 
 %% ---- Guide GLMs
 Overdispersion is common for ecological datasets \citep{warton_many_2005} and the case study illustrates the potential effects of overdispersion that is not accounted for: standard errors will be underestimated and significance overestimated (Figures \ref{fig:example}).
 This is also shown by our simulations (Figures \ref{fig:p_glob_c}, \ref{fig:p_loec_c}) where $GLM_p$ showed increased Type I error rates because of overdispersed simulated data. 
 However, in factorial designs the mean-variance relationship can be easily checked by plotting mean versus variance of the treatment groups or by inspecting residual vs. fitted values plots (see Supplement 2).
+As our simulations showed the LR test for $GLM_{nb}$ is invalid because of increased Type I errors. This explains why it had the lowest p-value in the case study.
+
 In the introduction we pointed out that there is little advice how to choose between the plenty of possible transformations - how do GLMs simplify this problem?
 The distribution modelled can be chosen using knowledge about the data (e.g. bounds, integer or continuous data etc).
 Knowing what type of data is modelled (see Methods section), the model selection process can be completely guided by the data and diagnostic tools. Therefore, choosing an appropriate model is easier than choosing between possible transformations.
@@ -432,6 +429,10 @@ We used an iterative algorithm to fit these models \citep{venables_modern_2002} 
 
 $GLM_{qp}$ showed higher statistical power than $GLM_{npb}$ (Figure \ref{fig:p_glob_c}, bottom).
 This could be explained by the simpler mean-variance relationship of $GLM_{qp}$ (eqn. \ref{eqn:quasi} and \ref{eqn:negbin}), because at small samples sizes, low abundances or few treatment groups it is difficult to determine the mean-variance relationship.
+Our results are similar to \citet{ives_for_2015}, who compared GLMs to LM applied to transformed data for testing regression coefficients.
+Because of inflated Type I errors of $GLM_{nb}$ and , in the case of multiple regression, inflated Type I errors of $GLM_{qp}$ he concluded that the approach of transforming data and applying LMs provides a robust method and should be preferred.
+We showed that the parametric bootstrap LR test of $GLM_{nb}$ provides appropriate Type I errors and bootstrapping might be also an alternative for testing coefficients.
+However, bootstrapping is computationally very intensive and we found no gains in power compared to $GLM_{qp}$ (Figure \ref{fig:p_glob_c}). Because of increased higher power, appropriate Type I errors and reduced bias \citep{ohara_not_2010} we conclude that count data in one factorial experiments should be analysed using the quasi-Poisson model.
 
 %% --- binomial data
 Binomial data are often collected in lab trials, where increasing the sample size may be relatively easy to accomplish. 
