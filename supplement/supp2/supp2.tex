@@ -241,7 +241,7 @@ The residuals vs. fitted values diagnostic plot show no problematic pattern, tho
 
 \end{knitrout}
 
-The \texttt{summary()} gives the estimated parameters with standard errors and Wald t tests:
+The \texttt{summary()} gives the estimated coefficients with standard errors and Wald t tests:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -329,8 +329,8 @@ Moreover, we adjust for multiple testing using Holm's method (\texttt{test = adj
 \end{kframe}
 \end{knitrout}
 
-Here only treatment 3 mg/L shows a statistically significant from control and is the determined LOEC.
-The column \texttt{'Estimate'} gives the estimated difference in means between treatments and control and \texttt{'Std. Error'} the standard errors of these estimated parameters.
+Here only treatment 3 mg/L shows a statistically significant difference from control and is the determined LOEC.
+The column \texttt{'Estimate'} gives the estimated difference in means between treatments and control and \texttt{'Std. Error'} the standard errors of these estimates.
 
 
 To determine the LOEC we could also use a Williams type contrast  \citep{bretz_multiple_2010}. 
@@ -427,7 +427,7 @@ If we do not adjust for multiple testing (\texttt{test = adjusted('none')}), we 
 \end{kframe}
 \end{knitrout}
 
-Note, this multiple contrast test is different from the original Williams test \citep{williams_comparison_1972} used by \citep{brock_minimum_2015}, because of different variance estimators \citep{bretz_powerful_1999}.
+Note, this multiple contrast test is different from the original Williams test \citep{williams_comparison_1972} used by \citep{brock_minimum_2015}. See \citet{bretz_powerful_1999} for a comparison.
 
 
 
@@ -446,7 +446,7 @@ GLMs can be fitted using the \texttt{glm()} function and here we fit the model f
 
 Here \texttt{family = poisson(link = 'log')} specifies that we want to fit a poisson model using a log link between response and predictors.
 
-The \texttt{summary} gives the estimated parameters, standard errors and Wald Z tests:
+The \texttt{summary} gives the estimated coefficients, standard errors and Wald Z tests:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -566,7 +566,7 @@ Fitting a quasi-Poisson model (eqn. 4) is straight forward:
 \end{kframe}
 \end{knitrout}
 
-The summary gives the estimated parameters:
+The summary gives the estimated coefficients:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -604,7 +604,7 @@ The summary gives the estimated parameters:
 \end{knitrout}
 
 , with the dispersion parameter $\Theta = 22.41055$. 
-Note, that the parameter estimates are the same as from the Poisson model, only the standard errors are scaled/wider.
+Note, that the coefficients estimates are the same as from the Poisson model, only the standard errors are scaled/wider.
 
 \subsubsection{Inference on general treatment effect}
 An F-test can be performed using \texttt{drop1()}:
@@ -674,7 +674,7 @@ To fit a negative binomial GLM (eqn. 5) we could use \texttt{glm.nb()} from the 
 \end{kframe}
 \end{knitrout}
 
-The estimated parameters:
+The estimated coefficients:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -1080,7 +1080,7 @@ Then, like in the count data example we fit the model using \texttt{lm()}:
 \end{kframe}
 \end{knitrout}
 
-The summary gives the estimated parameters:
+The summary gives the estimated coefficients:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -1177,7 +1177,7 @@ The binomial model with a logit link (eqn. 7) between predictors and response ca
 
 Here the weights arguments, indicates how many fish where exposed in each treatment (N=10, eqn .7).
 
-The summary gives the estimated parameters:
+The summary gives the estimated coefficients:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}

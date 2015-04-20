@@ -189,7 +189,7 @@ summary(glht(modlm, linfct = mcp(treatment = CM),
         test = adjusted('none'))
 @
 
-Note, this multiple contrast test is different from the original Williams test \citep{williams_comparison_1972} used by \citep{brock_minimum_2015}, because of different variance estimators \citep{bretz_powerful_1999}.
+Note, this multiple contrast test is different from the original Williams test \citep{williams_comparison_1972} used by \citep{brock_minimum_2015}. See \citet{bretz_powerful_1999} for a comparison.
 
 
 

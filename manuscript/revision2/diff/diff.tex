@@ -1,7 +1,7 @@
 \documentclass[twocolumn, natbib]{svjour3}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL revision/report/report.tex    Mon Mar 23 13:09:48 2015
-%DIF ADD revision2/report/report.tex   Mon Apr 20 14:39:57 2015
+%DIF ADD revision2/report/report.tex   Mon Apr 20 20:30:30 2015
 \usepackage{graphicx}%GRaphiken
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}%Tabellen!
@@ -76,18 +76,18 @@ Tel.: +49 06341 280 31552 \\
 
 %% ----------------------------------------------------------------------------
 \begin{abstract}
-Counts and proportions are data types \DIFdelbegin \DIFdel{often encountered by ecotoxicologists, }\DIFdelend which are rarely normally distributed\DIFaddbegin \DIFadd{, but often encountered by ecotoxicologists}\DIFaddend .
-To meet the assumptions of \DIFdelbegin \DIFdel{normality and heteroscedasticity, the standard procedure has been to either transform the data or use }\DIFdelend \DIFaddbegin \DIFadd{the linear model such data are usually transformed or }\DIFaddend non-parametric methods \DIFaddbegin \DIFadd{are used }\DIFaddend if this fails.
+\DIFdelbegin \DIFdel{Counts and proportions are data types often encountered by ecotoxicologists, which }\DIFdelend \DIFaddbegin \DIFadd{Ecotoxicologists often encounter count and proportion data that }\DIFaddend are rarely normally distributed.
+To meet the assumptions of \DIFdelbegin \DIFdel{normality and heteroscedasticity, the standard procedure has been to either transform the data or use }\DIFdelend \DIFaddbegin \DIFadd{the linear model such data are usually transformed or }\DIFaddend non-parametric methods \DIFdelbegin \DIFdel{if this fails}\DIFdelend \DIFaddbegin \DIFadd{are used if the transformed data still violate the assumptions}\DIFaddend .
 Generalised Linear Models (GLM) allow \DIFdelbegin \DIFdel{directly model distributions fitting such data}\DIFdelend \DIFaddbegin \DIFadd{to directly model such data, without the need for transformation}\DIFaddend .
-Here, we compare the performance of  \DIFdelbegin \DIFdel{parametric methods assuming }\DIFdelend (1) \DIFaddbegin \DIFadd{the linear model (assuming }\DIFaddend normality of transformed data\DIFaddbegin \DIFadd{)}\DIFaddend , (2) \DIFdelbegin \DIFdel{appropriate distributions (Poisson, negativ binomial , binomial}\DIFdelend \DIFaddbegin \DIFadd{GLMs (assuming a Poisson, negative binomial or binomially distibuted response}\DIFaddend ) and (3) non-parametric methods.
+Here, we compare the performance of  \DIFdelbegin \DIFdel{parametric methods assuming }\DIFdelend \DIFaddbegin \DIFadd{two parametric methods i.e.  }\DIFaddend (1) \DIFaddbegin \DIFadd{the linear model (assuming }\DIFaddend normality of transformed data\DIFdelbegin \DIFdel{, }\DIFdelend \DIFaddbegin \DIFadd{), and }\DIFaddend (2) \DIFdelbegin \DIFdel{appropriate distributions (Poisson, negativ binomial , binomial}\DIFdelend \DIFaddbegin \DIFadd{GLMs (assuming a Poisson, negative binomial or binomially distibuted response}\DIFaddend ) and (3) non-parametric methods.
 
 We simulated typical data mimicking low replicated ecotoxicological experiments of two common data types (counts and proportions from counts). 
 We compared the performance of \DIFaddbegin \DIFadd{the }\DIFaddend different methods in terms of statistical power and \DIFdelbegin \DIFdel{type 1 }\DIFdelend \DIFaddbegin \DIFadd{Type I }\DIFaddend error for detecting a general treatment effect and determining the lowest observed effect concentration (LOEC).
 In addition, we outlined differences \DIFdelbegin \DIFdel{and advantages of GLMs }\DIFdelend on a real world mesocosm data set.
 
-For \DIFdelbegin \DIFdel{counts}\DIFdelend \DIFaddbegin \DIFadd{count data}\DIFaddend , we found that the quasi-Poisson model \DIFdelbegin \DIFdel{and the }\DIFdelend \DIFaddbegin \DIFadd{yielded the highest power. The }\DIFaddend negative binomial model \DIFdelbegin \DIFdel{in combination with the parametric boostrap had higher statistical power than data transformation}\DIFdelend \DIFaddbegin \DIFadd{resulted in increased Type I errors, which could be fixed using the parametric bootstrap}\DIFaddend . 
+For \DIFdelbegin \DIFdel{counts}\DIFdelend \DIFaddbegin \DIFadd{count data}\DIFaddend , we found that the quasi-Poisson model \DIFdelbegin \DIFdel{and the negative binomial model in combination with the parametric boostrap had higher statistical power than data transformation}\DIFdelend \DIFaddbegin \DIFadd{yielded the highest power. The negative binomial GLM resulted in increased Type I errors, which could be fixed using the parametric bootstrap}\DIFaddend . 
 For proportions\DIFaddbegin \DIFadd{, binomial }\DIFaddend GLMs performed better \DIFaddbegin \DIFadd{than the linear model}\DIFaddend , except to determine LOEC at \DIFdelbegin \DIFdel{extremly }\DIFdelend \DIFaddbegin \DIFadd{extremely }\DIFaddend low sample sizes.
-The compared non-parametric methods had generally \DIFdelbegin \DIFdel{lower }\DIFdelend \DIFaddbegin \DIFadd{lowered }\DIFaddend power.
+The compared non-parametric methods had generally lower power.
 
 We recommend that counts \DIFaddbegin \DIFadd{in one-factorial experiments should be analysed using quasi-Poisson models }\DIFaddend and proportions from counts \DIFdelbegin \DIFdel{should be analysed by making appropriate distributional assumptions and GLMsshould become a standard method }\DIFdelend \DIFaddbegin \DIFadd{by binomial GLMs.
 These methods should become standard }\DIFaddend in ecotoxicology.
@@ -408,8 +408,9 @@ The outlined case study demonstrates that the choice of the statistical model an
 Therefore, ecotoxicologists should not base their inferences solely on statistical significance tests, but also on \DIFdelbegin \DIFdel{parameter }\DIFdelend \DIFaddbegin \DIFadd{model }\DIFaddend estimates, their uncertainty and importance \citep{gelman_difference_2006}.
 \DIFdelbegin \DIFdel{Nevertheless, }\DIFdelend \citet{ohara_not_2010} showed that \DIFdelbegin \DIFdel{$LM$ using a log transformation }\DIFdelend \DIFaddbegin \DIFadd{the linear model on log transformed data }\DIFaddend gave unreliable and biased \DIFdelbegin \DIFdel{parameter }\DIFdelend estimates, whereas GLMs performed well with little bias.
 Bias occurs also when back-transforming \DIFaddbegin \DIFadd{fitted }\DIFaddend means to the original scale, which explains the lower predicted means by $LM$ in Figure \ref{fig:example} \citep{rothery_cautionary_1988} and should be corrected for \citep{newman_regression_1993}.
-\DIFaddbegin \DIFadd{When applied to untransformed data, the linear model would result in identical predicted treatment means as GLMs. 
-However, predictions will differ with a continuous predictor.
+\DIFaddbegin \DIFadd{When applied to non-transformed data, the linear model would predict identical treatment means as GLMs, because for a categorical predictor the predicted means of the LM and GLM are identical. 
+When applied to non-transformed data, the linear model would result in identical predicted treatment means as GLMs. 
+However, predictions would differ with a continuous predictor and GLMs particularly advantageous in this case.
 }\DIFaddend 
 
 This is further highlighted by the fact that for the same model (linear model \DIFdelbegin \DIFdel{of }\DIFdelend \DIFaddbegin \DIFadd{applied to }\DIFaddend transformed data), \citet{brock_minimum_2015} reported a 10-fold lower LOEC (\mbox{0.3 mg/L}) then found in our study (3 mg/L, Figure \ref{fig:example}).

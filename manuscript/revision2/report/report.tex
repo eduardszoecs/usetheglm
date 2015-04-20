@@ -43,18 +43,18 @@ Tel.: +49 06341 280 31552 \\
 
 %% ----------------------------------------------------------------------------
 \begin{abstract}
-Counts and proportions are data types which are rarely normally distributed, but often encountered by ecotoxicologists.
-To meet the assumptions of the linear model such data are usually transformed or non-parametric methods are used if this fails.
+Ecotoxicologists often encounter count and proportion data that are rarely normally distributed.
+To meet the assumptions of the linear model such data are usually transformed or non-parametric methods are used if the transformed data still violate the assumptions.
 Generalised Linear Models (GLM) allow to directly model such data, without the need for transformation.
-Here, we compare the performance of  (1) the linear model (assuming normality of transformed data), (2) GLMs (assuming a Poisson, negative binomial or binomially distibuted response) and (3) non-parametric methods.
+Here, we compare the performance of  two parametric methods i.e.  (1) the linear model (assuming normality of transformed data), and (2) GLMs (assuming a Poisson, negative binomial or binomially distibuted response) and (3) non-parametric methods.
 
 We simulated typical data mimicking low replicated ecotoxicological experiments of two common data types (counts and proportions from counts). 
 We compared the performance of the different methods in terms of statistical power and Type I error for detecting a general treatment effect and determining the lowest observed effect concentration (LOEC).
 In addition, we outlined differences on a real world mesocosm data set.
 
-For count data, we found that the quasi-Poisson model yielded the highest power. The negative binomial model resulted in increased Type I errors, which could be fixed using the parametric bootstrap. 
+For count data, we found that the quasi-Poisson model yielded the highest power. The negative binomial GLM resulted in increased Type I errors, which could be fixed using the parametric bootstrap. 
 For proportions, binomial GLMs performed better than the linear model, except to determine LOEC at extremely low sample sizes.
-The compared non-parametric methods had generally lowered power.
+The compared non-parametric methods had generally lower power.
 
 We recommend that counts in one-factorial experiments should be analysed using quasi-Poisson models and proportions from counts by binomial GLMs.
 These methods should become standard in ecotoxicology.
@@ -368,8 +368,9 @@ The outlined case study demonstrates that the choice of the statistical model an
 Therefore, ecotoxicologists should not base their inferences solely on statistical significance tests, but also on model estimates, their uncertainty and importance \citep{gelman_difference_2006}.
 \citet{ohara_not_2010} showed that the linear model on log transformed data gave unreliable and biased estimates, whereas GLMs performed well with little bias.
 Bias occurs also when back-transforming fitted means to the original scale, which explains the lower predicted means by $LM$ in Figure \ref{fig:example} \citep{rothery_cautionary_1988} and should be corrected for \citep{newman_regression_1993}.
-When applied to untransformed data, the linear model would result in identical predicted treatment means as GLMs. 
-However, predictions will differ with a continuous predictor.
+When applied to non-transformed data, the linear model would predict identical treatment means as GLMs, because for a categorical predictor the predicted means of the LM and GLM are identical. 
+When applied to non-transformed data, the linear model would result in identical predicted treatment means as GLMs. 
+However, predictions would differ with continuous predictors and GLMs are particularly advantageous in this case.
 
 This is further highlighted by the fact that for the same model (linear model applied to transformed data), \citet{brock_minimum_2015} reported a 10-fold lower LOEC (\mbox{0.3 mg/L}) then found in our study (3 mg/L, Figure \ref{fig:example}).
 The reasons are manifold: 
