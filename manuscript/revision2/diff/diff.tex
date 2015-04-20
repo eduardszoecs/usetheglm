@@ -1,7 +1,7 @@
 \documentclass[twocolumn, natbib]{svjour3}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL revision/report/report.tex    Mon Mar 23 13:09:48 2015
-%DIF ADD revision2/report/report.tex   Sat Apr 18 02:33:00 2015
+%DIF ADD revision2/report/report.tex   Mon Apr 20 14:39:57 2015
 \usepackage{graphicx}%GRaphiken
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}%Tabellen!
@@ -76,20 +76,20 @@ Tel.: +49 06341 280 31552 \\
 
 %% ----------------------------------------------------------------------------
 \begin{abstract}
-Counts and proportions are data types often encountered by ecotoxicologists, which are rarely normally distributed.
-To meet the assumptions of \DIFdelbegin \DIFdel{normality and heteroscedasticity, the standard procedure has been to either transform the data or use }\DIFdelend \DIFaddbegin \DIFadd{the linear model such data are often transformed or }\DIFaddend non-parametric methods \DIFaddbegin \DIFadd{used }\DIFaddend if this fails.
-Generalised Linear Models (GLM) allow directly model \DIFdelbegin \DIFdel{distributions fitting such data}\DIFdelend \DIFaddbegin \DIFadd{such data, without the need for transformation}\DIFaddend .
-Here, we compare the performance of parametric methods assuming (1) normality of transformed data, (2) appropriate distributions (Poisson, negativ binomial, binomial) and (3) non-parametric methods.
+Counts and proportions are data types \DIFdelbegin \DIFdel{often encountered by ecotoxicologists, }\DIFdelend which are rarely normally distributed\DIFaddbegin \DIFadd{, but often encountered by ecotoxicologists}\DIFaddend .
+To meet the assumptions of \DIFdelbegin \DIFdel{normality and heteroscedasticity, the standard procedure has been to either transform the data or use }\DIFdelend \DIFaddbegin \DIFadd{the linear model such data are usually transformed or }\DIFaddend non-parametric methods \DIFaddbegin \DIFadd{are used }\DIFaddend if this fails.
+Generalised Linear Models (GLM) allow \DIFdelbegin \DIFdel{directly model distributions fitting such data}\DIFdelend \DIFaddbegin \DIFadd{to directly model such data, without the need for transformation}\DIFaddend .
+Here, we compare the performance of  \DIFdelbegin \DIFdel{parametric methods assuming }\DIFdelend (1) \DIFaddbegin \DIFadd{the linear model (assuming }\DIFaddend normality of transformed data\DIFaddbegin \DIFadd{)}\DIFaddend , (2) \DIFdelbegin \DIFdel{appropriate distributions (Poisson, negativ binomial , binomial}\DIFdelend \DIFaddbegin \DIFadd{GLMs (assuming a Poisson, negative binomial or binomially distibuted response}\DIFaddend ) and (3) non-parametric methods.
 
 We simulated typical data mimicking low replicated ecotoxicological experiments of two common data types (counts and proportions from counts). 
 We compared the performance of \DIFaddbegin \DIFadd{the }\DIFaddend different methods in terms of statistical power and \DIFdelbegin \DIFdel{type 1 }\DIFdelend \DIFaddbegin \DIFadd{Type I }\DIFaddend error for detecting a general treatment effect and determining the lowest observed effect concentration (LOEC).
 In addition, we outlined differences \DIFdelbegin \DIFdel{and advantages of GLMs }\DIFdelend on a real world mesocosm data set.
 
-For \DIFdelbegin \DIFdel{counts}\DIFdelend \DIFaddbegin \DIFadd{count data}\DIFaddend , we found that the quasi-Poisson model \DIFdelbegin \DIFdel{and the }\DIFdelend \DIFaddbegin \DIFadd{yielded highest power. The }\DIFaddend negative binomial model \DIFdelbegin \DIFdel{in combination with the parametric boostrap had higher statistical power than data transformation}\DIFdelend \DIFaddbegin \DIFadd{resulted in increased Type I errors , which could be fixed using the parametric bootstrap}\DIFaddend . 
-For proportions\DIFaddbegin \DIFadd{, binomial }\DIFaddend GLMs performed better \DIFaddbegin \DIFadd{than assuming normality of transformed data}\DIFaddend , except to determine LOEC at \DIFdelbegin \DIFdel{extremly }\DIFdelend \DIFaddbegin \DIFadd{extremely }\DIFaddend low sample sizes.
-The compared non-parametric methods had generally lower power.
+For \DIFdelbegin \DIFdel{counts}\DIFdelend \DIFaddbegin \DIFadd{count data}\DIFaddend , we found that the quasi-Poisson model \DIFdelbegin \DIFdel{and the }\DIFdelend \DIFaddbegin \DIFadd{yielded the highest power. The }\DIFaddend negative binomial model \DIFdelbegin \DIFdel{in combination with the parametric boostrap had higher statistical power than data transformation}\DIFdelend \DIFaddbegin \DIFadd{resulted in increased Type I errors, which could be fixed using the parametric bootstrap}\DIFaddend . 
+For proportions\DIFaddbegin \DIFadd{, binomial }\DIFaddend GLMs performed better \DIFaddbegin \DIFadd{than the linear model}\DIFaddend , except to determine LOEC at \DIFdelbegin \DIFdel{extremly }\DIFdelend \DIFaddbegin \DIFadd{extremely }\DIFaddend low sample sizes.
+The compared non-parametric methods had generally \DIFdelbegin \DIFdel{lower }\DIFdelend \DIFaddbegin \DIFadd{lowered }\DIFaddend power.
 
-We recommend that counts \DIFaddbegin \DIFadd{in one factorial experiments should be analysed using quasi-Poisson models }\DIFaddend and proportions from counts \DIFdelbegin \DIFdel{should be analysed by making appropriate distributional assumptions and GLMsshould become a standard method }\DIFdelend \DIFaddbegin \DIFadd{by binomial GLMs.
+We recommend that counts \DIFaddbegin \DIFadd{in one-factorial experiments should be analysed using quasi-Poisson models }\DIFaddend and proportions from counts \DIFdelbegin \DIFdel{should be analysed by making appropriate distributional assumptions and GLMsshould become a standard method }\DIFdelend \DIFaddbegin \DIFadd{by binomial GLMs.
 These methods should become standard }\DIFaddend in ecotoxicology.
  \DIFdelbegin %DIFDELCMD < \keywords{Generalized Linear Models \and Transformations \and Simulation \and Power \and Type 1 error}
 %DIFDELCMD < %%%
@@ -326,7 +326,7 @@ The pairwise Wilcoxon test did not detect any treatment different from control.
 \subsubsection{Count data}
 For detecting a general treatment effect, $GLM_{nb}$ and $GLM_{p}$ showed inflated \DIFdelbegin \DIFdel{type 1 }\DIFdelend \DIFaddbegin \DIFadd{Type I }\DIFaddend error rates, whereas $KW$ was conservative at low sample sizes.
 However, using \DIFaddbegin \DIFadd{the }\DIFaddend parametric bootstrap for the negative binomial model ($GLM_{npb}$)\DIFaddbegin \DIFadd{, as well as $LM$ and $GLM_{qp}$ }\DIFaddend resulted in appropriate \DIFdelbegin \DIFdel{type 1 }\DIFdelend \DIFaddbegin \DIFadd{Type I }\DIFaddend error rates.
-For detecting a treatment effect,\DIFdelbegin \DIFdel{$GLM_{npb}$ and }\DIFdelend $GLM_{qp}$ \DIFdelbegin \DIFdel{exhibited higher powerthan }\DIFdelend \DIFaddbegin \DIFadd{had highest power, followed by $GLM_{npb}$, }\DIFaddend $LM$ and $KW$, the latter having least power (Figure \ref{fig:p_glob_c}).
+For detecting a treatment effect,\DIFdelbegin \DIFdel{$GLM_{npb}$ and }\DIFdelend $GLM_{qp}$ \DIFdelbegin \DIFdel{exhibited higher powerthan }\DIFdelend \DIFaddbegin \DIFadd{had the highest power, followed by $GLM_{npb}$, }\DIFaddend $LM$ and $KW$, the latter having least power (Figure \ref{fig:p_glob_c}).
 For our simulation design (reduction in abundance by 50\%) a sample size per treatment of n = 9 was needed to achieve a power greater than 80\%.
 At small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of the negative binomial models ($GLM_{nb}$ and $GLM_{npb}$) did not converge to a solution (convergence rate \textless 85\% of the simulations, Supplement 1). 
 
@@ -334,9 +334,9 @@ At small sample sizes (n = {3, 6}) and low abundances ($\mu_C$ = {2, 4}) many of
   \centering
   \includegraphics[width = 126mm]{p_glob_c.pdf}
   \caption{Count data simulations: Type \DIFdelbeginFL \DIFdelFL{1 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{I }\DIFaddendFL error (top) and Power (bottom) for the test of a treatment effect.
-  Only \DIFdelbeginFL \DIFdelFL{type 1 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type I }\DIFaddendFL errors \textless 25\% are displayed. 
-  $GLM_p$ showed \DIFdelbeginFL \DIFdelFL{type 1 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type I }\DIFaddendFL errors \textgreater 20\% in all simulation scenarios.
-  Power levels for models with inflated \DIFdelbeginFL \DIFdelFL{type }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type }\DIFaddendFL I \DIFdelbeginFL \DIFdelFL{error }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{errors ($GLM_P$ and $GLM_{qp}$) }\DIFaddendFL are shown for completeness.
+  \DIFdelbeginFL \DIFdelFL{Only type 1 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type I }\DIFaddendFL errors \DIFdelbeginFL \DIFdelFL{\textless 25\% }\DIFdelendFL are displayed \DIFaddbeginFL \DIFaddFL{on a logarithmic scale}\DIFaddendFL .
+  \DIFdelbeginFL \DIFdelFL{$GLM_p$ showed type 1 errors \textgreater 20\% in all simulation scenarios.
+  }\DIFdelendFL Power levels for models with inflated \DIFdelbeginFL \DIFdelFL{type }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type }\DIFaddendFL I \DIFdelbeginFL \DIFdelFL{error }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{errors ($GLM_P$ and $GLM_{qp}$) }\DIFaddendFL are shown for completeness.
   For n = \{3, 6\} and $\mu_C$ = \{2, 4\} less than 85\% of $GLM_{nb}$ and $GLM_{npb}$ models did converge.
   Dashed horizontal line denotes the nominal \DIFdelbeginFL \DIFdelFL{Type 1 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{I }\DIFaddendFL error rate at $\alpha = 0.05$.
   }
@@ -353,7 +353,7 @@ $LM$ and $WT$ showed less power, with $WT$ having no power to detect the LOEC at
   \centering
   \includegraphics[width = 126mm]{p_loec_c.pdf}
   \caption{Count data simulations: Type \DIFdelbeginFL \DIFdelFL{1 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{I }\DIFaddendFL error (top) and Power (bottom) for determination of LOEC.
-  For clarity only \DIFdelbeginFL \DIFdelFL{type 1 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type I }\DIFaddendFL errors \textless 25\% are displayed.
+  \DIFdelbeginFL \DIFdelFL{For clarity only type 1 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type I }\DIFaddendFL errors \DIFdelbeginFL \DIFdelFL{\textless 25\% }\DIFdelendFL are displayed \DIFaddbeginFL \DIFaddFL{one a logarithmic scale}\DIFaddendFL .
   Power levels for models with inflated \DIFdelbeginFL \DIFdelFL{type }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Type }\DIFaddendFL I error are shown for completeness.
   For n = \{3, 6\} and $\mu_C$ = \{2, 4\} less than 85\% of $GLM_{nb}$ models did converge.
   Dashed horizontal line denotes the nominal Type \DIFdelbeginFL \DIFdelFL{1 }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{I }\DIFaddendFL error rate at $\alpha = 0.05$.
@@ -406,9 +406,9 @@ $WT$ had no power for n = 3 and showed less power in the other simulation runs (
 %% ---- Case study
 The outlined case study demonstrates that the choice of the statistical model and procedure can have substantial impact on ecotoxicological inferences and endpoints like the LOEC.
 Therefore, ecotoxicologists should not base their inferences solely on statistical significance tests, but also on \DIFdelbegin \DIFdel{parameter }\DIFdelend \DIFaddbegin \DIFadd{model }\DIFaddend estimates, their uncertainty and importance \citep{gelman_difference_2006}.
-Nevertheless, \citet{ohara_not_2010} showed that \DIFdelbegin \DIFdel{$LM$ using a log transformation }\DIFdelend \DIFaddbegin \DIFadd{the linear model on log transformed data }\DIFaddend gave unreliable and biased \DIFdelbegin \DIFdel{parameter }\DIFdelend estimates, whereas GLMs performed well with little bias.
-Bias occurs also when back-transforming means to the original scale, which explains the lower predicted means by $LM$ in Figure \ref{fig:example} \citep{rothery_cautionary_1988} and should be corrected for \citep{newman_regression_1993}.
-\DIFaddbegin \DIFadd{In fact, the linear model would results in identical treatment means as the GLMs when applied to untransformed data. 
+\DIFdelbegin \DIFdel{Nevertheless, }\DIFdelend \citet{ohara_not_2010} showed that \DIFdelbegin \DIFdel{$LM$ using a log transformation }\DIFdelend \DIFaddbegin \DIFadd{the linear model on log transformed data }\DIFaddend gave unreliable and biased \DIFdelbegin \DIFdel{parameter }\DIFdelend estimates, whereas GLMs performed well with little bias.
+Bias occurs also when back-transforming \DIFaddbegin \DIFadd{fitted }\DIFaddend means to the original scale, which explains the lower predicted means by $LM$ in Figure \ref{fig:example} \citep{rothery_cautionary_1988} and should be corrected for \citep{newman_regression_1993}.
+\DIFaddbegin \DIFadd{When applied to untransformed data, the linear model would result in identical predicted treatment means as GLMs. 
 However, predictions will differ with a continuous predictor.
 }\DIFaddend 
 
@@ -433,7 +433,7 @@ Nevertheless, such a Williams-type MCT is not a panacea }\citep{hothorn_statisti
 %% ---- Guide GLMs
 Overdispersion is common for ecological datasets \citep{warton_many_2005} and the case study illustrates the potential effects of overdispersion that is not accounted for: standard errors will be underestimated and significance overestimated (Figures \ref{fig:example}).
 This is also shown by our simulations (Figures \ref{fig:p_glob_c}, \ref{fig:p_loec_c}) where $GLM_p$ showed increased \DIFdelbegin \DIFdel{type 1 }\DIFdelend \DIFaddbegin \DIFadd{Type I }\DIFaddend error rates because of overdispersed simulated data. 
-However, in factorial designs the mean-variance relationship can be easily checked by plotting mean versus variance of the treatment groups \DIFaddbegin \DIFadd{or by inspecting residual vs. fitted values plots }\DIFaddend (see Supplement 2).
+However, in factorial designs the mean-variance relationship can be easily checked by plotting mean versus variance of the treatment groups \DIFaddbegin \DIFadd{or by inspecting residual versus fitted values plots }\DIFaddend (see Supplement 2).
 \DIFaddbegin \DIFadd{Our simulations revealed that the LR test for $GLM_{nb}$ is invalid because of increased Type I errors. This explains why it had the lowest p-value in the case study.
 }
 
@@ -451,7 +451,7 @@ Statistical power to detect the correct LOEC was even lower (less than 25\%), wh
 The low power of all methods to detect significant treatment levels such as the LOEC or NOEC suggests that these endpoints from ecotoxicological studies should be interpreted with caution and underpins their criticism \citep{laskowski_good_1995,landis_well_2011}.
 
 %% --- Multivariate + GLMM -------
-Mesocosm studies allow also inferences on community level. 
+Mesocosm studies allow also \DIFdelbegin \DIFdel{inferences on }\DIFdelend \DIFaddbegin \DIFadd{for inferences on the }\DIFaddend community level. 
 For community analyses \emph{GLM for multivariate data} \citep{warton_distance-based_2012} have been proposed as alternative to Principal Response Curves (PRC) and yielded \DIFdelbegin \DIFdel{to }\DIFdelend similar inferences, but better indication of responsive taxa \citep{szocs_analysing_2015}. 
 However, \citet{ter_braak_topics_2014} argue to use data transformations with community data because of their simplicity and robustness.
 Although our simulations covered only simple experimental designs at the population level, findings may also extend to more complex situations. 
@@ -482,10 +482,10 @@ We used an iterative algorithm to fit these models \citep{venables_modern_2002} 
 $GLM_{qp}$ showed higher statistical power than $GLM_{npb}$ (Figure \ref{fig:p_glob_c}, bottom).
 This could be explained by the simpler mean-variance relationship of $GLM_{qp}$ (eqn. \ref{eqn:quasi} and \ref{eqn:negbin}), because at small samples sizes, low abundances or few treatment groups it is difficult to determine the mean-variance relationship\DIFaddbegin \DIFadd{.
 Our results are similar to }\citet{ives_for_2015}\DIFadd{, who compared GLMs to LM applied to transformed data for testing regression coefficients.
-Because of inflated Type I errors of $GLM_{nb}$ and , in the case of multiple regression, inflated Type I errors of $GLM_{qp}$ he concluded that the approach of transforming data and applying LMs provides a robust method and should be preferred.
-We showed that the parametric bootstrap LR test of $GLM_{nb}$ provides appropriate Type I errors and bootstrapping might be also an alternative for testing coefficients.
-However, bootstrapping is computationally very intensive and we found no gains in power compared to $GLM_{qp}$ (Figure \ref{fig:p_glob_c}). 
-Because of higher power, appropriate Type I errors, stable convergence and reduced bias }\citep{ohara_not_2010} \DIFadd{we conclude that count data in one factorial experiments should be analysed using the quasi-Poisson model}\DIFaddend .
+Because of inflated Type I errors for $GLM_{nb}$ and, in the case of multiple explanatory variables in the model, inflated Type I errors of $GLM_{qp}$ he considered the LM on transformed data as most robust and recommended its preferred use.
+However, we showed that the parametric bootstrap LR test of $GLM_{nb}$ provides appropriate Type I errors and bootstrapping might be an alternative for testing coefficients.
+Nevertheless, bootstrapping is computationally very intensive and we found no gains in power compared to $GLM_{qp}$ (Figure \ref{fig:p_glob_c}). 
+Given the higher power, appropriate Type I errors, stable convergence and reduced bias }\citep{ohara_not_2010} \DIFadd{we suggest that count data in one factorial experiments should be analysed using the quasi-Poisson model}\DIFaddend .
 
 %% --- binomial data
 Binomial data are often collected in lab trials, where increasing the sample size may be relatively easy to accomplish. 

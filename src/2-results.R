@@ -87,8 +87,9 @@ plot_t1_glob_c  <- ggplot(t1_glob_c) +
   mytheme + 
   # legend title
   scale_shape_manual('Method', values=c(16,2,4,0,1,17)) +
-  scale_linetype_discrete('Method') +
-  coord_cartesian(ylim = c(-0.005, 0.25))
+  theme(legend.position="none") + labs(x = NULL) +
+  scale_y_log10(breaks = c(0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 1))
+  # coord_cartesian(ylim = c(-0.005, 0.25))
 plot_t1_glob_c
 
 
@@ -167,7 +168,7 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
                                 expression(GLM[p]), 'WT')) +
   scale_linetype_discrete('Method',  labels = c('LM', expression(GLM[nb]), 
                                                 expression(GLM[qp]), expression(GLM[p]), 'WT')) +
-  ylim(c(0,1))
+  scale_y_log10(breaks = c(0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 1), limit = c(0.01, 1))
 plot_pow_loec_c
 
 ### ------------------------
@@ -209,8 +210,8 @@ plot_t1_loec_c <- ggplot(t1_loec_c) +
   mytheme + 
   # legend title
   scale_shape_manual('Method', values=c(16,2,4,1, 17)) +
-  scale_linetype_discrete('Method') +
-  coord_cartesian(ylim = c(-0.005, 0.25))
+  theme(legend.position="none") + labs(x = NULL) +
+  scale_y_log10(breaks = c(0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 1), limit = c(0.01, 1))
 plot_t1_loec_c 
 
 

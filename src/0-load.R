@@ -19,7 +19,7 @@ srcdir <- file.path(prj, "src")     # source code
 datadir <- file.path(prj, "data")   # data
 cachedir <- file.path(prj, "cache")
 suppdir <- file.path(prj, "supplement")
-figdir <- file.path(prj, "manuscript/revision/report") # figures for latex
+figdir <- file.path(prj, "manuscript/revision2/report") # figures for latex
 
 #####--------------------------------------------------------------------------
 ### install missing if needed!
