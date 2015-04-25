@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2816"
+   version="1.1"
+   inkscape:version="0.47 r22583"
+   width="251"
+   height="151"
+   sodipodi:docname="logo_institut.jpg">
+  <metadata
+     id="metadata2822">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs2820">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       id="perspective2824" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="716"
+     id="namedview2818"
+     showgrid="false"
+     inkscape:zoom="2.210294"
+     inkscape:cx="239.81383"
+     inkscape:cy="64.450743"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2816" />
+  <path
+     style="fill:#000000"
+     d="m 26.080509,149.67625 c 0,-8.52019 8.747262,-33.4979 18.608819,-53.137283 3.004902,-5.98429 5.239434,-11.10456 4.965626,-11.37836 -0.565336,-0.56534 -5.213508,0.5055 -21.368435,4.92283 -12.833555,3.50916 -12.755401,3.43009 -17.135097,17.336053 -3.0024051,9.53293 -5.1819861,14.5 -6.3626908,14.5 -1.2860159,0 -0.3892645,-8.65664 1.8017827,-17.39321 0.929657,-3.7069 1.476389,-6.953723 1.214961,-7.215153 -0.261429,-0.26143 -2.350164,0.27483 -4.6416332,1.1917 -8.1892348,3.276683 -6.6480511,-1.02761 2.4432272,-6.82357 5.0684061,-3.23125 6.9986481,-5.15866 8.4483331,-8.435913 2.747121,-6.210321 10.012656,-17.054196 15.459778,-23.073853 4.85382,-5.363995 4.991988,-6.280507 0.565329,-3.75 -2.898842,1.657128 -7,1.953743 -7,0.506272 0,-1.836318 8.418137,-7.232907 19,-12.180272 5.775,-2.7 15.225,-7.333003 21,-10.295563 11.483885,-5.891203 31.960437,-14.530437 34.439767,-14.530437 1.87614,0 2.03634,1.39478 0.31023,2.701139 -0.6875,0.520315 -5.633311,2.904601 -10.990695,5.298413 -5.357384,2.393812 -9.627668,4.465416 -9.489519,4.603564 0.138148,0.138148 4.746462,-0.503538 10.240698,-1.425969 9.039356,-1.517624 10.607766,-2.118905 16.48952,-6.321563 11.75178,-8.396944 23,-13.794098 23,-11.035925 0,0.450813 -3.77872,3.386446 -8.39717,6.523629 -12.48859,8.483169 -12.53153,8.656712 -2.14194,8.656712 12.89118,0 10.85394,2.043616 -4.36092,4.37456 l -12.235884,1.87456 -8.474802,9.51869 c -8.669773,9.737676 -23.772244,29.182564 -23.149336,29.805472 0.190503,0.190503 4.185543,-0.04973 8.877867,-0.533851 14.841657,-1.531258 43.247535,-2.254539 44.873825,-1.142594 2.96311,2.025972 -0.63956,2.91989 -16.49164,4.092009 -16.027575,1.185095 -40.692737,4.394204 -42.537693,5.534449 -3.747332,2.315981 -23.310254,40.129564 -30.230602,58.433374 -4.494089,11.88654 -6.731706,14.81168 -6.731706,8.80009 z m 9.096393,-69.175741 c 5.171984,-1.309941 11.961436,-2.699699 15.087672,-3.08835 3.126236,-0.388651 5.884143,-1.228032 6.128682,-1.86529 1.18509,-3.088294 16.708287,-22.737829 23.792266,-30.116667 l 7.991052,-8.323666 -10.798032,2.360263 c -21.245403,4.643875 -23.797459,6.000277 -37.543914,19.95435 -6.275464,6.370245 -15.895452,19.097117 -17.401263,23.021197 -0.521536,1.3591 -0.247381,1.578441 1.342266,1.07391 1.098715,-0.348719 6.229288,-1.705805 11.401271,-3.015747 z M 137.44214,6.4194913 c -1.01103,-2.63469 0.44957,-4.5 3.52365,-4.5 3.24665,0 4.32771,1.560421 2.94441,4.25 -1.10064,2.14 -5.67496,2.316804 -6.46806,0.25 z"
+     id="path2828"
+     sodipodi:nodetypes="csssssssssssssssssssssssscccssssssccsscccsssccssc" />
+  <text
+     xml:space="preserve"
+     style="font-size:14px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+     x="55.066994"
+     y="113.24057"
+     id="text2830"><tspan
+       sodipodi:role="line"
+       id="tspan2832"
+       x="55.066994"
+       y="113.24057">  INSTITUTE FOR</tspan><tspan
+       sodipodi:role="line"
+       x="55.066994"
+       y="130.74059"
+       id="tspan2834">ENVIRONMENTAL SCIENCES</tspan></text>
+</svg>

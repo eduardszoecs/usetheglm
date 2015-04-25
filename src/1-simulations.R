@@ -34,8 +34,8 @@ for(i in seq_len(nrow(todo_c))){
 }
 
 # # plot one realisation of simulated data
-# todo1_c[15, ]
-# df <- data.frame(x = sims1_c[[15]]$x, y = sims1_c[[15]]$y[ , 2])
+# todo_c[13, ]
+# df <- data.frame(x = sims1_c[[13]]$x, y = sims1_c[[13]]$y[ , 10])
 # df$yt <- log(1 / min(df$y[df$y != 0]) * df$y + 1)
 # dfm <- melt(df)
 # levels(dfm$variable) <- c('y', 'ln(Ay + 1)')
@@ -50,6 +50,23 @@ for(i in seq_len(nrow(todo_c))){
 #         text = element_text(size = 14),
 #         axis.text = element_text(size = 12),
 #         axis.title = element_text(size = 14,face = "bold"))
+# 
+# # poster plot
+# ggplot(dfm[dfm$variable == 'y', ], aes(x = x, y = value)) +
+#   # geom_boxplot(fill = '#2A6491') + 
+#   geom_point(size = 7, col = '#2A6491') + 
+#   scale_x_discrete(labels = c('C', 'T1', 'T2', 'T3', 'T4', 'T5')) +
+#   labs(x = 'Treatment', y = 'Abundance') +
+#   theme_bw(base_size = 12, 
+#            base_family = "Helvetica") +
+#   theme(panel.grid.major = element_blank(),
+#         text = element_text(size = 14),
+#         axis.text = element_text(size = 25),
+#         axis.title = element_text(size = 27,face = "bold")) +
+#   annotate("text", x = 4.8, y = 50, label = "T2 - T5: Effect treatments (mean = 16)", size = 7)+
+#   annotate("text", x = 1.5, y = 50, label = "C + T1: mean = 32", size = 7)
+
+
 
 # run methods
 if(sim1){
