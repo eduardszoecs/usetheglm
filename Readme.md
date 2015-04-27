@@ -13,6 +13,7 @@ Online repository for the paper submitted to [Environmental Science and Pollutio
 * `~/cache/`	: cached files (simulation results)
 * `~/manuscript/`  : manuscript files (LaTeX) - including review process
 * `~/packrat/`    : packrat library
+* `~/poster`  : files for poster presented at SETAC Europen in Barcelona
 * `~/src/`    	: Source code (R)
 * `~/supplement/`: Supplementary material (LaTeX)
 
@@ -33,7 +34,7 @@ R code has been written hierarchically, that is scripts must be run in a specifi
 2. Extract the zip file.
 3. Uncomment and point the path in `~/0-load.R`, Lines 8-11 to the extracted folder.
 4. source `~/0-load.R` to setup the project
-5. source `~/1-simulations.R` to run the simulations
+5. (optional) Set options in `load.R`, see *Notes* below.
 6. source `~/2-results.R`	to compile the results
 
 ### Notes
@@ -44,10 +45,10 @@ packrat will try to install these packages from the snapshot on first start of R
 
 `~/0-load.R` contains some switches (at the end of the file):
 
-* If the switches `sim1` and `sim2` are set to `FALSE`, the simulations results are grabbed from cache. Otherwise, the actual simulation will run.
 * the count data simulations took ~ 12 hours on a amazon EC2 c3.2xlarge instance.
+* If the switches `sim1` and `sim2` are set to `FALSE`, the simulations results are grabbed from cache. Otherwise, the actual simulation will run. 
+* Clearly, most time is consumed for bootstrap, set `pb = FALSE` to omit it and save a lot of computation time.
 * simulations can be run in parallel, set `parallel = TRUE` to use the `parallel` package for parallelization.
-* Clearly, most time is consumed for bootstrap, set `pb = FALSE` to omit it.
 
 
 ### Information about the R Environment used

@@ -11,14 +11,14 @@ rm(list = ls()[!ls() %in% 'prj'])
 # prj <- 'C:\\Users\\Edi\\Documents\\usetheglm' # on Windows
 if (!exists("prj")) {
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- '/home/edisz/Documents/Uni/Projects/PHD/4BFG/Project'!")
+       e.g. prj <- '/home/edisz/Documents/usetheglm'!")
 }
 
 # Subfolder paths
 srcdir <- file.path(prj, "src")     # source code
 datadir <- file.path(prj, "data")   # data
-cachedir <- file.path(prj, "cache")
-suppdir <- file.path(prj, "supplement")
+cachedir <- file.path(prj, "cache")  # cached files
+suppdir <- file.path(prj, "supplement")   #supplement
 figdir <- file.path(prj, "manuscript/revision2/report") # figures for latex
 
 #####--------------------------------------------------------------------------
@@ -46,16 +46,20 @@ source(file.path(srcdir, "0-functions.R"))
 ### Switches
 # check if load.R already run
 ld <- TRUE
+
 # Run simulations? 
 # if TRUE the simulation will run (takes some time...), 
 # if FALSE simulation results from cache
 sim1 <- FALSE
 sim2 <- FALSE
+
 # export plots to figure dir?
 exp_plot <- TRUE
+
 # number of simulated datasets 
 nsims <- 1000
-# run sims parallel?
+
+# run simulations parallel?
 parallel = FALSE
 if(parallel){
   require(parallel)
@@ -66,6 +70,7 @@ if(parallel){
 }
 
 # run parametric boostrap?
+# FALSE will save some computation time
 pb <-  TRUE
 
 # keep these objects
