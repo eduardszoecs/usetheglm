@@ -1,6 +1,6 @@
 Ecotoxicology is not normal.
 ============================
-## How the use of proper statistical models can increase statistical power in ecotoxicological experiments.
+## A comparison of statistical approaches for analysis of count and proportion data in ecotoxicology.
 
 Online repository for the paper submitted to [Environmental Science and Pollution Research](http://www.springer.com/environment/journal/11356)
 
@@ -13,7 +13,7 @@ Online repository for the paper submitted to [Environmental Science and Pollutio
 * `~/cache/`	: cached files (simulation results)
 * `~/manuscript/`  : manuscript files (LaTeX) - including review process
 * `~/packrat/`    : packrat library
-* `~/poster`  : files for poster presented at SETAC Europen in Barcelona
+* `~/poster`  : files for poster presentation at SETAC Europen in Barcelona
 * `~/src/`    	: Source code (R)
 * `~/supplement/`: Supplementary material (LaTeX)
 
