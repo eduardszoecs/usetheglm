@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.3
-RVersion: 3.1.3
+RVersion: 3.2.0
 Repos: CRAN=http://cran.uni-muenster.de/,
     BioCsoft=http://bioconductor.org/packages/2.13/bioc,
     BioCann=http://bioconductor.org/packages/2.13/data/annotation,
@@ -68,6 +68,10 @@ Package: exactRankTests
 Source: CRAN
 Version: 0.8-28
 Hash: e99d23c77f8273958428d9e9e6201bbe
+
+Package: filehash
+Source: CRAN
+Version: 2.2-2
 
 Package: formatR
 Source: CRAN
@@ -203,6 +207,11 @@ Package: survival
 Source: CRAN
 Version: 2.38-1
 Hash: 643179105493be7b35d7aae18016bbb8
+
+Package: tikzDevice
+Source: CRAN
+Version: 0.8.1
+Requires: filehash
 
 Package: xtable
 Source: CRAN

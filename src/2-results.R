@@ -93,6 +93,42 @@ plot_t1_glob_c  <- ggplot(t1_glob_c) +
 plot_t1_glob_c
 
 
+# poster plot
+# pp_t1  <- ggplot(t1_glob_c) +
+#   geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable), color =  '#2A6491', size = 1) +
+#   geom_point(aes(y = power, x = log2(muc), shape = variable), color =  '#2A6491', size = 5) +
+#   geom_segment(aes(x = -Inf, xend = Inf, y = 0.05, yend = 0.05), linetype = 'dashed') + 
+#   facet_grid( ~N, labeller = n_labeller) + 
+#   # axes
+#   labs(x = expression(mu[C]), 
+#        y = expression(paste('Type 1 error (global test , ', alpha, ' = 0.05)'))) +
+#   scale_x_continuous(breaks = log2(round(unique(todo_c$ctrl), 0))[c(1, 3, 5, 7)], 
+#                      labels = round(unique(todo_c$ctrl), 0)[c(1, 3, 5, 7)]
+#                      )+
+#   # appearance
+#   mytheme + 
+#   # legend title
+#   scale_y_log10(breaks = c(0.01, 0.05, 0.25, 1)) +
+#   scale_shape_manual('Method', values=c(16,2,4,0, 1, 17), 
+#                      labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
+#                                 expression(GLM[npb]), expression(GLM[p]), 'KW')) +
+#   scale_linetype_discrete('Method', labels = c('LM', expression(GLM[nb]), expression(GLM[qp]), 
+#                                                expression(GLM[npb]), expression(GLM[p]), 'KW')) +
+#   theme(panel.grid.major = element_blank(),
+#         panel.grid.minor = element_blank(), 
+#         text = element_text(size=25),
+#         axis.text = element_text(size=25),
+#         axis.title.x = element_text(size=25,face="bold", vjust = 0),
+#         axis.title.y = element_text(size=25,face="bold", vjust = 1),
+#         legend.position="bottom",
+#         legend.key = element_blank(),
+#         strip.background = element_blank(),
+#         strip.text= element_text(size=25, face = 'bold'))
+# pp_t1
+
+
+
+
 ### ------------------------
 ### Tabular output
 ldf <- dcast(t1_glob_c, N + muc ~ variable, value.var = "power")
@@ -168,8 +204,42 @@ plot_pow_loec_c <- ggplot(pow_loec_c) +
                                 expression(GLM[p]), 'WT')) +
   scale_linetype_discrete('Method',  labels = c('LM', expression(GLM[nb]), 
                                                 expression(GLM[qp]), expression(GLM[p]), 'WT')) +
-  scale_y_log10(breaks = c(0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 1), limit = c(0.01, 1))
+  ylim(c(0,1))
+# +
+#   scale_y_log10(breaks = c(0.01, 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 1), limit = c(0.01, 1))
 plot_pow_loec_c
+
+### Poster plot
+pppdf <- pow_loec_c[pow_loec_c$variable %in% c('lm', 'glm_qp', 'np'), ]
+pppdf <- droplevels(pppdf)
+ppp <- ggplot(pppdf) +
+  geom_line(aes(y = power, x = log2(muc), group = variable, linetype = variable), color = '#2A6491', size = 1) +
+  geom_point(aes(y = power, x = log2(muc), shape = variable), color = '#2A6491', size = 5) +
+  geom_segment(aes(x = -Inf, xend = Inf, y = 0.8, yend = 0.8), linetype = 'dashed') + 
+  facet_grid( ~N, labeller = n_labeller) + 
+  # axes
+  labs(x = expression(mu[C]), 
+       y = expression(paste('Power (LOEC , ', alpha, ' = 0.05)'))) + 
+  scale_x_continuous(breaks = log2(round(unique(todo_c$ctrl), 0))[c(1, 3, 5, 7)], 
+                     labels = round(unique(todo_c$ctrl), 0)[c(1, 3, 5, 7)]
+  )+
+  scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.8, 1), limits = c(0,1)) +
+  scale_shape_manual('Method', values=c(16,4,17), 
+                     labels = c('LM', expression(GLM[qp]), 'WT')) +
+  scale_linetype_discrete('Method',  labels = c('LM', 
+                                                expression(GLM[qp]), 'WT')) +
+  mytheme + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        text = element_text(size=25),
+        axis.text = element_text(size=25),
+        axis.title.x = element_text(size=25,face="bold", vjust = 0),
+        axis.title.y = element_text(size=25,face="bold", vjust = 1),
+        legend.position="bottom",
+        legend.key = element_blank(),
+        strip.background = element_blank(),
+        strip.text= element_text(size=25, face = 'bold'))
+ppp
 
 ### ------------------------
 ### Tabular output

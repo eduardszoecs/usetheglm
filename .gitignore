@@ -7,7 +7,6 @@
 .directory
 *.sublime-project
 *.sublime-workspace
-
 # Latex
 *aux
 *log
@@ -18,20 +17,16 @@
 *bbl
 *blg
 *toc
-
 # beamer
 *.bcf
 *.nav
 *.run.xml
 *.snm
 *.xcf
-
 # Markdown
 *html
-
 # data
 *data
-
 # other
 report_old
 *.zip
@@ -39,5 +34,3 @@ cache/aws*
 packrat/lib*/
 comments_ralf
 upload
-
-

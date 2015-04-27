@@ -11,6 +11,7 @@
 \definecolor{blue}{RGB}{42, 100, 145}
 \definecolor{alu1}{HTML}{D0D0D0}
 \definecolor{alu2}{HTML}{EEEEEC}
+\definecolor{alu3}{HTML}{777676}
 
 \setbeamertemplate{itemize items}[circle]
 \setbeamertemplate{navigation symbols}{}  % no navigation on a poster
@@ -73,9 +74,10 @@
 }
 
 \setbeamertemplate{footline}{%
-  \begin{beamercolorbox}[ht=10ex,leftskip=1cm,rightskip=1cm]{footlinecolor}%
+  \begin{beamercolorbox}[ht=12ex,leftskip=1cm,rightskip=1cm]{footlinecolor}%
+    \vskip4ex
     \hfill \raisebox{-0.4cm}{\textbf{\Large \insertfooter}}
-    \vskip1ex
+    \vskip2ex
   \end{beamercolorbox}
 }
 \mode<all>
@@ -94,6 +96,7 @@
   }
   \setbeamertemplate{block end}{
   \end{beamercolorbox}
+   \vskip2ex
 }
 
 \setbeamertemplate{block alerted begin}{
@@ -109,6 +112,7 @@
 
 \setbeamertemplate{block alerted end}{
   \end{beamercolorbox}
+      \vskip2ex
 }
 
 \setbeamertemplate{block example begin}{
@@ -124,4 +128,5 @@
 
 \setbeamertemplate{block example end}{
   \end{beamercolorbox}
+      \vskip2ex
 }

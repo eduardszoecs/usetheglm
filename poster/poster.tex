@@ -9,11 +9,44 @@
 \usepackage{color}
 \usepackage{natbib}
 
-% document properties
+% add circle to enumitem
+\usepackage{enumitem}
+\setitemize{label=\usebeamerfont*{itemize item}%
+\usebeamercolor[fg]{itemize item}
+\usebeamertemplate{itemize item}
+}
+\setbeamertemplate{itemize item}{\small\raise1.25pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
+
+\usepackage{tikz}
+\newcommand*{\numberingI}[1]{%
+\footnotesize\protect\tikz[baseline=-3px]%
+\protect\node[fill=none,shape=circle,draw,inner sep=1.5pt,line width=1mm, color=blue, font=\bf, yshift=0.45cm](n1){\large #1};
+}
+
+
+\makeatletter
+\setbeamertemplate{enumerate item}
+{
+  \begin{pgfpicture}{-1ex}{-0.65ex}{1ex}{1ex}
+    \usebeamercolor[fg]{item projected}
+    {\pgftransformscale{2}\pgftext{\normalsize\pgfuseshading{bigsphere}}}
+    {\pgftransformshift{\pgfpoint{0pt}{0.5pt}}
+      \pgftext{\usebeamerfont*{item projected}\insertenumlabel.}}
+  \end{pgfpicture}%
+}
+\makeatother
+
+% caption size
+\usepackage[margin=1cm]{caption}
+\captionsetup{font=normalsize, labelfont={color=blue,bf, normalsize}}
+
+
+
+% document meta
 \title{Ecotoxicology is not normal.}
 \author{Eduard Sz\"ocs, Ralf B. Sch\"afer}
 \institute{Institute for Environmental Sciences, University Koblenz-Landau}
-\footer{Paper, poster \& source code here: \color{black}{https://github.com/EDiLD/usetheglm}}
+\footer{\faDownload~Paper, poster \& source code here: \color{alu1}{https://github.com/EDiLD/usetheglm}}
 
 
 %------------------------------------------------------------------------------
@@ -33,11 +66,12 @@
 
         \begin{itemize}
             \item Usually analysed by \\[0.5ex]
-                \begin{itemize}
-                    \item transforming data (e.g. $log(Ax + C)$, $x^{0.5}, arcsine~x^{0.25}$) for linear model \cite{newman_quantitative_2012}
+                \begin{itemize}[label=$-$]
+                    \item transformation (e.g. $log(Ax + C)$, $x^{0.5}, arcsine~x^{0.25}$) for linear model \cite{newman_quantitative_2012}
                     \item non-parametric methods \cite{wang_making_2011}
                 \end{itemize}
-            \item \emph{Generalized Linear Models} (GLM) an alternative to direct model such data
+                \vskip1ex
+            \item \emph{Generalized Linear Models} (GLM) an alternative to directly model such data
             \item Can GLMs enhance inference in ecotoxicology?
         \end{itemize}
     \end{exampleblock}
@@ -47,22 +81,23 @@
     \begin{columns}[T]
     \begin{column}{.48\linewidth}
         \begin{itemize}
-            \item Simulated count and binomial data
+            \item Simulated overdispersed counts
             \item One-factorial design
-            \item Benchmarks:
-                \begin{itemize}
-                    \item  Power
-                    \item Type I error
-                \end{itemize}
             \item Variates:
-                \begin{itemize}
+                \begin{itemize}[label=$-$]
                     \item Number of replicates
                     \item Abundance
-                    \item Effect size
-                    \item Methods 
                 \end{itemize}
+                \vskip1ex
+            \item Methods:
+                \begin{itemize}[label=$-$]
+                    \item linear model on transformed data
+                    \item GLM (Poisson, negative binomial, quasi-Poisson)
+                    \item Kruskal-Wallis / pairwise Wilcoxon
+                \end{itemize}
+                \vskip1ex
             \item Endpoints:
-                \begin{itemize}
+                \begin{itemize}[label=$-$]
                     \item Global Treatment effect
                     \item LOEC
                 \end{itemize}
@@ -70,14 +105,30 @@
         \end{column}
         \begin{column}{.48\linewidth}
             \begin{figure}
-             \includegraphics[width=.9\linewidth]{fig/sim.png}
-             \caption{A realised simulation. N = 3, mean  = 32, effectsize = 50\%}
+             \includegraphics[width=\linewidth]{fig/sim.png}
+             \caption{A realised simulation. N = 3, mean  = 32, effect = 50\%}
              \end{figure}
         \end{column}
         \end{columns}
     \end{block}
 
     \begin{block}{Results: Type I errors}
+        \begin{figure}
+             \includegraphics[width=.95\linewidth]{fig/T1.png}
+             \caption{Type 1 errors for testing global treatment effect. }
+         \end{figure}
+         \vskip2ex
+         %enumitem does not play well with beamer, fix symptoms: Horizontal scale (minpage) and alignments (centered, makebox)
+        \noindent\makebox[\textwidth][c]{%
+         \begin{minipage}{0.95\linewidth}
+         \begin{enumerate}[label=\numberingI{\arabic*}, itemindent=0cm, itemsep = 1.5ex]
+            \item Poisson GLM does not fit to the data (overdispersion) and overestimates significance.
+            \item Increased Type I errors for negative binomial GLM
+            \item Negative binomial GLM + bootstrap gives correct levels. Quasi-Poisson GLM and Linear model give appropriate error levels.
+            \item Kruskal-Wallis test  is slightly conservative
+         \end{enumerate}
+        \end{minipage}
+         }
     \end{block}
 
 \end{column}
@@ -89,6 +140,21 @@
 \begin{column}{.48\linewidth}
 
     \begin{block}{Results: Power}
+        \begin{figure}      
+             \includegraphics[width=.95\linewidth]{fig/Power.png}
+             \caption{Power to detect LOEC. Only methods wtih appropriate Type I errors are displayed.}
+         \end{figure}
+
+         \vskip2ex
+         \noindent\makebox[\textwidth][c]{%
+         \begin{minipage}{0.95\linewidth}
+          \begin{enumerate}[label=\numberingI{\arabic*}, itemindent=0cm, itemsep = 1.5ex]
+            \item Quasi-Poisson GLM has greater power then the linear model on transformed data
+            \item Pairwise Wilcoxon has reduced power
+            \item  Low power to detect LOEC at a reduction of 50\%  for common mesocosm designs
+         \end{enumerate}
+         \end{minipage}
+         }
     \end{block}
 
 
@@ -97,28 +163,32 @@
         \item \emph{For "a priori"} power calculations
         \item web based, easy to use, for one factorial designs
         \item Currently hostet at \faGlobe~\textbf{\textcolor{blue}{http://52.28.43.83/shinypower/}}
+        \vskip2ex
     \end{itemize}
         \begin{center}
           \includegraphics[width=0.7\linewidth]{fig/shinytox.png}
         \end{center}
+        \vskip -0.5cm
     \end{block}
   
     % Conclusions
     \begin{alertblock}{Conclusions}
         \begin{itemize}
-            \item Low power at common experimental designs (NOEC!?)
+            \item Low power at common experimental designs (NOEC !?)
             \item Change your model, not your data!
+            \item GLM increases Power for  count and binomial data
             \item Negative binomial GLM not recommended (but see bootstrap).
+            \item GLMs for multivariate data?  \cite{szocs_analysing_2015}
         \end{itemize}
     \end{alertblock}
 
         % References
     \begin{block}{References}
-        \vskip -0.8cm
-        \footnotesize      
+    \vskip -0.5cm
+        \small     
         \bibliographystyle{plain}
-       \bibliography{references}    % i.e. the poster.bib file
-        \vskip -0.8cm
+       \bibliography{references}   
+       \vskip -0.5cm
     \end{block}
 
     \begin{block}{Contact}
@@ -126,6 +196,7 @@
     \normalsize
     \faEnvelope ~szoecs@uni-landau.de \hfill  \faTwitter ~@EduardSzoecs \\[1ex]
     \faGlobe ~http://edild.github.io/   \hfill \faGithub ~ @EDiLD
+    \vskip -0.5cm
     \end{block}
 
 \end{column}
