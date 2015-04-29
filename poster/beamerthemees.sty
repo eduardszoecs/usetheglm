@@ -13,7 +13,6 @@
 \definecolor{alu2}{HTML}{EEEEEC}
 \definecolor{alu3}{HTML}{777676}
 
-\setbeamertemplate{itemize items}[circle]
 \setbeamertemplate{navigation symbols}{}  % no navigation on a poster
 \setbeamertemplate{caption}[numbered]
 \setbeamercolor{caption name}{fg=blue}
@@ -76,7 +75,18 @@
 \setbeamertemplate{footline}{%
   \begin{beamercolorbox}[ht=12ex,leftskip=1cm,rightskip=1cm]{footlinecolor}%
     \vskip4ex
-    \hfill \raisebox{-0.4cm}{\textbf{\Large \insertfooter}}
+    \begin{columns}[T]
+      \begin{column}{.2\paperwidth}
+        \begin{center}
+          \vskip2ex
+          \includegraphics[height = 2cm]{fig/logo_uni-koblenz.png}
+        \end{center}
+      \end{column}
+      \begin{column}{.75\paperwidth}
+        \vskip6ex
+        \hfill \textbf{\Large \insertfooter}
+      \end{column}
+    \end{columns}
     \vskip2ex
   \end{beamercolorbox}
 }

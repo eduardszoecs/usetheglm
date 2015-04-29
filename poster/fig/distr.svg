@@ -15,7 +15,7 @@
    id="svg2"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="distr.svg"
-   inkscape:export-filename="/home/edisz/Documents/Uni/Projects/PHD/CONFERENCES/SETAC2014_Barcelona/poster/setac_poster/fig/distr.png"
+   inkscape:export-filename="/home/edisz/Documents/Uni/Projects/PHD/6USETHEGLM/poster/fig/distr.png"
    inkscape:export-xdpi="300.00314"
    inkscape:export-ydpi="300.00314">
   <metadata
@@ -26,7 +26,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -44,12 +44,12 @@
      id="namedview76"
      showgrid="false"
      inkscape:zoom="0.511501"
-     inkscape:cx="1424.5987"
+     inkscape:cx="1428.5088"
      inkscape:cy="1251.0562"
      inkscape:window-x="0"
      inkscape:window-y="21"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g3767" />
+     inkscape:current-layer="svg2" />
   <defs
      id="defs4">
     <g
@@ -283,7 +283,7 @@
   </g>
   <g
      id="g4574"
-     transform="translate(63.45694,-224.16395)">
+     transform="translate(-0.54306,-224.16395)">
     <g
        transform="translate(16.75767,363.42832)"
        id="surface313">
@@ -406,7 +406,7 @@
   </g>
   <g
      id="g4598"
-     transform="translate(-66.459721,-204.2951)">
+     transform="translate(66.340279,-204.2951)">
     <g
        transform="translate(193.08983,37.601695)"
        id="g3767">
@@ -620,39 +620,43 @@
   <text
      xml:space="preserve"
      style="font-size:33.59999847px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeMono;-inkscape-font-specification:FreeMono"
-     x="1182.9238"
-     y="171.23738"
+     x="1000.1849"
+     y="155.23738"
      id="text4659"
      sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
        id="tspan4661"
-       x="1182.9238"
-       y="171.23738"
-       style="font-size:60px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial Bold Italic">&quot;x out of 8&quot;</tspan></text>
+       x="1000.1849"
+       y="155.23738"
+       style="font-size:60px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial Bold Italic"><tspan
+   style="font-style:normal;font-weight:bold;-inkscape-font-specification:Arial Bold"
+   id="tspan3096">Survival: </tspan>&quot;x out of 8 survived&quot;</tspan></text>
   <text
      xml:space="preserve"
      style="font-size:33.59999847px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeMono;-inkscape-font-specification:FreeMono"
-     x="340.26321"
-     y="155.04211"
+     x="66.662445"
+     y="147.04208"
      id="text4659-3"
      sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
        id="tspan4661-7"
-       x="340.26321"
-       y="155.04211"
-       style="font-size:60px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial Bold Italic">Counts</tspan></text>
+       x="66.662445"
+       y="147.04208"
+       style="font-size:60px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial Bold Italic"><tspan
+   style="font-style:normal;-inkscape-font-specification:Arial Bold"
+   id="tspan3102">Mesocosms:</tspan> Count data</tspan></text>
   <text
      xml:space="preserve"
      style="font-size:33.59999847px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeMono;-inkscape-font-specification:FreeMono"
-     x="783.13348"
-     y="425.37717"
+     x="757.53387"
+     y="438.17722"
      id="text4659-3-0"
      sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
        id="tspan4661-7-4"
-       x="783.13348"
-       y="425.37717"
-       style="font-size:60px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial Bold Italic">Normal?</tspan></text>
+       x="757.53387"
+       y="438.17722"
+       style="font-size:64px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial Bold Italic">Normal?</tspan></text>
   <text
      xml:space="preserve"
      style="font-size:42px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeMono;-inkscape-font-specification:FreeMono"

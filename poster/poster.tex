@@ -15,26 +15,13 @@
 \usebeamercolor[fg]{itemize item}
 \usebeamertemplate{itemize item}
 }
-\setbeamertemplate{itemize item}{\small\raise1.25pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
+\setbeamertemplate{itemize item}{\small\raise1.25pt\hbox{$\blacktriangleright$}}
 
 \usepackage{tikz}
 \newcommand*{\numberingI}[1]{%
 \footnotesize\protect\tikz[baseline=-3px]%
 \protect\node[fill=none,shape=circle,draw,inner sep=1.5pt,line width=1mm, color=blue, font=\bf, yshift=0.45cm](n1){\large #1};
 }
-
-
-\makeatletter
-\setbeamertemplate{enumerate item}
-{
-  \begin{pgfpicture}{-1ex}{-0.65ex}{1ex}{1ex}
-    \usebeamercolor[fg]{item projected}
-    {\pgftransformscale{2}\pgftext{\normalsize\pgfuseshading{bigsphere}}}
-    {\pgftransformshift{\pgfpoint{0pt}{0.5pt}}
-      \pgftext{\usebeamerfont*{item projected}\insertenumlabel.}}
-  \end{pgfpicture}%
-}
-\makeatother
 
 % caption size
 \usepackage[margin=1cm]{caption}
@@ -45,7 +32,7 @@
 % document meta
 \title{Ecotoxicology is not normal.}
 \author{Eduard Sz\"ocs, Ralf B. Sch\"afer}
-\institute{Institute for Environmental Sciences, University Koblenz-Landau}
+\institute{Institute for Environmental Sciences, University of Koblenz-Landau}
 \footer{\faDownload~Paper, poster \& source code here: \color{alu1}{https://github.com/EDiLD/usetheglm}}
 
 
@@ -61,28 +48,29 @@
     % Problem
     \begin{exampleblock}{Most eco(toxico)logical data is not normally distributed}
         \begin{center}
-          \includegraphics[width=0.7\linewidth]{fig/distr.png}
+          \includegraphics[width=0.8\linewidth]{fig/distr.png}
         \end{center}
 
         \begin{itemize}
-            \item Usually analysed by \\[0.5ex]
+            \item Usually analysed by using \\[0.5ex]
                 \begin{itemize}[label=$-$]
-                    \item transformation (e.g. $log(Ax + C)$, $x^{0.5}, arcsine~x^{0.25}$) for linear model \cite{newman_quantitative_2012}
+                    \item transformations (e.g. $log(Ax + C)$, $x^{0.5}, arcsine~x^{0.25}$) for linear model \cite{newman_quantitative_2012}
                     \item non-parametric methods \cite{wang_making_2011}
                 \end{itemize}
                 \vskip1ex
-            \item \emph{Generalized Linear Models} (GLM) an alternative to directly model such data
+            \item \emph{Generalized Linear Models} (GLM) can directly model such data
             \item Can GLMs enhance inference in ecotoxicology?
         \end{itemize}
     \end{exampleblock}
 
 
     \begin{block}{Methods: Simulation study}
+    \setbeamercolor{itemize item}{fg=blue}
     \begin{columns}[T]
     \begin{column}{.48\linewidth}
         \begin{itemize}
             \item Simulated overdispersed counts
-            \item One-factorial design
+            \item One-factorial design, 50\% effect
             \item Variates:
                 \begin{itemize}[label=$-$]
                     \item Number of replicates
@@ -98,8 +86,8 @@
                 \vskip1ex
             \item Endpoints:
                 \begin{itemize}[label=$-$]
-                    \item Global Treatment effect
-                    \item LOEC
+                    \item Global Treatment effect (F-Test, LR-Test)
+                    \item LOEC (Dunnett contrasts)
                 \end{itemize}
             \end{itemize}
         \end{column}
@@ -112,20 +100,20 @@
         \end{columns}
     \end{block}
 
-    \begin{block}{Results: Type I errors}
+    \begin{block}{Results: Claiming an effect when there is none (Type I error)}
         \begin{figure}
              \includegraphics[width=.95\linewidth]{fig/T1.png}
-             \caption{Type 1 errors for testing global treatment effect. }
+             \caption{Type I errors for testing a global treatment effect. }
          \end{figure}
          \vskip2ex
          %enumitem does not play well with beamer, fix symptoms: Horizontal scale (minpage) and alignments (centered, makebox)
         \noindent\makebox[\textwidth][c]{%
          \begin{minipage}{0.95\linewidth}
          \begin{enumerate}[label=\numberingI{\arabic*}, itemindent=0cm, itemsep = 1.5ex]
-            \item Poisson GLM does not fit to the data (overdispersion) and overestimates significance.
+            \item Poisson GLM does not fit to the data (overdispersion) and overestimates significance
             \item Increased Type I errors for negative binomial GLM
             \item Negative binomial GLM + bootstrap gives correct levels. Quasi-Poisson GLM and Linear model give appropriate error levels.
-            \item Kruskal-Wallis test  is slightly conservative
+            \item Kruskal-Wallis test  shows low Type I error (loses power)
          \end{enumerate}
         \end{minipage}
          }
@@ -139,7 +127,7 @@
 % ----------------------------------------------------------------------------
 \begin{column}{.48\linewidth}
 
-    \begin{block}{Results: Power}
+    \begin{block}{Results: How often is a reduction of 50\% detected? (Power)}
         \begin{figure}      
              \includegraphics[width=.95\linewidth]{fig/Power.png}
              \caption{Power to detect LOEC. Only methods wtih appropriate Type I errors are displayed.}
@@ -159,6 +147,7 @@
 
 
     \begin{block}{Power estimation app}
+    \setbeamercolor{itemize item}{fg=blue}
     \begin{itemize}
         \item \emph{For "a priori"} power calculations
         \item web based, easy to use, for one factorial designs
@@ -178,7 +167,7 @@
             \item Change your model, not your data!
             \item GLM increases Power for  count and binomial data
             \item Negative binomial GLM not recommended (but see bootstrap).
-            \item GLMs for multivariate data?  \cite{szocs_analysing_2015}
+            \item GLMs for multivariate data?  See \cite{szocs_analysing_2015} for a comparison with PRC.
         \end{itemize}
     \end{alertblock}
 
