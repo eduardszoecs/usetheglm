@@ -6,6 +6,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{fontspec}
 \usepackage{fontawesome}
+% use ttf font, see  http://tex.stackexchange.com/questions/239801/fontawesome-scaling-deedy-resume-pgfplots-axis-xetex-luatex-issues
+% \newfontfamily{\FA}[Path = fonts/]{fontawesome-webfont}
+\newfontfamily{\FA}[Path = fonts/]{FontAwesome-1000upm}
 \usepackage{color}
 \usepackage{natbib}
 
@@ -183,8 +186,9 @@
     \begin{block}{Contact}
     \vskip -0.5cm
     \normalsize
-    \faEnvelope ~szoecs@uni-landau.de \hfill  \faTwitter ~@EduardSzoecs \\[1ex]
-    \faGlobe ~http://edild.github.io/   \hfill \faGithub ~ @EDiLD
+    \faEnvelope ~\textbf{szoecs@uni-landau.de} \hfill  \faTwitter ~@EduardSzoecs \\[1ex]
+    \faGlobe ~\textbf{http://edild.github.io/}   \hfill \faTwitter ~@LandscapEcology \\[1ex]
+    \hfill \faGithub ~ @EDiLD 
     \vskip -0.5cm
     \end{block}
 
