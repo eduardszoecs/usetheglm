@@ -8,6 +8,12 @@ Online repository for the paper submitted to [Environmental Science and Pollutio
 [Eduard Szöcs](http://www.uni-koblenz-landau.de/en/campus-landau/faculty7/environmental-sciences/landscape-ecology/Staff/eduardszoecs), [Ralf B. Schäfer](http://www.uni-koblenz-landau.de/en/campus-landau/faculty7/environmental-sciences/landscape-ecology/Staff/ralf-schaefer/ralf-schaefer)
 
 
+### Final Manuscript
+Can be found [here](https://github.com/EDiLD/usetheglm/raw/master/manuscript/final/report.pdf).
+
+### Poster
+Can be found [here](https://github.com/EDiLD/usetheglm/raw/master/poster/poster.pdf).
+
 ### Structure of this repository
 
 * `~/cache/`	: cached files (simulation results)
