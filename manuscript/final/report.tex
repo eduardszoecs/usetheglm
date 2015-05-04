@@ -46,7 +46,7 @@ Tel.: +49 06341 280 31552 \\
 Ecotoxicologists often encounter count and proportion data that are rarely normally distributed.
 To meet the assumptions of the linear model such data are usually transformed or non-parametric methods are used if the transformed data still violate the assumptions.
 Generalised Linear Models (GLM) allow to directly model such data, without the need for transformation.
-Here, we compare the performance of  two parametric methods i.e.  (1) the linear model (assuming normality of transformed data), and (2) GLMs (assuming a Poisson, negative binomial or binomially distibuted response) and (3) non-parametric methods.
+Here, we compare the performance of  two parametric methods, i.e.,  (1) the linear model (assuming normality of transformed data), (2) GLMs (assuming a Poisson, negative binomial, or binomially distibuted response), and (3) non-parametric methods.
 
 We simulated typical data mimicking low replicated ecotoxicological experiments of two common data types (counts and proportions from counts). 
 We compared the performance of the different methods in terms of statistical power and Type I error for detecting a general treatment effect and determining the lowest observed effect concentration (LOEC).
@@ -78,13 +78,13 @@ Other transformations, like the square root or fourth root transformation, are a
 Note that there has been little evaluation and advice for practitioners which transformations to use.
 If the transformed data still do not meet the assumptions of the linear model, non-parametric tests are usually applied \citep{wang_making_2011}.
 
-Generalised linear models (GLM) provide a method to analyse counts or proportions from counts in a  statistically sound way \citep{nelder_generalized_1972}.
-GLMs can handle various types of data distributions, e.g. Poisson or negative binomial (for count data) or binomial (for proportions); the normal distribution being a special case of GLMs.
-Despite GLMs being available for more than 40 years, ecotoxicologists do not regularly make use of them.
+Generalised linear models (GLM) provide a method to analyse counts or proportions from counts in a statistically sound way \citep{nelder_generalized_1972}.
+GLMs can handle various types of data distributions, e.g., Poisson or negative binomial (for count data) or binomial (for proportions); the normal distribution being a special case of GLMs.
+Despite GLMs being available for more than 40~years, ecotoxicologists do not regularly make use of them.
 Recent studies concluded that the linear model should not be applied on transformed data and GLMs be used as they have better statistical properties (\citealt{ohara_not_2010,warton_many_2005} (counts), \citealt{warton_arcsine_2011} (proportions from counts)). 
 
 Ecotoxicological experiments often involve small sample sizes due to practical constraints. 
-For example, extremely low samples sizes (n \textless 5) are common in many mesocosm studies \citep{sanderson_pesticide_2002,szocs_analysing_2015}.
+For example, extremely low samples sizes ($n$~\textless~5) are common in many mesocosm studies \citep{sanderson_pesticide_2002,szocs_analysing_2015}.
 Small sample sizes lead to low power in statistical hypothesis testing, on which many ecotoxiological approaches (e.g. risk assessment for pesticides) rely. 
 Such an endpoint are L/NOEC values (Lowest / No observed effect concentration).
 Although their use has been heavily criticized in the past \citep{laskowski_good_1995}, they are the predominant endpoint in mesocosm experiments \citep{brock_minimum_2015, efsa_ppr_guidance_2013}. 
@@ -126,7 +126,7 @@ We allow this mean to vary between treatments ($X_i$ codes the treatments) and $
 
 \subsubsection{Generalised Linear Models}
 GLMs extend the linear model to variables that are not normally distributed.
-Instead of transforming the response variable, the counts could be directly modelled by a Poisson GLM ($GLM_p$):
+Instead of transforming the response variable, the counts could be directly modeled by a Poisson GLM ($GLM_p$):
 \begin{align}
   Y_i &\sim P(\mu_i) \nonumber \\
   E(Y_i) &= var(Y_i) = \mu_i \label{eqn:pois} \\
@@ -136,7 +136,7 @@ Instead of transforming the response variable, the counts could be directly mode
 This model assumes Poisson distributed abundances with mean $\mu_i \ge 0$.
 The expected value for each observation $i$ is given by its mean. 
 Moreover, this model assumes that mean and variance are equal.
-We are modelling the mean as a function of treatment membership ($X_i$).
+We are modeling the mean as a function of treatment membership ($X_i$).
 However, to avoid negative values of the mean this is done on a log scale.
 Therefore, $\beta$ also describes the differences between treatments on a log scale (eqn. \ref{eqn:pois}).
 
@@ -179,7 +179,7 @@ To accommodate the assumptions for the standard linear model with such proportio
   \end{cases} \label{eqn:arcsine}
 \end{align}
 
-, where $Y_i$ are the untransformed proportions, $Y_{new~i}$ are the transformed proportions and n is the total number of exposed animals per treatment.
+, where $Y_i$ are the untransformed proportions, $Y_{new~i}$ are the transformed proportions, and n is the total number of exposed animals per treatment.
 The transformed proportions are then analysed using the standard linear model ($LM$, eqn. \ref{eqn:normal}).
 Note, that the coefficients of the linear model are not directly interpretable due to transformation.
 
@@ -194,7 +194,7 @@ A more natural way to model such data is the  binomial distribution with paramet
 
 This model assumes that the number of occurrences ($Y_i$) are binomially distributed, where N = number of trials (e.g. exposed animals) and $\pi_i$ is the probability of occurrences (fish survived), which together give the expected number of occurrences.
 The variance of the binomial distribution is a quadratic function of the mean.
-We are modelling the probability of occurrence as function of treatment membership ($X_i$) and to ensure that $0 < \pi_i < 1$ we do this on a logit scale (eqn. \ref{eqn:bin}). 
+We are modeling the probability of occurrence as function of treatment membership ($X_i$) and to ensure that $0 < \pi_i < 1$ we do this on a logit scale (eqn. \ref{eqn:bin}). 
 The estimated coefficients ($\beta$) of this model are directly interpretable as changes in log odds between treatments.
 
 Non-independent trials (e.g. fish are grouped in aquaria) may lead to overdispersion \citep{williams_extra-binomial_1982}.
@@ -277,7 +277,7 @@ The normal (F = 2.57, p = 0.084) and quasi-Poisson model (F = 2.90, p = 0.061), 
 By contrast, the LR test and parametric bootstrap of the negative binomial model indicated a treatment-related effect (LR = 13.99, p = 0.016, bootstrap: p = 0.042).
 
 All methods predicted similar values, except the normal model predicting always lower abundances (Figure \ref{fig:example}). 
-95\%~confidence intervals (CI) where most narrow for the negative binomial model and widest for the quasi-Poisson model - especially at lower estimated abundances.
+95\%~confidence intervals (CI) were most narrow for the negative binomial model and widest for the quasi-Poisson model - especially at lower estimated abundances.
 Consequently, the LOECs differed (Normal and quasi-Poisson: 3 mg/L, negative binomial: 0.3 mg/L).
 The pairwise Wilcoxon test did not detect any treatment different from control.
 
@@ -390,8 +390,8 @@ However, in factorial designs the mean-variance relationship can be easily check
 Our simulations revealed that the LR test for $GLM_{nb}$ is invalid because of increased Type I errors. This explains why it had the lowest p-value in the case study.
 
 In the introduction we pointed out that there is little advice how to choose between the plenty of possible transformations - how do GLMs simplify this problem?
-The distribution modelled can be chosen using knowledge about the data (e.g. bounds, integer or continuous data etc).
-Knowing what type of data is modelled (see Methods section), the model selection process can be completely guided by the data and diagnostic tools. Therefore, choosing an appropriate model is easier than choosing between possible transformations.
+The distribution modeled can be chosen using knowledge about the data (e.g. bounds, integer or continuous data etc).
+Knowing what type of data is modeled (see Methods section), the model selection process can be completely guided by the data and diagnostic tools. Therefore, choosing an appropriate model is easier than choosing between possible transformations.
 
 
 \subsection{Simulations}
