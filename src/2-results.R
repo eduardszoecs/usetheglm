@@ -1,6 +1,6 @@
 if(!exists("prj")){
   stop("You need to create a object 'prj' that points to the top folder, 
-       e.g. prj <- '/home/edisz/Documents/usetheglm'!")
+       e.g. prj <- '/home/edisz/Documents/work/research/projects/2016/6USETHEGLM/'!")
 } else {
   source(file.path(prj, "src", "0-load.R"))
 }
@@ -164,6 +164,7 @@ p_glob_c <- arrangeGrob(
 p_glob_c
 if(exp_plot)
   ggsave(file.path(figdir, 'p_glob_c.pdf'), p_glob_c, width = 10, height = 8)
+# ggsave(file.path(figdir, 'p_glob_c.svg'), p_glob_c, width = 10, height = 8)
 
 
 ### ------------------------
@@ -356,74 +357,74 @@ print(xtable(ldf,
       table.placement = 'H', caption.placement = 'top', size = 'footnotesize',
       include.rownames = FALSE, sanitize.text.function=function(x){x})
 
-### ----------------------------------------------------------------------------
-### Misc plots
-# # XKCD-Plot
-# pow_glob_c$glm <- ifelse(pow_glob_c$variable %in% c('lm', 'np'), 'Standard', 'GLM')
-# library(extrafont)
-# require(xkcd)
-# loadfonts() # fonts appear only in pdf
-# # for the dataman
-# ratioxy <- 8
-# mapping <- aes(x=x,
-#                y=y,
-#                scale=scale,
-#                ratioxy=ratioxy,
-#                angleofspine = angleofspine,
-#                anglerighthumerus = anglerighthumerus,
-#                anglelefthumerus = anglelefthumerus,
-#                anglerightradius = anglerightradius,
-#                angleleftradius = angleleftradius,
-#                anglerightleg =  anglerightleg,
-#                angleleftleg = angleleftleg,
-#                angleofneck = angleofneck)
-# dataman <- data.frame( x=4.5, y=0.4, N = 9,
-#                        scale = 0.15 ,
-#                        ratioxy = ratioxy,
-#                        angleofspine = -pi/2 ,
-#                        anglerighthumerus = pi/2 + pi/2,
-#                        anglelefthumerus = pi/2 + pi/3, 
-#                        anglerightradius = pi/2 +  pi/4,
-#                        angleleftradius = pi/2 +  pi/4, 
-#                        angleleftleg = 3*pi/2 + pi / 12 ,
-#                        anglerightleg = 3*pi/2 - pi / 12,
-#                        angleofneck = runif(1, 3*pi/2-pi/10, 3*pi/2+pi/10)
-#                        )
-# myp <- ggplot(pow_glob_c) +
-#   geom_smooth(aes(y = power, x = log2(muc), group = variable, color = glm), 
-#               size= 1, se = FALSE, span = 0.8, shape = 'X',
-#               position = position_jitter(width = 0.025)) +
-#   # geom_line(aes(y = power, x = log2(muc), group = variable, color = glm), linewidth = 4) +
-#   # geom_point(aes(y = power, x = log2(muc), color = glm), size = 4, shape = 4) +
-#   facet_grid( ~N, labeller = n_labeller) + 
-#   # axes
-#   labs(x = expression('Effect size'), 
-#        y = 'Power') +
-#   # xkcd appearance
-#   theme_xkcd() +
-#   xkcdaxis(c(1,7), c(0, 1)) + 
-#   scale_y_continuous(breaks = c(0, 0.8, 1), labels = c('0', '80', '100')) + 
-#   scale_x_continuous(breaks = c(1.5, 6.5), labels = c('small', 'big')) +
-#   # colors
-#   scale_color_manual('', values =  c('#FA6C00', 'gray25'), 
-      # guide = guide_legend(override.aes = list(size = 2)))   +
-#   theme(legend.justification=c(0,1), 
-#         legend.position=c(0,1), 
-#         axis.text=element_text(size=22),
-#         axis.title=element_text(size=25,face="bold"),
-#         strip.text.x = element_text(size = 25),
-#         legend.text=element_text(size = 22)) +
-#   # decoration
-#   xkcdman(mapping, dataman) +
-#   geom_text(data=data.frame(x=5.7, y = 0.55, N = 9, label = "Lo and behold!"),
-#                             aes(x=x,y=y,label=label), size=6,
-#             show_guide=F, family="xkcd") +
-#   xkcdline(mapping=aes(xbegin=xb, ybegin=yb, xend =xe, yend= ye), 
-#            data = data.frame(xb = 5.2, xe = 6, yb = 0.45, ye = 0.5, N = 9), 
-#            xjitteramount = 0.4)
-# myp 
-# ggsave('/home/edisz/Documents/Uni/Projects/PHD/MISC/AG_presentations/fig/myp2.pdf', 
-# myp, width = 10, height = 6)
+## ----------------------------------------------------------------------------
+## Misc plots
+# XKCD-Plot
+pow_glob_c$glm <- ifelse(pow_glob_c$variable %in% c('lm', 'np'), 'Standard', 'GLM')
+library(extrafont)
+require(xkcd)
+loadfonts() # fonts appear only in pdf
+# for the dataman
+ratioxy <- 8
+mapping <- aes(x=x,
+               y=y,
+               scale=scale,
+               ratioxy=ratioxy,
+               angleofspine = angleofspine,
+               anglerighthumerus = anglerighthumerus,
+               anglelefthumerus = anglelefthumerus,
+               anglerightradius = anglerightradius,
+               angleleftradius = angleleftradius,
+               anglerightleg =  anglerightleg,
+               angleleftleg = angleleftleg,
+               angleofneck = angleofneck)
+dataman <- data.frame( x=4.5, y=0.4, N = 9,
+                       scale = 0.15 ,
+                       ratioxy = ratioxy,
+                       angleofspine = -pi/2 ,
+                       anglerighthumerus = pi/2 + pi/2,
+                       anglelefthumerus = pi/2 + pi/3,
+                       anglerightradius = pi/2 +  pi/4,
+                       angleleftradius = pi/2 +  pi/4,
+                       angleleftleg = 3*pi/2 + pi / 12 ,
+                       anglerightleg = 3*pi/2 - pi / 12,
+                       angleofneck = runif(1, 3*pi/2-pi/10, 3*pi/2+pi/10)
+                       )
+myp <- ggplot(pow_glob_c) +
+  geom_smooth(aes(y = power, x = log2(muc), group = variable, color = glm),
+              size= 1, se = FALSE, span = 0.8, shape = 'X',
+              position = position_jitter(width = 0.025)) +
+  # geom_line(aes(y = power, x = log2(muc), group = variable, color = glm), linewidth = 4) +
+  # geom_point(aes(y = power, x = log2(muc), color = glm), size = 4, shape = 4) +
+  facet_grid( ~N) +
+  # axes
+  labs(x = expression('Effect size'),
+       y = 'Power') +
+  # xkcd appearance
+  theme_xkcd() +
+  xkcdaxis(c(1,7), c(0, 1)) +
+  scale_y_continuous(breaks = c(0, 0.8, 1), labels = c('0', '80', '100')) +
+  scale_x_continuous(breaks = c(1.5, 6.5), labels = c('small', 'big')) +
+  # colors
+  scale_color_manual('', values =  c('#FA6C00', 'gray25'),
+    guide = guide_legend(override.aes = list(size = 2)))   +
+  theme(legend.justification=c(0,1),
+        legend.position=c(0,1),
+        axis.text=element_text(size=22),
+        axis.title=element_text(size=25,face="bold"),
+        strip.text.x = element_text(size = 25),
+        legend.text=element_text(size = 22)) +
+  # decoration
+  xkcdman(mapping, dataman) +
+  geom_text(data=data.frame(x=5.7, y = 0.55, N = 9, label = "Lo and behold!"),
+                            aes(x=x,y=y,label=label), size=6,
+            show_guide=F, family="xkcd") +
+  xkcdline(mapping=aes(xbegin=xb, ybegin=yb, xend =xe, yend= ye),
+           data = data.frame(xb = 5.2, xe = 6, yb = 0.45, ye = 0.5, N = 9),
+           xjitteramount = 0.4)
+myp
+ggsave('/home/edisz/Documents/Uni/Projects/PHD/MISC/AG_presentations/fig/myp2.pdf',
+myp, width = 10, height = 6)
 
 
 

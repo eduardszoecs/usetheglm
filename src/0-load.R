@@ -29,11 +29,11 @@ require(plyr)
 require(gridExtra)
 require(MASS)
 require(multcomp)
-require(exactRankTests)
+library(exactRankTests)
 require(xtable)
 
-# or get the packages from packrat
-source(file.path(prj, 'packrat/init.R'))
+# # or get the packages from packrat
+# source(file.path(prj, 'packrat/init.R'))
 
 
 #####--------------------------------------------------------------------------
